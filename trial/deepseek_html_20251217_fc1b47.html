@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyReader - AI File Reader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a56db;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 35px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a56db;
+        }
+        
+        .nav-button {
+            background-color: #1a56db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .nav-button:hover {
+            background-color: #1e4bb8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 86, 219, 0.3);
+        }
+        
+        /* Hero Section with Background Image */
+        .hero {
+            padding: 120px 0 100px;
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z');
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f7ff;
+            position: relative;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,247,255,0.8) 100%);
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 25px;
+            color: #111827;
+            line-height: 1.1;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a56db, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #4b5563;
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #1a56db, #3b82f6);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 86, 219, 0.4);
+        }
+        
+        /* Upload Section with Background */
+        .upload-section {
+            padding: 100px 0;
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z');
+            background-size: cover;
+            background-position: center;
+            background-color: #f8fafc;
+            position: relative;
+        }
+        
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 0;
+        }
+        
+        .upload-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .upload-box {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1a56db, #3b82f6);
+        }
+        
+        .upload-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(26, 86, 219, 0.15);
+        }
+        
+        .upload-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #111827;
+            font-weight: 700;
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            color: #1a56db;
+            margin-bottom: 25px;
+        }
+        
+        /* Features Section with Background */
+        .features {
+            padding: 100px 0;
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z');
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f7ff;
+            position: relative;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 0;
+        }
+        
+        .features-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #111827;
+            font-weight: 800;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(26, 86, 219, 0.15);
+        }
+        
+        .feature-title {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: #111827;
+            font-weight: 700;
+        }
+        
+        .feature-text {
+            color: #6b7280;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        /* Testimonials Section with Background */
+        .testimonials {
+            padding: 100px 0;
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z');
+            background-size: cover;
+            background-position: center;
+            background-color: #f8fafc;
+            position: relative;
+        }
+        
+        .testimonials::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 0;
+        }
+        
+        .testimonials-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #1a56db;
+            transition: all 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(26, 86, 219, 0.15);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #4b5563;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .testimonial-author {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.2rem;
+        }
+        
+        /* FAQ Section with Background */
+        .faq {
+            padding: 100px 0;
+            background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z');
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f7ff;
+            position: relative;
+        }
+        
+        .faq::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 0;
+        }
+        
+        .faq-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(26, 86, 219, 0.15);
+        }
+        
+        .faq-question {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #111827;
+        }
+        
+        .faq-answer {
+            color: #6b7280;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1a56db, #3b82f6);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: white;
+        }
+        
+        .footer-tagline {
+            color: #d1d5db;
+            max-width: 600px;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .footer-copyright {
+            color: #9ca3af;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #374151;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1a56db 0%, #3b82f6 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .demo-title {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .upload-box {
+                width: 280px;
+                padding: 50px 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 8px 20px;
+            }
+            
+            .hero {
+                padding: 80px 0 60px;
+                min-height: 500px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 16px 35px;
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid, .testimonials-grid, .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .upload-box {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .upload-box {
+                padding: 40px 25px;
+            }
+            
+            .feature-card, .testimonial-card, .faq-item {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-book-reader"></i> MyReader
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#login">Login</a></li>
+                    <li><button class="nav-button">Get Started</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Unlock Insights from<br>Your Files with AI</h1>
+            <p class="hero-subtitle">
+                AI File Reader that transforms your documents into actionable insights with advanced artificial intelligence.
+            </p>
+            <button class="cta-button">Try It Now</button>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section" id="demo">
+        <div class="container">
+            <h2 class="section-title">Upload & Analyze</h2>
+            <p class="section-subtitle">
+                Upload any document and get AI-powered insights instantly. Our platform supports multiple file formats.
+            </p>
+            
+            <div class="upload-container">
+                <div class="upload-box">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3 class="upload-title">File Upload</h3>
+                    <p>Drag & drop your files here or click to browse</p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-file-pdf"></i> PDF, DOC, TXT, Images
+                    </div>
+                </div>
+                
+                <div class="upload-box">
+                    <div class="upload-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="upload-title">Real Time Analysis</h3>
+                    <p>Live processing and insights from your documents</p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-bolt"></i> Instant Results
+                    </div>
+                </div>
+                
+                <div class="upload-box">
+                    <div class="upload-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="upload-title">AI Powered Insights</h3>
+                    <p>Advanced AI algorithms extract key information</p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-lightbulb"></i> Smart Analysis
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container features-content">
+            <h2 class="section-title">Features</h2>
+            <p class="section-subtitle">
+                Use the power of AI for PDF analysis by NLP user. Get the insights you need from your documents.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">Harmany AI</h3>
+                    <p class="feature-text">
+                        Our advanced AI system understands context and extracts meaningful information from your documents. Perfect for researchers, students, and professionals.
+                    </p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-check-circle"></i> Context Understanding
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Secure Processing</h3>
+                    <p class="feature-text">
+                        Your documents are processed securely with end-to-end encryption. We never store your data longer than necessary for analysis.
+                    </p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-shield-alt"></i> Bank-level Security
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Advanced Analytics</h3>
+                    <p class="feature-text">
+                        Get detailed analytics, summaries, and key point extraction from any document. Export results in multiple formats for further use.
+                    </p>
+                    <div style="margin-top: 20px; color: #1a56db; font-weight: 600;">
+                        <i class="fas fa-chart-bar"></i> Detailed Reports
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section">
+        <div class="container">
+            <h2 class="demo-title">AI Powered Impact Demo</h2>
+            <p class="demo-subtitle">
+                See how MyReader transforms complex documents into clear, actionable insights in real-time. Try our interactive demo below.
+            </p>
+            <button class="cta-button" style="background: white; color: #1a56db;">View Live Demo</button>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container testimonials-content">
+            <h2 class="section-title">Customer Testimonials</h2>
+            <p class="section-subtitle">
+                See what our users have to say about MyReader. Join thousands of satisfied customers.
+            </p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "MyReader has completely transformed how we analyze legal documents. The AI-powered insights save us hours of manual work every week."
+                    </p>
+                    <div class="testimonial-author">Sarah Johnson</div>
+                    <div class="testimonial-role">Legal Research Director</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "As a researcher, I deal with hundreds of PDFs monthly. MyReader's analysis features help me extract key information in seconds."
+                    </p>
+                    <div class="testimonial-author">Michael Chen</div>
+                    <div class="testimonial-role">Academic Researcher</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        "We've reduced document processing time by 70% since implementing MyReader. The accuracy of the AI analysis is impressive."
+                    </p>
+                    <div class="testimonial-author">Lisa Rodriguez</div>
+                    <div class="testimonial-role">Operations Manager</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container faq-content">
+            <h2 class="section-title">FAQ & Data Overview</h2>
+            <p class="section-subtitle">
+                Get answers to common questions and understand how MyReader delivers expert results.
+            </p>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3 class="faq-question">How do I get started?</h3>
+                    <p class="faq-answer">Simply sign up for a free account, upload your first document, and start getting AI-powered insights immediately. No credit card required.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">What file types are supported?</h3>
+                    <p class="faq-answer">We support PDF, DOCX, PPTX, TXT, and image files (JPG, PNG, GIF). More formats are coming soon based on user feedback.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">Is my data secure?</h3>
+                    <p class="faq-answer">Yes, all files are encrypted in transit and at rest. We never share your data with third parties and comply with GDPR regulations.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">Can I export my results?</h3>
+                    <p class="faq-answer">Absolutely! Export your analysis results in PDF, CSV, or JSON format for further use in other applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">MyReader</div>
+            <p class="footer-tagline">
+                AI File Reader that helps you unlock insights from your documents with powerful AI analysis. Try it now for free.
+            </p>
+            <button class="cta-button" style="margin-bottom: 30px;">Get Started Free</button>
+            
+            <div class="footer-copyright">
+                &copy; 2023 MyReader. All rights reserved. Privacy Policy | Terms of Service
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // CTA button functionality
+        document.querySelectorAll('.cta-button, .nav-button').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Welcome to MyReader! You would be redirected to the signup page.');
+            });
+        });
+        
+        // File upload box interaction
+        document.querySelectorAll('.upload-box').forEach(box => {
+            box.addEventListener('click', function() {
+                alert('Upload dialog would open here. This is a demo page.');
+            });
+        });
+    </script>
+</body>
+</html>

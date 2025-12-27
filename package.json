@@ -1,0 +1,33 @@
+{
+  "name": "Myreader",
+  "version": "1.0.0",
+  "description": "PDF reader ",
+  "homepage": "https://github.com/sentflix01/Myreader#readme",
+  "bugs": {
+    "url": "https://github.com/sentflix01/Myreader/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sentflix01/Myreader.git"
+  },
+  "license": "ISC",
+  "author": "Sintayehu.M",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start:dev": "nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "mongodb": "7.0",
+    "mongoose": "^9.0.2",
+    "morgan": "^1.10.1",
+    "validator": "^13.15.26"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.11"
+  }
+}
