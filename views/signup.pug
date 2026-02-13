@@ -1,0 +1,55 @@
+extends base
+
+block content
+  .login-form
+    h2.heading-secondary Sign Up for an Account
+    form.form.form--signup(autocomplete="off")
+      .form__group
+        label.form__label(for="name") Name
+        input.form__input#name(type="text", placeholder="Enter your name", name="name", required)
+
+      .form__group
+        label.form__label(for="email") Email address
+        input.form__input#email(type="email", placeholder="Enter your email", name="email", required)
+
+      .form__group
+        label.form__label(for="password") Password
+        .password-wrapper(style="position:relative; display:flex; align-items:center;")
+          input#password.form__input(type="password", placeholder="Enter your password", name="password", required, minlength="8", style="padding-right:2.5rem;")
+          button.toggle-password(type="button", tabindex="-1", aria-label="Show/Hide password", style="background:none; border:none; position:absolute; right:1rem; top:50%; transform:translateY(-50%); cursor:pointer; padding:0;")
+            svg.eye-show(width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24")
+              path(d="M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z")
+              circle(cx="12" cy="12" r="3")
+            svg.eye-hide(width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="display:none")
+              path(d="M17.94 17.94A10.06 10.06 0 0 1 12 19C5 19 1 12 1 12a18.8 18.8 0 0 1 5.06-7.94M1 1l22 22")
+              path(d="M9.53 9.53A3 3 0 0 0 12 15 3 3 0 0 0 14.47 14.47")
+
+      .form__group
+        label.form__label(for="passwordConfirm") Confirm password
+        .password-wrapper(style="position:relative; display:flex; align-items:center;")
+          input#passwordConfirm.form__input(type="password", placeholder="Enter your password", name="passwordConfirm", required, minlength="8", style="padding-right:2.5rem;")
+          button.toggle-password(type="button", tabindex="-1", aria-label="Show/Hide password", style="background:none; border:none; position:absolute; right:1rem; top:50%; transform:translateY(-50%); cursor:pointer; padding:0;")
+            svg.eye-show(width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24")
+              path(d="M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z")
+              circle(cx="12" cy="12" r="3")
+            svg.eye-hide(width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="display:none")
+              path(d="M17.94 17.94A10.06 10.06 0 0 1 12 19C5 19 1 12 1 12a18.8 18.8 0 0 1 5.06-7.94M1 1l22 22")
+              path(d="M9.53 9.53A3 3 0 0 0 12 15 3 3 0 0 0 14.47 14.47")
+        
+      .form__group
+        button.btn.btn--green(type="submit") Sign Up
+
+  script.
+    // Improved: support multiple toggle-password buttons for all password fields
+    document.querySelectorAll('.toggle-password').forEach((toggleBtn) => {
+      const input = toggleBtn.parentElement.querySelector('input[type="password"], input[type="text"]');
+      const eyeShow = toggleBtn.querySelector('.eye-show');
+      const eyeHide = toggleBtn.querySelector('.eye-hide');
+      toggleBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const isPwd = input.type === 'password';
+        input.type = isPwd ? 'text' : 'password';
+        eyeShow.style.display = isPwd ? 'none' : '';
+        eyeHide.style.display = isPwd ? '' : 'none';
+      });
+    });

@@ -1,0 +1,102 @@
+extends base
+
+block content
+  // Include Font Awesome and chat.css directly in content
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+  link(rel="stylesheet" href="css/chat.css")
+  
+  main.chat-main-section
+    .chat-container
+      // Sidebar
+      aside.chat-sidebar
+        .chat-logo
+          h1
+            i.fas.fa-comment-dots
+            | SentReader
+        .chat-try-free
+          a.chat-try-btn(href="#cta") Try for free
+        
+        .recent-chats
+          h3 Recent Chats
+          ul.chat-history-list#chatHistoryList
+            li.chat-history-item
+              i.fas.fa-comment
+              div
+                .chat-history-name No chats available
+        
+      // Main Chat Area
+      section.main-chat-area
+        .chat-area-header
+          h2#chatTitle New Chat
+          .chat-header-actions
+            button#newChatBtn.new-chat-btn
+              i.fas.fa-plus
+              | New Chat
+            button#settingsBtn(title="Settings")
+              i.fas.fa-cog
+            button#helpBtn(title="Help")
+              i.fas.fa-question-circle
+        
+        .chat-messages-area#chatMessagesArea
+          .chat-welcome-state
+            .chat-welcome-icon
+              i.fas.fa-comments
+            h3 No Chats Available
+            p Please upload a file to start a new chat. SentReader can process documents, images, and other files to help you analyze and discuss content.
+            
+            //- .chat-welcome-cta
+            //-   a.chat-welcome-btn(href="#cta") Try for free
+          .chat-upload   
+            .chat-upload-area#chatUploadArea
+              .chat-upload-icon
+                i.fas.fa-cloud-upload-alt
+              h4 Upload a file to start chatting
+              p Drag and drop your file here or click to browse
+              button#uploadFileBtn.upload-file-btn
+                i.fas.fa-upload
+                | Choose File
+              .supported-file-types
+                span.file-type-badge PDF
+                span.file-type-badge DOCX
+                span.file-type-badge TXT
+                span.file-type-badge JPG/PNG
+                span.file-type-badge CSV
+            .hero-img-box
+              .form-v3.w-form
+                form#email-form(
+                  name="email-form" 
+                  data-name="Email Form" 
+                  redirect="https://orion.file.ai/en/sign-up" 
+                  data-redirect="https://orion.file.ai/en/sign-up" 
+                  method="get" 
+                  class="form-6" 
+                  data-wf-page-id="689c9545a074282643a763c5" 
+                  data-wf-element-id="3815e6ca-2841-3a3e-0277-812f2bd4f7a5" 
+                  aria-label="Email Form" 
+                  data-hs-cf-bound="true"
+                )
+                  #form-textarea.form-textarea(data-v-app="")
+                    .textarea-wrapper
+                      textarea
+                      span.placeholder
+                        | Create a chart showing the demographics of
+                        span.cursor
+                  .chat-button-container-form
+                    //- <a href="#" class="button-attach w-button"></a>
+                    ion-icon.chat-upload-feature-icon(name="attach-outline")
+                    //- <ion-icon class="feature-icon" name="arrow-up-outline"></ion-icon>
+                    //- <input type="submit" data-wait="" class="button-arrow-up w-button" value="">
+                    button.chat-button-arrow-up(type="submit")
+                      ion-icon.chat-feature-icon(name="arrow-up-outline")
+                
+                .w-form-done(tabindex="-1" role="region" aria-label="Email Form success")
+                  div Thank you! Your submission has been received!
+                
+                .w-form-fail(tabindex="-1" role="region" aria-label="Email Form failure")
+                  div Oops! Something went wrong while submitting the form.
+        
+        .chat-input-container#chatInputContainer
+          .message-input-wrapper
+            textarea#messageInput.chat-message-input(placeholder="Type your message here...")
+            button#sendMessageBtn.send-message-btn
+              i.fas.fa-paper-plane

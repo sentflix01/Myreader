@@ -1,0 +1,107 @@
+extends base
+
+block content
+    section#services.section-meals
+      .container
+        h2.heading-secondary
+          | SentReader AI reading from 5,000+ Documents
+      .container.grid.grid--3-cols.margin-bottom-md
+        .meal
+          video.meal-img(src='img/meals/video 2.mp4' autoplay='' muted='' loop='' playsinline='')
+          .meal-content
+            .meal-tags
+              span.tag.tag--vegetarian ChatPDF
+            p.meal-title
+            ul.meal-attributes
+              li.meal-attribute
+                ion-icon.meal-icon(name='star-outline')
+                span
+                  strong 4.9
+        .meal
+          video.meal-img(src='img/meals/video 1.mp4' autoplay='' muted='' loop='' playsinline='')
+          .meal-content
+            .meal-tags
+              span.tag.tag--vegan AI generation
+            p.meal-title
+            ul.meal-attributes
+              li.meal-attribute
+                ion-icon.meal-icon(name='star-outline')
+                span
+                  strong 4.8
+                  |  rating (441)
+        .diets
+          h3.heading-tertiary Works with any Documents:
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span PDF
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span WORD
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span WEB
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span PPT
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span EXELL
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span IMAGE
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span SCREENSHOOT
+
+    section#dashboard.section-testimonials
+      .testimonials-container
+        h2.heading-secondary Once you try it, you can't go back
+
+        if reviews && reviews.length
+          .testimonials
+            each review in reviews
+              figure.testimonial
+                - const userName = review.user ? review.user.name : 'customer';
+                - const userPhoto = review.user && review.user.photo ? review.user.photo : 'default.jpg';
+                img.testimonial-img(
+                  alt=`Photo of ${userName}`,
+                  src=`/img/users/${userPhoto}`
+                )
+                blockquote.testimonial-text
+                  | &ldquo;#{review.review}&rdquo;
+                p.testimonial-name &mdash; #{review.user ? review.user.name : 'Anonymous'}
+                .reviews__rating
+                  each star in [1, 2, 3, 4, 5]
+                    svg.reviews__star(
+                      class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`
+                    )
+                      use(xlink:href='/img/icons.svg#icon-star')
+        else
+          p.testimonial-text No reviews yet. Be the first to share your experience!
+
+      .gallery
+        figure.gallery-item
+          img(src='img/gallery/gallery-1.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-2.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-3.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-4.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-5.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-6.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-7.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-8.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-9.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-10.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-11.jpg' alt='Photo of beautifully arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-12.jpg' alt='Photo of beautifully arranged food')

@@ -1,0 +1,51 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(content="IE=edge" http-equiv="X-UA-Compatible")
+    meta(content="width=device-width, initial-scale=1.0" name="viewport")
+    meta(content="MyReader AI is an AI-powered reading assistant that lets you upload documents like PDFs, books then chat with them for summaries, answers. It's great for researching, studying, or extracting insights quickly." name="description")
+    //- link(rel='shortcut icon', type='/image/png', href='logo\icon.png')
+    link(href="manifest.webmanifest" type="image/webmanifest" rel="manifest")
+    link(href="https://fonts.gstatic.com" rel="preconnect")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap")
+    link(
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      rel="stylesheet"
+      )
+    link(
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js" 
+      type="module"
+    )
+    script(type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js")
+    script(nomodule src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.js")
+    link(href="css/general.css" rel="stylesheet")
+    link(href="css/style.css" rel="stylesheet")
+    link(href="css/queries.css" rel="stylesheet")
+    link(href="css/account.css" rel="stylesheet")
+    
+    // Add this block for page-specific styles
+    block styles
+    
+    script(src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js" defer="")
+    //- script(src="js/script.js" defer="")
+    //- script(src="js/toggleProfile.js" defer="")
+    //- script(type="module" src="js/supportAssistant.js")
+    //- script(src="js/chat.js" defer="")
+    //- script(src="js/chat.js" defer="")
+    title SentReader | #{title}
+  body
+    // HEADER
+    include _header
+
+    // CONTENT
+    block content
+
+    // FOOTER
+    include _footer
+
+     // Floating AI assistant mount point
+    div#support-assistant-root(data-assistant-root='')
+
+    //- layout.pug or index.pug
+    script(type="module" src="/dist/js/index.js")

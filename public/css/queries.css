@@ -237,6 +237,18 @@
     grid-template-columns: 1fr;
   }
 
+  .success__actions {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .success__actions .btn {
+    width: 100%;
+  }
+
   .btn,
   .btn:link,
   .btn:visited {
@@ -292,6 +304,9 @@
     height: 32rem;
     grid-row: 1;
     width: 100%;
+  }
+  .login-form {
+    padding: 4rem 3rem;
   }
 }
 

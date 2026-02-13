@@ -1,0 +1,47 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg Log into your account
+      form.form.form--login
+        .form__group
+          label.form__label(for='email') Email address
+          input#email.form__input(type='email', placeholder='you@example.com', required)
+        .form__group.ma-bt-md
+          label.form__label(for='password') Password
+          .password-wrapper(style="position:relative; display:flex; align-items:center;")
+            input#password.form__input(type='password', placeholder='••••••••', required, minlength='8', style='padding-right:2.5rem;')
+            button#togglePassword(type='button', tabindex='-1', aria-label='Show/Hide password', style='background:none; border:none; position:absolute; right:1rem; top:50%; transform:translateY(-50%); cursor:pointer; padding:0;')
+              svg.eye-show(width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24')
+                path(d='M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z')
+                circle(cx='12' cy='12' r='3')
+              svg.eye-hide(width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24' style='display:none')
+                path(d='M17.94 17.94A10.06 10.06 0 0 1 12 19C5 19 1 12 1 12a18.8 18.8 0 0 1 5.06-7.94M1 1l22 22')
+                path(d='M9.53 9.53A3 3 0 0 0 12 15 3 3 0 0 0 14.47 14.47')
+        .form__group
+          div
+           label.form__label(for='select-where') What is Your Role?
+           select#select-where.form__input(name='select-where' required='')
+             option(value='') Please choose one option:
+             option(value='admim') Admin
+             option(value='user') User
+        .form__group
+          button.btn.btn--green Login
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const pwInput = document.getElementById('password');
+      const toggleBtn = document.getElementById('togglePassword');
+      if (pwInput && toggleBtn) {
+        const eyeShow = toggleBtn.querySelector('.eye-show');
+        const eyeHide = toggleBtn.querySelector('.eye-hide');
+        toggleBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const isPwd = pwInput.type === 'password';
+          pwInput.type = isPwd ? 'text' : 'password';
+          if (eyeShow) eyeShow.style.display = isPwd ? 'none' : '';
+          if (eyeHide) eyeHide.style.display = isPwd ? '' : 'none';
+        });
+      }
+    });

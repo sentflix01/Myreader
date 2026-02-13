@@ -1,0 +1,14 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      .success-content
+        .success__icon 🎉
+        h2.heading-secondary.ma-bt-lg Email Verified Successfully!
+        p.success__message= msg
+        .success__actions
+          a.btn.btn--green(href='/login') Log in
+          if showHome
+            a.btn.btn--white(href='/') Go to Home
+

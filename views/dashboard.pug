@@ -1,0 +1,72 @@
+extends  base
+
+block content
+    section#dashboard.section-testimonials
+      .testimonials-container
+        //- span.subheading
+        h2.heading-secondary Once you try it, you can&apos;t go back
+        .testimonials
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Dave Bryson' src='img/customers/dave.jpg')
+            blockquote.testimonial-text
+              | &quot;SentReader is a total game-changer for my research! I upload long PDFs and reports, and it summarizes everything perfectly while letting me ask specific questions. Saves me hours every week&mdash;highly recommend for students and professionals!&quot;
+            p.testimonial-name &mdash; Dave Bryson
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Ben Hadley' src='img/customers/ben.jpg')
+            blockquote.testimonial-text
+              | &quot;As a busy professional, I love how easy SentReader makes reviewing documents. The AI chat is intuitive, answers accurately with citations, and the summaries are spot-on. Best PDF reader tool I&apos;ve tried!&quot;
+            p.testimonial-name &mdash; Ben Hadley
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Steve Miller' src='img/customers/steve.jpg')
+            blockquote.testimonial-text
+              | &quot;This tool has boosted my productivity big time. Chatting with multiple files at once and getting quick insights from complex reports is amazing. The interface is clean and fast&mdash;definitely my go-to AI reader now.&quot;
+            p.testimonial-name &mdash; Steve Miller
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Hannah Smith' src='img/customers/hannah.jpg')
+            blockquote.testimonial-text
+              | &quot;I was skeptical at first, but SentReader exceeded my expectations. Quick uploads, precise summaries, and the chat responses are helpful and cited. It&apos;s become essential for my daily work with reports and eBooks.&quot;
+            p.testimonial-name &mdash; Hannah Smith
+              .reviews__rating
+                each star in [1, 2, 3, 4, 5]
+                   svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
+                    use(xlink:href='/img/icons.svg#icon-star')
+      .gallery
+        figure.gallery-item
+          img(src='img/gallery/gallery-1.jpg' alt='Photo of beautifully\
+          arranged food')
+          // <figcaption>Caption</figcaption>
+        figure.gallery-item
+          img(src='img/gallery/gallery-2.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-3.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-4.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-5.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-6.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-7.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-8.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-9.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-10.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-11.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-12.jpg' alt='Photo of beautifully\
+          arranged food')
+
+        

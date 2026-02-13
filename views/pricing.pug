@@ -1,0 +1,130 @@
+extends  base
+
+block content
+    section#pricing.section-pricing
+      .container
+        //- span.subheading
+        h2.heading-secondary
+          | Read smarter without loosing your time
+      .container.grid.grid--3-cols.margin-bottom-md
+        .pricing-plan.pricing-plan--complete-free
+          header.complete-free
+            p.plan-name Free
+            p.plan-price
+              span /$
+              | 0
+            p.plan-text FOREVER
+          ul.list.list-free
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span 5 queries per day
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Files up to 10 MB
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Basic chat &amp; summaries
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Great for testing the waters
+            //
+              <li class="list-item">
+              <ion-icon class="list-icon" name="close-outline"></ion-icon>
+              <span>Premium level</span>
+              </li>
+          .plan-sing-up
+            a.btn.btn--full(href='#') Start Reading well
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-starter
+          header.plan-header
+            p.plan-name Starter
+            p.plan-price
+              span $
+              | 9
+            p.plan-text per month.(or $90/year &ndash; save 17%)
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span
+                | Everything in
+                strong Free
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span
+                | Up to 
+                strong 20,000 pages
+                |  total
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Advanced multi-file analysis &amp; citations
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Built for researchers and professionals
+          .plan-sing-up
+            a.btn.btn--full(href='#') Start Reading Good
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-enterprise
+          header.complete-enterprise
+            p.plan-name Enterprise
+            p.plan-price
+              span Custom pricing
+            p.plan-text
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span
+                strong Unlimited
+                |  scale
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span
+                | Team seats &amp; admin controls 
+                strong 20,000 pages
+                |  total
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Custom integrations &amp; dedicated support
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span Contact us for a personalized demo
+          .plan-sing-up
+            a.btn.btn--full(href='#') Custom Reading
+      .container.grid
+        aside.plan-details
+          span All plans are fast, secure, and ad-free. Cancel anytime with one click.
+      #contacts.container.grid.grid--4-cols
+        .feature
+          ion-icon.feature-icon(name='time')
+          p.feature-title Save Your Time!
+          ul.step-description
+            li
+              | No more endless scrolling, highlighting, or re-reading paragraphs to find what you need.
+            li
+              | Whether it&rsquo;s a 300-page report or a dense research paper, you get the insights you need in minutes instead of hours&mdash;freeing up your day for what matters most.
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='book-outline')
+          p.feature-title Read Smarter
+          ul.step-description
+            li Reading isn&rsquo;t just about speed; it&rsquo;s about understanding and retaining more.
+            li
+              | You walk away with deeper comprehension, better context, and smarter insights without the mental fatigue
+        .feature
+          ion-icon.feature-icon(name='help-outline')
+          p.feature-title Ask Questions
+          ul.step-description
+            li Turn passive reading into an active conversation.
+            li
+              | Upload your PDF, book, or report and simply ask anything:
+              br
+              | &ldquo;What are the main arguments in chapter 5?&rdquo;
+              br
+              |  &ldquo;Compare the results from these two studies.&rdquo;
+              br
+              |  &ldquo;Explain this technical section in simple terms.&rdquo;
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='checkbox-outline')
+          p.feature-title Be Productive
+          ul.step-description
+            li  Productivity isn&rsquo;t just doing more&mdash;it&rsquo;s achieving more with less effort.
+            li
+              | Students finish assignments faster. Professionals prepare for meetings in minutes. Researchers stay ahead without burnout.

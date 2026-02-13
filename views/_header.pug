@@ -1,0 +1,58 @@
+header.header
+  a(href="/")
+    img.logo(src="img/logos/sentreader remover.png" alt="SentReader logo")
+  nav.main-nav
+    video.hero-bg-video( src="img/video 7.mp4" autoplay muted loop playsinline )
+    ul.main-nav-list
+      li
+        a.main-nav-link(href="/chat") Chat
+      li
+        a.main-nav-link(href="/dashboard") Dashboard
+      li
+        a.main-nav-link(href="/pricing") Price
+      li
+        a.main-nav-link(href="/services") Services
+      li
+          a.main-nav-link(href="/feaures") Feaures
+      //- li
+      //-   a.main-nav-link(href="/contacts") Contacts
+      if user
+        li
+          //- a.main-nav-link(href="/profile") Profile
+          .profile-toggle-container
+            button#profileToggle.profile-toggle-btn
+              .user-avatar-small= user.name.split(' ').map(n => n[0]).join('').toUpperCase()
+              span.user-name-small= user.name.split(' ')[0]  
+              i.fas.fa-chevron-down.toggle-arrow
+            // Profile Dropdown
+            #profileDropdown.profile-dropdown
+              .profile-content  
+                .profile-header
+                  .profile-avatar-large= user.name.split(' ').map(word => word[0]).join('').toUpperCase()
+                  .profile-content-name
+                    .profile-name= user.name
+                    .profile-email= user.email
+                .profile-status
+                  span.status-badge.status-free= user.subscriptionTier
+                  span.status-badge.status-active= user.subscriptionStatus
+              .profile-actions
+                a#editProfile.action-item(href='/editProfile')
+                  .action-icon
+                    i.fas.fa-user-edit
+                  span.action-text Edit Profile
+                a#contact.action-item(href='/contact')
+                  .action-icon
+                    i.fas.fa-headset
+                  span.action-text Contact
+                a#logout.action-item(href='/logout')
+                  .action-icon
+                    i.fas.fa-sign-out-alt
+                  span.action-text Logout
+      else
+        a.main-nav-link(href="/login") Log in
+        a.main-nav-link(href="/signup") Sign up
+// Overlay to close dropdown when clicking outside
+#dropdownOverlay.dropdown-overlay
+button.btn-mobile-nav
+  ion-icon.icon-mobile-nav(name="menu-outline")
+  ion-icon.icon-mobile-nav(name="close-outline")
