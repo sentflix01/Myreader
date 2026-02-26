@@ -32,6 +32,7 @@ if (userDataForm)
     const email = document.getElementById('email').value;
     updateSettings({ name, email }, 'data');
   });
+import { initSupportAssistant } from './supportAssistant';
 
 if (userPasswordForm)
   userPasswordForm.addEventListener('submit', async (e) => {
@@ -51,4 +52,5 @@ if (userPasswordForm)
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
   });
+initSupportAssistant();
 // console.log('hello from parcel')
