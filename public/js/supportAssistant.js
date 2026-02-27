@@ -3,12 +3,12 @@ const QUICK_ACTIONS = [
   {
     label: 'Summarize this page',
     prompt:
-      'Summarize the key things on this Sentours page and tell me what I can do next.',
+      'Summarize the key things on this Sentreader page and tell me what I can do next.',
   },
   {
     label: 'Plan my trip',
     prompt:
-      'Help me choose a Sentours trip. Ask for my preferences if you need more info.',
+      'Help me choose a Sentreader trip. Ask for my preferences if you need more info.',
   },
   {
     label: 'Booking help',
@@ -17,7 +17,7 @@ const QUICK_ACTIONS = [
   },
   {
     label: 'Ask anything',
-    prompt: 'Hi Sentours assistant!',
+    prompt: 'Hi Sentreader assistant!',
   },
 ];
 
@@ -40,7 +40,7 @@ const buildUI = (root) => {
   const launcher = document.createElement('button');
   launcher.type = 'button';
   launcher.className = 'assistant-launcher';
-  launcher.setAttribute('aria-label', 'Open Sentours assistant');
+  launcher.setAttribute('aria-label', 'Open Sentreader assistant');
   launcher.textContent = '🤖';
 
   const panel = document.createElement('div');
@@ -53,7 +53,7 @@ const buildUI = (root) => {
 
   const heading = document.createElement('div');
   heading.innerHTML = `
-    <p class="assistant-panel__title">Sentours AI</p>
+    <p class="assistant-panel__title">Sentreader AI</p>
     <p class="assistant-panel__tagline">Need help? I can guide you.</p>
   `;
 
@@ -68,7 +68,7 @@ const buildUI = (root) => {
   const input = document.createElement('input');
   input.type = 'text';
   input.className = 'assistant-panel__input';
-  input.placeholder = 'Ask anything about Sentours...';
+  input.placeholder = 'Ask anything about Sentreader...';
   input.required = true;
 
   const quickWrap = document.createElement('div');
