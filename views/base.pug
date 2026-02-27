@@ -29,11 +29,6 @@ html(lang="en")
     block styles
     
     script(src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js" defer="")
-    //- script(src="js/script.js" defer="")
-    //- script(src="js/toggleProfile.js" defer="")
-    //- script(type="module" src="js/supportAssistant.js")
-    //- script(src="js/chat.js" defer="")
-    //- script(src="js/chat.js" defer="")
     title SentReader | #{title}
   body
     // HEADER
@@ -46,7 +41,8 @@ html(lang="en")
     include _footer
 
      // Floating AI assistant mount point
-    div#support-assistant-root(data-assistant-root='')
+    //- div#support-assistant-root(data-assistant-root='')
+    include _sentbot
 
     //- layout.pug or index.pug
     script(type="module" src="/dist/js/index.js")

@@ -86,6 +86,11 @@ exports.getSuccess = (req, res) => {
     title: 'Success',
   });
 };
+exports.getSentbot = (req, res) => {
+  res.status(200).render('sentbot', {
+    title: 'Success',
+  });
+};
 
 // exports.getAccount = (req, res) => {
 //   res.status(200).render('account', {
