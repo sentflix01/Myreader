@@ -1,5 +1,7 @@
 const User = require('../model/userModel');
 const Review = require('../model/reviewModel');
+const Document = require('../model/documentsModel');
+const Chat = require('../model/chatsModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getOverview = (req, res) => {
@@ -14,15 +16,86 @@ exports.getHero = (req, res) => {
   });
 };
 
-exports.getDashbord = async (req, res, next) => {
-  // 1) Fetch all reviews (or only those relevant to the logged-in user)
+exports.getDashbord = catchAsync(async (req, res, next) => {
+  // Fetch latest reviews plus platform-wide stats
+  const [reviews, documentsByType, usersByTier, engagementByModel, dashboardUsers] =
+    await Promise.all([
+      Review.find()
+        .populate('user', 'name photo')
+        .populate('chat', 'title')
+        .populate('document', 'originalFileName')
+        .sort('-createdAt')
+        .limit(10),
+      Document.aggregate([
+        {
+          $group: {
+            _id: '$fileType',
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { count: -1 } },
+      ]),
+      User.aggregate([
+        {
+          $group: {
+            _id: '$subscriptionTier',
+            count: { $sum: 1 },
+          },
+        },
+      ]),
+      Chat.aggregate([
+        {
+          $group: {
+            _id: '$aiModel',
+            users: { $addToSet: '$user' },
+          },
+        },
+      ]),
+      User.find()
+        .select(
+          'name email photo subscriptionTier subscriptionStatus documentsUploadedCount totalChatMessages lastActiveAt',
+        )
+        .sort('-createdAt')
+        .limit(50),
+    ]);
 
-  // 2) Render the dashboard with reviews
+  const totalDocuments = documentsByType.reduce(
+    (sum, doc) => sum + (doc.count || 0),
+    0,
+  );
+
+  const usersByTierMap = usersByTier.reduce((acc, tier) => {
+    acc[tier._id || 'unknown'] = tier.count;
+    return acc;
+  }, {});
+
+  const engagementModels = engagementByModel.map((m) => ({
+    model: m._id || 'unknown',
+    userCount: Array.isArray(m.users) ? m.users.length : 0,
+  }));
+
+  const findModelCount = (key) =>
+    engagementModels.find((m) => m.model === key)?.userCount || 0;
+
+  const engagementSummary = {
+    chatpdfUsers: findModelCount('chatpdf'),
+    sentbotUsers: findModelCount('sentbot'),
+    aiGenerationUsers: engagementModels.reduce((sum, m) => {
+      if (m.model === 'chatpdf' || m.model === 'sentbot') return sum;
+      return sum + m.userCount;
+    }, 0),
+  };
+
   res.status(200).render('dashboard', {
     title: 'Your Dashboard',
     reviews,
+    totalDocuments,
+    documentsByType,
+    usersByTier: usersByTierMap,
+    engagementSummary,
+    dashboardUsers,
   });
-};
+});
 
 exports.getChat = (req, res) => {
   res.status(200).render('chat', {
@@ -88,7 +161,7 @@ exports.getSuccess = (req, res) => {
 };
 exports.getSentbot = (req, res) => {
   res.status(200).render('sentbot', {
-    title: 'Success',
+    title: 'Sentbot',
   });
 };
 

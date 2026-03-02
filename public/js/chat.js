@@ -1,5 +1,5 @@
 /* eslint-disable */
-document.addEventListener('DOMContentLoaded', function () {
+export function initChat() {
   // DOM Elements - UPDATED with correct IDs from Pug template
   const newChatBtn = document.getElementById('newChatBtn');
   const uploadFileBtn = document.getElementById('uploadFileBtn');
@@ -438,4 +438,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initialize the chat list
   updateChatList();
-});
+};

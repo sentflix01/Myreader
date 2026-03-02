@@ -1,7 +1,7 @@
 /* eslint-disable */
 // Toggle profile dropdown
 // Note: header elements only exist when `user` is logged in.
-document.addEventListener('DOMContentLoaded', () => {
+export function initProfileToggle() {
   const profileToggle = document.getElementById('profileToggle');
   const profileDropdown = document.getElementById('profileDropdown');
   const dropdownOverlay = document.getElementById('dropdownOverlay');
@@ -61,4 +61,4 @@ document.addEventListener('DOMContentLoaded', () => {
       closeDropdown();
     }
   });
-});
+}
