@@ -36,27 +36,6 @@ block content
             p.delivered-text
               span 250,000+
               |  Files addressed last year!
-        .hero-img-box
-          .form-v3.w-form
-            form#email-form.form-6(name='email-form' data-name='Email Form' redirect='https://orion.file.ai/en/sign-up' data-redirect='https://orion.file.ai/en/sign-up' method='get' data-wf-page-id='689c9545a074282643a763c5' data-wf-element-id='3815e6ca-2841-3a3e-0277-812f2bd4f7a5' aria-label='Email Form' data-hs-cf-bound='true')
-              #form-textarea.form-textarea(data-v-app='')
-                .textarea-wrapper
-                  textarea
-                  span.placeholder
-                    | Create a chart showing the demographics of
-                    span.cursor
-              .button-container-form
-                // <a href="#" class="button-attach w-button"></a>
-                ion-icon.feature-icon(name='attach-outline')
-                //
-                  <ion-icon class="feature-icon" name="arrow-up-outline"></ion-icon>
-                  <input type="submit" data-wait="" class="button-arrow-up w-button" value="">
-                button.button-arrow-up(type='submit')
-                  ion-icon.feature-icon(name='arrow-up-outline')
-            .w-form-done(tabindex='-1' role='region' aria-label='Email Form success')
-              div Thank you! Your submission has been received!
-            .w-form-fail(tabindex='-1' role='region' aria-label='Email Form failure')
-              div Oops! Something went wrong while submitting the form.
           picture
             //
               <source srcset="img/hero.mp4" type="video/mp4" />
@@ -101,7 +80,7 @@ block content
             img(src='img/logos/the-new-york-times.png' alt='The New York Times logo')
             img(src='img/logos/forbes.png' alt='Forbes logo')
             img(src='img/logos/usa-today.png' alt='USA Today logo')
-    section#feaures.section-how
+    section#features.section-how
       .container
         span.subheading How it works
         h2.heading-secondary
@@ -395,7 +374,7 @@ block content
               ion-icon.list-icon(name='checkmark-outline')
               span Built for researchers and professionals
           .plan-sing-up
-            a.btn.btn--full(href='#') Start Reading Good
+            a.btn.btn--full(href='#' data-plan-tier='premium') Start Reading Good
         .pricing-plan.pricing-plan--complete.pricing-plan--complete-enterprise
           header.complete-enterprise
             p.plan-name Enterprise
@@ -421,7 +400,7 @@ block content
               ion-icon.list-icon(name='checkmark-outline')
               span Contact us for a personalized demo
           .plan-sing-up
-            a.btn.btn--full(href='#') Custom Reading
+            a.btn.btn--full(href='#' data-plan-tier='enterprise') Custom Reading
       .container.grid
         aside.plan-details
           span All plans are fast, secure, and ad-free. Cancel anytime with one click.

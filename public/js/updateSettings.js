@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios from 'axios';
 import { showAlert } from './alerts';
 
@@ -10,16 +9,21 @@ export const updateSettings = async (data, type) => {
         ? '/api/v1/users/updateMyPassword'
         : '/api/v1/users/updateMe';
 
-    const res = await axios({
+    const config = {
       method: 'PATCH',
       url,
-      data
-    });
+      data,
+    };
 
+    if (type === 'data' && data instanceof FormData) {
+      config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+
+    const res = await axios(config);
     if (res.data.status === 'success') {
       showAlert('success', `${type.toUpperCase()} updated successfully!`);
     }
   } catch (err) {
-    showAlert('error', err.response.data.message);
+    showAlert('error', err.response?.data?.message || 'Update failed.');
   }
 };

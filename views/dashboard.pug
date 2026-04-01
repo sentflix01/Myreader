@@ -6,47 +6,57 @@ block content
       .dashboard-header
         .dashboard-user
           if user
-            img.dashboard-user__photo(src=`/img/users/${user.photo}` alt=`${user.name}`)
+            img.dashboard-user__photo(src=`/img/users/${user.photo}` alt=user.name)
             .dashboard-user__info
               p.dashboard-user__welcome Welcome back,
               h2.heading-secondary.dashboard-user__name #{user.name}
           else
-            h2.heading-secondary Your dashboard
-            p.text-muted Sign in to see your recent activity.
+            .dashboard-user__info
+              p.dashboard-user__welcome Welcome to SentReader
+              h2.heading-secondary.dashboard-user__name Public Dashboard
 
         .dashboard-summary
-          .dashboard-card
-            p.dashboard-card__label Total reviews
-            h3.dashboard-card__value #{reviews && reviews.length ? reviews.length : 0}
-          .dashboard-card
-            p.dashboard-card__label Average rating
-            if reviews && reviews.length
-              - const avgRating = (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1);
-              h3.dashboard-card__value #{avgRating}
-            else
-              h3.dashboard-card__value -
-          .dashboard-card
-            p.dashboard-card__label Documents reviewed
-            if reviews && reviews.length
-              - const docCount = reviews.reduce((acc, r) => (r.document ? acc + 1 : acc), 0);
-              h3.dashboard-card__value #{docCount}
-            else
-              h3.dashboard-card__value 0
+          if user
+            .dashboard-card
+              p.dashboard-card__label Documents uploaded
+              h3.dashboard-card__value #{typeof myDocumentsCount !== 'undefined' ? myDocumentsCount : 0}
+            .dashboard-card
+              p.dashboard-card__label Chats started
+              h3.dashboard-card__value #{typeof myChatsCount !== 'undefined' ? myChatsCount : 0}
+            .dashboard-card
+              p.dashboard-card__label Reviews left
+              h3.dashboard-card__value #{typeof myReviewsCount !== 'undefined' ? myReviewsCount : 0}
+          else
+            .dashboard-card
+              p.dashboard-card__label Total Users
+              h3.dashboard-card__value #{publicStats.totalUsers}
+            .dashboard-card
+              p.dashboard-card__label Total Documents
+              h3.dashboard-card__value #{publicStats.totalDocuments}
+            .dashboard-card
+              p.dashboard-card__label Total Reviews
+              h3.dashboard-card__value #{publicStats.totalReviews}
 
-      if user
-        .dashboard-user-chart
-          h4.dashboard-chart__title Your activity overview
-          canvas#userStatsChart(width='360' height='140')
+      // Public charts (only pie chart for user tiers)
+      if !user
+        .dashboard-charts-row
+          .dashboard-chart-container
+            h4.dashboard-chart__title Users by Subscription Tier
+            canvas#publicPieChart(width='400' height='200')
+          // Bar chart removed
 
+      // Personal chart removed (no bar chart for user activity)
+
+    // Recent reviews table (for logged‑in users)
     section.section-dashboard-list
       .dashboard-list__header
         h3.heading-tertiary Recent reviews
-        if reviews && reviews.length
+        if user && reviews && reviews.length
           p.text-muted Showing #{reviews.length} latest reviews
         else
           p.text-muted No reviews yet. Once you start using SentReader, your recent activity will appear here.
 
-      if reviews && reviews.length
+      if user && reviews && reviews.length
         .dashboard-table-wrapper
           table.dashboard-table
             thead
@@ -79,7 +89,38 @@ block content
                   td
                     span #{review.createdAt ? review.createdAt.toDateString ? review.createdAt.toDateString() : review.createdAt : '-'}
 
-    // Admin-only analytics (numbers only, no inline JS)
+    // Recent chats (for logged‑in users)
+    if user
+      section.section-dashboard-list
+        .dashboard-list__header
+          h3.heading-tertiary Recent chats
+          if recentChats && recentChats.length
+            p.text-muted Showing #{recentChats.length} latest chats
+          else
+            p.text-muted No chats yet. Start a chat from the Chat page.
+
+        if recentChats && recentChats.length
+          .dashboard-table-wrapper
+            table.dashboard-table
+              thead
+                tr
+                  th Uploaded document
+                  th Last activity
+                  th Messages
+                  th Open
+              tbody
+                each c in recentChats
+                  tr
+                    td
+                      span #{c.title || 'Chat'}
+                    td
+                      span #{c.updatedAt ? c.updatedAt.toDateString ? c.updatedAt.toDateString() : c.updatedAt : '-'}
+                    td
+                      span #{typeof c.messageCount !== 'undefined' ? c.messageCount : (c.messages ? c.messages.length : 0)}
+                    td
+                      a(href="/chat") Open chat
+
+    // Admin analytics (only pie chart)
     if user && user.role === 'admin'
       section.section-dashboard-admin
         .dashboard-list__header
@@ -111,3 +152,22 @@ block content
                 li
                   span Enterprise: 
                   strong #{usersByTier && usersByTier.enterprise ? usersByTier.enterprise : 0}
+        .dashboard-charts-row
+          .dashboard-chart-container
+            h4.dashboard-chart__title Users by Tier (Pie)
+            canvas#adminPieChart(width='400' height='200')
+          // Bar chart removed
+
+  script.
+    window.__dashboardData = {
+      user: !{JSON.stringify(user || null)},
+      reviews: !{JSON.stringify(reviews || [])},
+      publicStats: !{JSON.stringify(publicStats || { totalUsers:0, totalDocuments:0, totalReviews:0 })},
+      documentsByType: !{JSON.stringify(documentsByType || [])},
+      usersByTier: !{JSON.stringify(usersByTier || { free:0, premium:0, enterprise:0 })},
+      myDocumentsCount: !{JSON.stringify(typeof myDocumentsCount !== 'undefined' ? myDocumentsCount : 0)},
+      myChatsCount: !{JSON.stringify(typeof myChatsCount !== 'undefined' ? myChatsCount : 0)},
+      myReviewsCount: !{JSON.stringify(typeof myReviewsCount !== 'undefined' ? myReviewsCount : 0)}
+    };
+
+  script(src="/js/dashboard.js")

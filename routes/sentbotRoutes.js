@@ -1,8 +1,12 @@
 const express = require('express');
-const viewsController = require('../controllers/viewsController');
+const authController = require('../controllers/authController');
+const sentbotController = require('../controllers/sentbotController');
 
 const router = express.Router();
 
-router.post('/sentbot', viewsController.getSentbot);
+router.use(authController.protect);
+
+router.post('/respond', sentbotController.respond);
 
 module.exports = router;
+

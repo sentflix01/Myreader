@@ -101,6 +101,33 @@
   flex: 1;
   padding: 7rem 0;
 }
+.user-view__section {
+  display: none;
+}
+.user-view__section--active {
+  display: block;
+}
+.subscription-summary,
+.billing-summary {
+  background-color: #f9fafb;
+  border-radius: 1.2rem;
+  padding: 2rem 2.4rem;
+  margin-bottom: 2.4rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.subscription-summary p,
+.billing-summary p {
+  font-size: 1.5rem;
+  color: #4b5563;
+  margin-bottom: 0.8rem;
+}
+
+.subscription-summary strong,
+.billing-summary strong {
+  color: #0f172a;
+}
 .user-view__form-container {
   max-width: 68rem;
   margin: 0 auto;

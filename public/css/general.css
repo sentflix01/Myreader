@@ -295,3 +295,31 @@ body {
 strong {
   font-weight: 500;
 }
+
+/* Alerts */
+.alert {
+  position: fixed;
+  top: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  max-width: min(92vw, 64rem);
+  padding: 1.2rem 1.6rem;
+  border-radius: 10px;
+
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+.alert--success {
+  background: #16a34a; /* green */
+}
+
+.alert--error {
+  background: #dc2626; /* red */
+}

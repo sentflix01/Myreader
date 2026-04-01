@@ -1,11 +1,36 @@
 const mongoose = require('mongoose');
 
+const chatMessageSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      enum: ['user', 'assistant'],
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false },
+);
+
 const chatSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: true,
+    },
+    // Maps a browser-local chat (localStorage) to a server chat for hybrid sync.
+    clientId: {
+      type: String,
+      trim: true,
     },
     title: String,
     description: String,
@@ -31,6 +56,10 @@ const chatSchema = new mongoose.Schema(
     contextWindow: {
       type: Number,
       default: 10,
+    },
+    messages: {
+      type: [chatMessageSchema],
+      default: [],
     },
     // 📊 RATING FIELDS (ADD THESE)
     ratingsAverage: {
@@ -70,5 +99,7 @@ const chatSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+chatSchema.index({ user: 1, clientId: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('Chat', chatSchema);

@@ -1,8 +1,8 @@
 extends base
 
-mixin navItem(link, text, icon, active)
+mixin navItem(section, text, icon, active)
   li(class=`${active ? 'side-nav--active' : ''}`)
-    a(href=`${link}`)
+    a(href='#', data-section=section)
       svg
         use(xlink:href=`img/icons.svg#icon-${icon}`)
       | #{text}
@@ -12,50 +12,141 @@ block content
     .user-view
       nav.user-view__menu
         ul.side-nav
-          +navItem('#','Settings', 'settings', true)
-          //- +navItem('/my-tours','My bookings', 'briefcase')
-          +navItem('#','My reviews', 'star')
-          //- +navItem('#','Billing', 'credit-card')
+          +navItem('profile','Edit Profile', 'settings', true)
+          +navItem('subscription','Subscription', 'briefcase')
+          +navItem('reviews','My reviews', 'star')
+          +navItem('billing','Billing', 'credit-card')
 
         - if (user.role === 'admin')
           .admin-nav
             h5.admin-nav__heading Admin
             ul.side-nav
-              +navItem('#','Manage users', 'users')
-              +navItem('#','Manage reviews', 'star')
-              //- +navItem('#','Manage bookings ', 'briefcase')
+              +navItem('manage-users','Manage users', 'users')
+              +navItem('manage-reviews','Manage reviews', 'star')
+              //- +navItem('manage-bookings','Manage bookings ', 'briefcase')
 
       .user-view__content
-        .user-view__form-container
-          h2.heading-secondary.ma-bt-md Your account settings
-          //- WITHOUT API
-          //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
-          //- WITH API
-          form.form.form-user-data
-            .form__group
-              label.form__label(for='name') Name
-              input#name.form__input(type='text', value=`${user.name}`, required, name='name')
-            .form__group.ma-bt-md
-              label.form__label(for='email') Email address
-              input#email.form__input(type='email', value=`${user.email}`, required,name='email')
-            .form__group.form__photo-upload
-              img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
-              input.form__upload(type='file', accept='image/*',id='photo', name='photo')
-              label(for='photo') choose new photo
-            .form__group.right
-              button.btn.btn--small.btn--green Save settings
-        .line &nbsp;
-        .user-view__form-container
-          h2.heading-secondary.ma-bt-md Password change
-          form.form.form-user-password
-            .form__group
-              label.form__label(for='password-current') Current password
-              input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
-            .form__group
-              label.form__label(for='password') New password
-              input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
-            .form__group.ma-bt-lg
-              label.form__label(for='password-confirm') Confirm password
-              input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
-            .form__group.right
-              button.btn.btn--small.btn--green.btn--save-password Save password
+        // Profile section (default)
+        .user-view__section.user-view__section--active(data-section-content='profile')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md Your account settings
+            //- WITHOUT API
+            //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
+            //- WITH API
+            form.form.form-user-data
+              .form__group
+                label.form__label(for='name') Name
+                input#name.form__input(type='text', value=`${user.name}`, required, name='name')
+              .form__group.ma-bt-md
+                label.form__label(for='email') Email address
+                input#email.form__input(type='email', value=`${user.email}`, required,name='email')
+              .form__group.form__photo-upload
+                img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
+                input.form__upload(type='file', accept='image/*',id='photo', name='photo')
+                label(for='photo') choose new photo
+              .form__group.right
+                button.btn.btn--small.btn--green Save settings
+          .line &nbsp;
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md Password change
+            form.form.form-user-password
+              .form__group
+                label.form__label(for='password-current') Current password
+                input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group
+                label.form__label(for='password') New password
+                input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group.ma-bt-lg
+                label.form__label(for='password-confirm') Confirm password
+                input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group.right
+                button.btn.btn--small.btn--green.btn--save-password Save password
+
+        // Subscription section
+        .user-view__section(data-section-content='subscription')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md Subscription
+            if user
+              .subscription-summary
+                p
+                  | Current plan: 
+                  strong #{user.subscriptionTier || 'free'}
+                p
+                  | Status: 
+                  strong #{user.subscriptionStatus || 'pending'}
+                if user.trialEndsAt
+                  p
+                    | Trial ends: 
+                    strong #{user.trialEndsAt.toDateString ? user.trialEndsAt.toDateString() : user.trialEndsAt}
+                if user.currentPeriodEnd
+                  p
+                    | Current period ends: 
+                    strong #{user.currentPeriodEnd.toDateString ? user.currentPeriodEnd.toDateString() : user.currentPeriodEnd}
+              .form__group.ma-bt-md
+                p Choose a plan to upgrade your account:
+              .form__group
+                button.btn.btn--small.btn--green(type='button', data-plan-tier='premium') Upgrade to Premium
+                button.btn.btn--small.btn--green(type='button', data-plan-tier='enterprise', style='margin-left:1rem;') Upgrade to Enterprise
+            else
+              p Please log in to view your subscription.
+
+        // My reviews section
+        .user-view__section(data-section-content='reviews')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md My reviews
+            if accountReviews && accountReviews.length
+              .dashboard-table-wrapper
+                table.dashboard-table
+                  thead
+                    tr
+                      th Document
+                      th Chat
+                      th Rating
+                      th Date
+                      th Review
+                  tbody
+                    each review in accountReviews
+                      tr
+                        td
+                          if review.document
+                            span #{review.document.originalFileName}
+                          else
+                            span —
+                        td
+                          if review.chat
+                            span #{review.chat.title}
+                          else
+                            span —
+                        td
+                          span #{review.rating || '-'}
+                        td
+                          span #{review.createdAt ? (review.createdAt.toDateString ? review.createdAt.toDateString() : review.createdAt) : '-'}
+                        td
+                          span #{review.review}
+            else
+              p You have not submitted any reviews yet.
+
+        // Billing section
+        .user-view__section(data-section-content='billing')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md Billing
+            if user
+              p
+                | Current plan: 
+                strong #{user.subscriptionTier || 'free'}
+              p
+                | Status: 
+                strong #{user.subscriptionStatus || 'pending'}
+              p
+                | Active Stripe subscription: 
+                strong #{user.stripeSubscriptionId ? 'Yes' : 'No'}
+              if user.currentPeriodEnd
+                p
+                  | Next billing date: 
+                  strong #{user.currentPeriodEnd.toDateString ? user.currentPeriodEnd.toDateString() : user.currentPeriodEnd}
+              .form__group.ma-bt-md
+                a.btn.btn--small.btn--green(href='/pricing') View pricing plans
+              .form__group
+                a.btn.btn--small.btn--green(href='/services') Contact support
+            else
+              p Please log in to view your billing information.

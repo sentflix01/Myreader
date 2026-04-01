@@ -8,7 +8,6 @@
 /* importing Google Fonts - inter */
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
 
-
 #chatbot-toggler {
   position: fixed;
   bottom: 30px;
@@ -377,7 +376,6 @@ body.show-emoji-picker em-emoji-picker {
     opacity: 0;
   }
 }
-
 
 /* --------------------------------------------------
  Support Assistant Widget
@@ -1961,8 +1959,10 @@ input.w-button {
 .status-badge {
   padding: 0.8rem 1.4rem;
   border-radius: 1rem;
-  font-size: 18px;
+  font-size: 1.4rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
 }
 
 .status-free {
@@ -1973,6 +1973,30 @@ input.w-button {
 .status-active {
   background-color: #dbeafe;
   color: #1e40af;
+}
+
+.status-premium {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-enterprise {
+  background-color: #e0f2fe;
+  color: #075985;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-pending {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.profile-status__icon {
+  margin-right: 0.6rem;
 }
 
 .profile-actions {
@@ -2492,6 +2516,37 @@ input.w-button {
 
 .bar-inner--tertiary {
   background-color: #f97316;
+}
+
+/* Dashboard charts row and containers */
+.dashboard-charts-row {
+  max-width: 120rem;
+  margin: 3.2rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.4rem;
+  padding: 0 1.6rem;
+}
+
+.dashboard-chart-container {
+  background: #ffffff;
+  border-radius: 1.2rem;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard-chart-container h4 {
+  margin-bottom: 1.6rem;
+  color: #0f172a;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.dashboard-chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 250px;
 }
 
 @media (max-width: 900px) {

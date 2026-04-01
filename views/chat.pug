@@ -1,34 +1,44 @@
 extends base
 
 block content
-  // Include Font Awesome and chat.css directly in content
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
-  
   
   main.chat-main-section
     .chat-container
-      // Sidebar
-      aside.chat-sidebar
-        .chat-logo
-          h1
-            i.fas.fa-comment-dots
-            | SentReader
-        .chat-try-free
-          a.chat-try-btn(href="#cta") Try for free
-        
-        .recent-chats
-          h3 Recent Chats
-          ul.chat-history-list#chatHistoryList
-            li.chat-history-item
-              i.fas.fa-comment
-              div
-                .chat-history-name No chats available
-        
+      // Left Sidebar – Document Navigation
+      aside.chat-sidebar.chat-sidebar-left#leftSidebar
+        .sidebar-left-head
+          span.sidebar-doc-title No Document
+          button#sidebarFileBtn(type="button" title="Table of Contents")
+            i.fas.fa-file-alt
+          button#sidebarFolderBtn(type="button" title="Documents")
+            i.fas.fa-folder
+        .sidebar-left-body
+          .sidebar-view.toc-view#tocView
+          .sidebar-view.docs-view#docsView(style="display:none")
+      
       // Main Chat Area
       section.main-chat-area
         .chat-area-header
+          .header-left
           h2#chatTitle New Chat
-          .chat-header-actions
+          .header-right
+            .panel-icon-group
+              // Left panel icon: highlighted bar on the LEFT side
+              button#toggleLeftSidebar.sidebar-toggle.panel-icon-btn(title="Toggle left panel")
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="1" y="1" width="6" height="16" rx="2.5" fill="currentColor")
+              // Right panel icon: highlighted bar on the RIGHT side
+              button#toggleRightSidebar.sidebar-toggle.panel-icon-btn(title="Toggle right panel")
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="11" y="1" width="6" height="16" rx="2.5" fill="currentColor")
+              // Bottom panel icon: highlighted bar on the BOTTOM
+              button#toggleBottomPanel.sidebar-toggle.panel-icon-btn(title="Toggle bottom panel")
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="1" y="11" width="16" height="6" rx="2.5" fill="currentColor")
             button#newChatBtn.new-chat-btn
               i.fas.fa-plus
               | New Chat
@@ -43,9 +53,6 @@ block content
               i.fas.fa-comments
             h3 No Chats Available
             p Please upload a file to start a new chat. SentReader can process documents, images, and other files to help you analyze and discuss content.
-            
-            //- .chat-welcome-cta
-            //-   a.chat-welcome-btn(href="#cta") Try for free
           .chat-upload   
             .chat-upload-area#chatUploadArea
               .chat-upload-icon
@@ -61,42 +68,57 @@ block content
                 span.file-type-badge TXT
                 span.file-type-badge JPG/PNG
                 span.file-type-badge CSV
-            .hero-img-box
-              .form-v3.w-form
-                form#email-form(
-                  name="email-form" 
-                  data-name="Email Form" 
-                  redirect="https://orion.file.ai/en/sign-up" 
-                  data-redirect="https://orion.file.ai/en/sign-up" 
-                  method="get" 
-                  class="form-6" 
-                  data-wf-page-id="689c9545a074282643a763c5" 
-                  data-wf-element-id="3815e6ca-2841-3a3e-0277-812f2bd4f7a5" 
-                  aria-label="Email Form" 
-                  data-hs-cf-bound="true"
-                )
-                  #form-textarea.form-textarea(data-v-app="")
-                    .textarea-wrapper
-                      textarea
-                      span.placeholder
-                        | Create a chart showing the demographics of
-                        span.cursor
-                  .chat-button-container-form
-                    //- <a href="#" class="button-attach w-button"></a>
-                    ion-icon.chat-upload-feature-icon(name="attach-outline")
-                    //- <ion-icon class="feature-icon" name="arrow-up-outline"></ion-icon>
-                    //- <input type="submit" data-wait="" class="button-arrow-up w-button" value="">
-                    button.chat-button-arrow-up(type="submit")
-                      ion-icon.chat-feature-icon(name="arrow-up-outline")
-                
-                .w-form-done(tabindex="-1" role="region" aria-label="Email Form success")
-                  div Thank you! Your submission has been received!
-                
-                .w-form-fail(tabindex="-1" role="region" aria-label="Email Form failure")
-                  div Oops! Something went wrong while submitting the form.
+
+        // Bottom Panel – replaces .chat-input-container
+        #bottomPanel.bottom-panel
+          .bottom-panel-tabs
+            button.bottom-tab.bottom-tab-active(type="button" data-tab="chat") CHAT
+            button.bottom-tab(type="button" data-tab="error") ERROR
+            button.bottom-tab(type="button" data-tab="token") TOKEN USED
+            button.bottom-tab(type="button" data-tab="model") MODEL USED
+            button.bottom-tab(type="button" data-tab="rag") RAG INFO
+            button.bottom-tab(type="button" data-tab="usage") USAGE LIMIT
+            button.bottom-tab(type="button" data-tab="subscription") SUBSCRIPTION
+            button#closeBottomPanel.bottom-panel-close(type="button" title="Close panel")
+              i.fas.fa-times
+          .bottom-panel-body
+            .bottom-panel-content.bottom-content-active(data-content="chat")
+              form.chat-form
+                textarea.message-input(placeholder="Type your message..." required)
+                .chat-controls
+                  button#emoji-picker-btn(type="button")
+                    i.fas.fa-face-smile
+                  button#send-message-btn(type="submit")
+                    i.fas.fa-paper-plane
+            .bottom-panel-content(data-content="error")
+            .bottom-panel-content(data-content="token")
+            .bottom-panel-content(data-content="model")
+            .bottom-panel-content(data-content="rag")
+            .bottom-panel-content(data-content="usage")
+            .bottom-panel-content(data-content="subscription")
+
+      // Right Sidebar – Upload History & Conversation Topics
+      aside.chat-sidebar.chat-sidebar-right#rightSidebar
+        .chat-logo
+          h2
+            i.fas.fa-history
+            | History
+        // Upload History Section
+        .upload-history
+          .chat-section-header
+            h3 Upload History
+            button#deleteAllUploadsBtn.chat-action-btn(type="button" title="Delete all uploads") Delete all
+          ul.chat-history-list#uploadHistoryList
+            li.chat-history-item
+              i.fas.fa-file-upload
+              div
+                .chat-history-name No uploads yet
         
-        .chat-input-container#chatInputContainer
-          .message-input-wrapper
-            textarea#messageInput.chat-message-input(placeholder="Type your message here...")
-            button#sendMessageBtn.send-message-btn
-              i.fas.fa-paper-plane
+        // Conversation Topics Section
+        .conversation-topics
+          h3 Conversation Topics
+          ul.chat-history-list#conversationTopicsList
+            li.chat-history-item
+              i.fas.fa-tag
+              div
+                .chat-history-name No topics yet

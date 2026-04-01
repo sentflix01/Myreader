@@ -24,8 +24,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'user'],
-      default: 'user',
+      enum: ['Admin', 'User'],
+      default: 'User',
     },
     subscriptionTier: {
       type: String,
@@ -73,6 +73,11 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     subscriptionId: mongoose.Schema.ObjectId,
+    stripeCustomerId: String,
+    stripeSubscriptionId: String,
+    stripePriceId: String,
+    trialEndsAt: Date,
+    currentPeriodEnd: Date,
     storageLimit: {
       type: Number,
       default: 1024 * 1024 * 1024, // 1GB

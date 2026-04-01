@@ -3,7 +3,9 @@ extends base
 block content
   .login-form
     h2.heading-secondary Sign Up for an Account
-    form.form.form--signup(autocomplete="off")
+    form.form.form--signup(autocomplete="off", method="POST")
+      if typeof next !== 'undefined' && next
+        input(type="hidden", name="next", id="next", value=next)
       .form__group
         label.form__label(for="name") Name
         input.form__input#name(type="text", placeholder="Enter your name", name="name", required)
@@ -38,6 +40,13 @@ block content
         
       .form__group
         button.btn.btn--green(type="submit") Sign Up
+
+      .form__group
+        p
+          | Already have an account?
+          -
+            const nextQuery = typeof next !== 'undefined' && next ? `?next=${encodeURIComponent(next)}` : '';
+          a(href=`/login${nextQuery}`)  Log in
 
   script.
     // Improved: support multiple toggle-password buttons for all password fields

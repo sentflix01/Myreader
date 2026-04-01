@@ -1,116 +1,142 @@
-import { login, logout } from './login';
 import { initChat } from './chat';
+import { initBilling } from './billing';
 import { initSentBot } from './sentbot';
 import { initProfileToggle } from './toggleProfile';
+import { initAccountTabs } from './accountTabs';
+import { initSidebarToggle } from './sidebarToggle';
+import { initBottomPanel } from './bottomPanel';
+import { login, logout } from './login';
+import { signup } from './signup';
 import { updateSettings } from './updateSettings';
-// import { initSupportAssistant } from './supportAssistant';
-
-// DOM ELEMENTS
-const loginForm = document.querySelector('.form--login');
-const logOutBtn = document.getElementById('logout');
-// const ditProfile = document.getElementById('ditProfile');
-const userDataForm = document.querySelector('.form-user-data');
-const userPasswordForm = document.querySelector('.form-user-password');
-const yearEl = document.querySelector('.year');
-const currentYear = new Date().getFullYear();
-const btnNavEl = document.querySelector('.btn-mobile-nav');
-const headerEl = document.querySelector('.header');
-const allLinks = document.querySelectorAll('a:link');
 
 document.addEventListener('DOMContentLoaded', () => {
+  initProfileToggle();
+  initAccountTabs();
+  initSidebarToggle();
+  initBottomPanel();
+
+  // Features
   initChat();
   initSentBot();
-  initProfileToggle();
+  initBilling();
+
+  // Site shell helpers
+  const yearEl = document.querySelector('.year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  const btnNavEl = document.querySelector('.btn-mobile-nav');
+  const headerEl = document.querySelector('.header');
+  if (btnNavEl && headerEl) {
+    btnNavEl.addEventListener('click', () => headerEl.classList.toggle('nav-open'));
+  }
+
+  const allLinks = document.querySelectorAll('a:link');
+  allLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      if (href === '#') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (href.startsWith('#')) {
+        e.preventDefault();
+        const sectionEl = document.querySelector(href);
+        if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      if (href.startsWith('#') && link.classList.contains('main-nav-link')) {
+        headerEl?.classList.toggle('nav-open');
+      }
+    });
+  });
+
+  // Auth + user settings wiring (Jonas-style)
+  const loginForm = document.querySelector('.form--login');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email')?.value;
+      const password = document.getElementById('password')?.value;
+      const nextInput = document.getElementById('next');
+      const nextPath = nextInput && nextInput.value ? nextInput.value : undefined;
+      login(email, password, nextPath);
+    });
+  }
+
+  const signupForm = document.querySelector('.form--signup');
+  if (signupForm) {
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name')?.value;
+      const email = document.getElementById('email')?.value;
+      const password = document.getElementById('password')?.value;
+      const passwordConfirm = document.getElementById('passwordConfirm')?.value;
+      const button = signupForm.querySelector('button[type="submit"]');
+      const nextInput = document.getElementById('next');
+      const nextPath = nextInput && nextInput.value ? nextInput.value : undefined;
+      signup(name, email, passwordConfirm, passwordConfirm, button, nextPath);
+    });
+  }
+
+  const logOutBtn = document.getElementById('logout');
+  if (logOutBtn) {
+    logOutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  }
+
+  const userDataForm = document.querySelector('.form-user-data');
+  if (userDataForm) {
+    userDataForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name')?.value;
+      const email = document.getElementById('email')?.value;
+      const photoInput = document.getElementById('photo');
+      const form = new FormData();
+      form.append('name', name);
+      form.append('email', email);
+      if (photoInput?.files?.[0]) form.append('photo', photoInput.files[0]);
+      updateSettings(form, 'data');
+    });
+  }
+
+  const userPasswordForm = document.querySelector('.form-user-password');
+  if (userPasswordForm) {
+    userPasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.querySelector('.btn--save-password');
+      if (btn) btn.textContent = 'Updating...';
+
+      const passwordCurrent = document.getElementById('password-current')?.value;
+      const password = document.getElementById('password')?.value;
+      const passwordConfirm = document.getElementById('password-confirm')?.value;
+      await updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
+
+      if (btn) btn.textContent = 'Save password';
+      const currentEl = document.getElementById('password-current');
+      const passEl = document.getElementById('password');
+      const confirmEl = document.getElementById('password-confirm');
+      if (currentEl) currentEl.value = '';
+      if (passEl) passEl.value = '';
+      if (confirmEl) confirmEl.value = '';
+    });
+  }
+
+  // Flex-gap check
+  (function checkFlexGap() {
+    const flex = document.createElement('div');
+    flex.style.display = 'flex';
+    flex.style.flexDirection = 'column';
+    flex.style.rowGap = '1px';
+    flex.appendChild(document.createElement('div'));
+    flex.appendChild(document.createElement('div'));
+    document.body.appendChild(flex);
+    const isSupported = flex.scrollHeight === 1;
+    flex.parentNode.removeChild(flex);
+    if (!isSupported) document.body.classList.add('no-flexbox-gap');
+  })();
 });
 
-// DELEGATION
-if (loginForm)
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    login(email, password);
-  });
-
-if (logOutBtn) {
-  logOutBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // 🛑 Stop the browser from navigating to "/logout"
-    logout();
-  });
-}
-
-if (userDataForm)
-  userDataForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    updateSettings({ name, email }, 'data');
-  });
-
-if (userPasswordForm)
-  userPasswordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    document.querySelector('.btn--save-password').textContent = 'Updating...';
-    const passwordCurrent = document.getElementById('password-current').value;
-    const password = document.getElementById('password').value;
-    const passwordConfirm = document.getElementById('password-confirm').value;
-    await updateSettings(
-      { passwordCurrent, password, passwordConfirm },
-      'password',
-    );
-
-    document.querySelector('.btn--save-password').textContent = 'Save password';
-    document.getElementById('password-current').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('password-confirm').value = '';
-  });
-// initSupportAssistant();
 // console.log('hello from parcel')
-
-yearEl.textContent = currentYear;
-btnNavEl.addEventListener('click', function () {
-  headerEl.classList.toggle('nav-open');
-});
-allLinks.forEach(function (link) {
-  link.addEventListener('click', function (e) {
-    const href = link.getAttribute('href');
-
-    if (!href) return;
-
-    // Handle in-page navigation links only
-    if (href === '#') {
-      // Scroll back to top
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    } else if (href.startsWith('#')) {
-      // Scroll to other sections
-      e.preventDefault();
-      const sectionEl = document.querySelector(href);
-      if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Close mobile navigation only for hash-based main nav links
-    if (href.startsWith('#') && link.classList.contains('main-nav-link'))
-      headerEl.classList.toggle('nav-open');
-  });
-});
-function checkFlexGap() {
-  var flex = document.createElement('div');
-  flex.style.display = 'flex';
-  flex.style.flexDirection = 'column';
-  flex.style.rowGap = '1px';
-
-  flex.appendChild(document.createElement('div'));
-  flex.appendChild(document.createElement('div'));
-
-  document.body.appendChild(flex);
-  var isSupported = flex.scrollHeight === 1;
-  flex.parentNode.removeChild(flex);
-  // console.log(isSupported);
-
-  if (!isSupported) document.body.classList.add('no-flexbox-gap');
-}
-checkFlexGap();

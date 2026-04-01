@@ -16,86 +16,77 @@ exports.getHero = (req, res) => {
   });
 };
 
-exports.getDashbord = catchAsync(async (req, res, next) => {
-  // Fetch latest reviews plus platform-wide stats
-  const [reviews, documentsByType, usersByTier, engagementByModel, dashboardUsers] =
-    await Promise.all([
-      Review.find()
-        .populate('user', 'name photo')
-        .populate('chat', 'title')
+exports.getDashboard = async (req, res, next) => {
+  try {
+    const user = res.locals.user; // from isLoggedIn middleware
+    let reviews = [];
+    let totalDocuments, documentsByType, usersByTier, publicStats;
+    let myDocumentsCount, myChatsCount, myReviewsCount;
+    let recentDocuments, recentChats;
+
+    // If user is logged in, get their per-user stats and recent activity
+    if (user) {
+      reviews = await Review.find({ user: user.id })
+        .populate('user', 'name')
         .populate('document', 'originalFileName')
+        .populate('chat', 'title')
         .sort('-createdAt')
-        .limit(10),
-      Document.aggregate([
-        {
-          $group: {
-            _id: '$fileType',
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { count: -1 } },
-      ]),
-      User.aggregate([
-        {
-          $group: {
-            _id: '$subscriptionTier',
-            count: { $sum: 1 },
-          },
-        },
-      ]),
-      Chat.aggregate([
-        {
-          $group: {
-            _id: '$aiModel',
-            users: { $addToSet: '$user' },
-          },
-        },
-      ]),
-      User.find()
-        .select(
-          'name email photo subscriptionTier subscriptionStatus documentsUploadedCount totalChatMessages lastActiveAt',
-        )
+        .limit(10);
+
+      myDocumentsCount = await Document.countDocuments({ user: user.id });
+      myChatsCount = await Chat.countDocuments({ user: user.id });
+      myReviewsCount = await Review.countDocuments({ user: user.id });
+
+      recentDocuments = await Document.find({ user: user.id })
         .sort('-createdAt')
-        .limit(50),
+        .limit(5);
+      recentChats = await Chat.find({ user: user.id }).sort('-createdAt').limit(5);
+    }
+
+    // Aggregated stats (always needed for public and admin)
+    totalDocuments = await Document.countDocuments();
+    documentsByType = await Document.aggregate([
+      { $group: { _id: '$fileType', count: { $sum: 1 } } },
     ]);
 
-  const totalDocuments = documentsByType.reduce(
-    (sum, doc) => sum + (doc.count || 0),
-    0,
-  );
+    // User counts by subscription tier – adjust field names as per your schema
+    const freeCount = await User.countDocuments({ subscriptionTier: 'free' });
+    const premiumCount = await User.countDocuments({
+      subscriptionTier: 'premium',
+    });
+    const enterpriseCount = await User.countDocuments({
+      subscriptionTier: 'enterprise',
+    });
+    usersByTier = {
+      free: freeCount,
+      premium: premiumCount,
+      enterprise: enterpriseCount,
+    };
 
-  const usersByTierMap = usersByTier.reduce((acc, tier) => {
-    acc[tier._id || 'unknown'] = tier.count;
-    return acc;
-  }, {});
+    publicStats = {
+      totalUsers: await User.countDocuments(),
+      totalDocuments,
+      totalReviews: await Review.countDocuments(),
+    };
 
-  const engagementModels = engagementByModel.map((m) => ({
-    model: m._id || 'unknown',
-    userCount: Array.isArray(m.users) ? m.users.length : 0,
-  }));
-
-  const findModelCount = (key) =>
-    engagementModels.find((m) => m.model === key)?.userCount || 0;
-
-  const engagementSummary = {
-    chatpdfUsers: findModelCount('chatpdf'),
-    sentbotUsers: findModelCount('sentbot'),
-    aiGenerationUsers: engagementModels.reduce((sum, m) => {
-      if (m.model === 'chatpdf' || m.model === 'sentbot') return sum;
-      return sum + m.userCount;
-    }, 0),
-  };
-
-  res.status(200).render('dashboard', {
-    title: 'Your Dashboard',
-    reviews,
-    totalDocuments,
-    documentsByType,
-    usersByTier: usersByTierMap,
-    engagementSummary,
-    dashboardUsers,
-  });
-});
+    res.status(200).render('dashboard', {
+      title: 'Dashboard',
+      user, // already in res.locals, but explicit pass
+      reviews,
+      myDocumentsCount,
+      myChatsCount,
+      myReviewsCount,
+      recentDocuments,
+      recentChats,
+      totalDocuments,
+      documentsByType,
+      usersByTier,
+      publicStats,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.getChat = (req, res) => {
   res.status(200).render('chat', {
@@ -124,9 +115,9 @@ exports.getServices = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getFeaures = (req, res) => {
-  res.status(200).render('feaures', {
-    title: 'Feaures',
+exports.getFeatures = (req, res) => {
+  res.status(200).render('features', {
+    title: 'Features',
   });
 };
 
@@ -139,20 +130,36 @@ exports.getContacts = (req, res) => {
 exports.getLogin = (req, res) => {
   res.status(200).render('login', {
     title: 'Log into your account',
+    next: req.query.next || '',
   });
 };
 
 exports.getSignup = (req, res) => {
   res.status(200).render('signup', {
     title: 'Signup',
+    next: req.query.next || '',
   });
 };
 
-exports.getEditProfile = (req, res) => {
+exports.getEditProfile = catchAsync(async (req, res, next) => {
+  const user = res.locals.user;
+
+  if (!user) {
+    return res.redirect('/login');
+  }
+
+  const accountReviews = await Review.find({ user: user.id })
+    .populate('document', 'originalFileName')
+    .populate('chat', 'title')
+    .sort('-createdAt')
+    .limit(5);
+
   res.status(200).render('account', {
-    title: 'EditProfile',
+    title: 'Account settings',
+    user,
+    accountReviews,
   });
-};
+});
 
 exports.getSuccess = (req, res) => {
   res.status(200).render('success', {
