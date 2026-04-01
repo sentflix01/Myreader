@@ -11,9 +11,9 @@ export function getChatDom() {
     uploadArea: document.getElementById('chatUploadArea'),
     chatList: document.getElementById('chatHistoryList'),
     chatContent: document.getElementById('chatMessagesArea'),
-    chatInputArea: document.getElementById('chatInputContainer'),
-    messageInput: document.getElementById('messageInput'),
-    sendBtn: document.getElementById('sendMessageBtn'),
+    chatInputArea: document.getElementById('bottomPanel'),       // bottom panel IS the input area
+    messageInput: document.querySelector('#bottomPanel .message-input'),
+    sendBtn: document.getElementById('send-message-btn'),
     chatTitle: document.getElementById('chatTitle'),
     settingsBtn: document.getElementById('settingsBtn'),
     helpBtn: document.getElementById('helpBtn'),
@@ -58,7 +58,6 @@ export function renderChatInterface(dom, file) {
       </div>
     </div>
   `;
-  if (dom.chatInputArea) dom.chatInputArea.style.display = 'block';
   if (dom.messageInput) dom.messageInput.focus();
 }
 

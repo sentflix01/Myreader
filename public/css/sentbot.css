@@ -330,7 +330,7 @@ body.show-chatbot .chatbot-popup {
   display: block;
 }
 
-em-emoji-picker {
+.chat-footer em-emoji-picker {
   position: absolute;
   left: 50%;
   top: -337px;
@@ -341,7 +341,7 @@ em-emoji-picker {
   transform: translateX(-50%);
 }
 
-body.show-emoji-picker em-emoji-picker {
+body.show-emoji-picker .chat-footer em-emoji-picker {
   visibility: visible;
 }
 

@@ -27,6 +27,26 @@ export function isOpen(el) {
   return el.classList.contains('show-sidebar');
 }
 
+// Public helper so chatController can open/close the bottom panel
+// and keep the toggle icon in sync without importing the full init
+export function setBottomPanelOpen(open) {
+  const bottomPanel  = document.querySelector('#bottomPanel');
+  const bottomToggle = document.querySelector('#toggleBottomPanel');
+  if (!bottomPanel) return;
+  if (open) {
+    bottomPanel.dataset.collapsed = 'false';
+    bottomPanel.classList.remove('panel-collapsed');
+    bottomPanel.style.display = '';
+  } else {
+    bottomPanel.dataset.collapsed = 'true';
+    bottomPanel.classList.add('panel-collapsed');
+    bottomPanel.style.display = 'none';
+  }
+  if (bottomToggle) {
+    bottomToggle.classList.toggle('panel-icon-active', open);
+  }
+}
+
 // ─── main init ──────────────────────────────────────────────────────────────
 
 export function initSidebarToggle() {
@@ -147,7 +167,7 @@ export function initSidebarToggle() {
   });
 
   // ── set correct initial states ────────────────────────────────────────────
-  // Bottom panel starts open
-  openBottom();
+  // Bottom panel starts CLOSED — opens when a chat becomes active
+  closeBottom();
   sync();
 }

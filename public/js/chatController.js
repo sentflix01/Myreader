@@ -28,6 +28,8 @@ import {
   truncateToTwoWords,
 } from './chatView';
 
+import { setBottomPanelOpen } from './sidebarToggle';
+
 export function initChat() {
   if (!isOnChatPage()) return;
 
@@ -127,6 +129,9 @@ export function initChat() {
 
     renderChatInterface(dom, file);
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = truncateToTwoWords(newChat.name);
+    setBottomPanelOpen(true);
+    initChatEmoji();
+    dom.messageInput?.focus();
     refreshLists();
 
     if (window.innerWidth <= 1200) {
@@ -140,7 +145,8 @@ export function initChat() {
     if (dom.chatTitle) dom.chatTitle.textContent = `Chat about ${chat.name || 'Chat'}`;
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = truncateToTwoWords(chat.name);
     renderExistingChat(dom, chat);
-    if (dom.chatInputArea) dom.chatInputArea.style.display = 'block';
+    setBottomPanelOpen(true);
+    initChatEmoji();
     dom.messageInput?.focus();
     refreshLists();
     if (window.innerWidth <= 1200) {
@@ -162,9 +168,9 @@ export function initChat() {
       triggerFileUpload();
     });
 
-    if (dom.chatInputArea) dom.chatInputArea.style.display = 'none';
     if (dom.chatTitle) dom.chatTitle.textContent = 'New Chat';
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = 'No Document';
+    setBottomPanelOpen(false);
     currentChatId = null;
     refreshLists();
     if (window.innerWidth <= 1200) {
@@ -319,11 +325,29 @@ export function initChat() {
     });
   }
 
-  // Emoji picker for chat input
-  const emojiPickerBtn = document.getElementById('emoji-picker-btn');
-  const chatMessageInput = document.querySelector('#bottomPanel .message-input');
-  const EmojiMart = window.EmojiMart;
-  if (emojiPickerBtn && chatMessageInput && EmojiMart?.Picker) {
+  // Emoji picker for chat input — mounted on body to avoid overflow/clipping
+  let chatEmojiReady = false;
+  let chatPickerEl = null;
+  let chatPickerVisible = false;
+
+  const initChatEmoji = () => {
+    if (chatEmojiReady) return;
+    const emojiPickerBtn = document.getElementById('emoji-picker-btn');
+    const chatMessageInput = document.querySelector('#bottomPanel .message-input');
+    const EmojiMart = window.EmojiMart;
+    if (!emojiPickerBtn || !chatMessageInput || !EmojiMart?.Picker) return;
+    chatEmojiReady = true;
+
+    // Create a wrapper div mounted directly on body — no clipping
+    const wrapper = document.createElement('div');
+    wrapper.id = 'chat-emoji-wrapper';
+    wrapper.style.cssText = [
+      'position:fixed',
+      'z-index:99999',
+      'display:none',
+    ].join(';');
+    document.body.appendChild(wrapper);
+
     const picker = new EmojiMart.Picker({
       theme: 'light',
       skinTonePosition: 'none',
@@ -332,22 +356,69 @@ export function initChat() {
         const { selectionStart: start, selectionEnd: end } = chatMessageInput;
         chatMessageInput.setRangeText(emoji.native, start, end, 'end');
         chatMessageInput.focus();
-        document.body.classList.remove('show-chat-emoji-picker');
+        hidePicker();
       },
       onClickOutside: (e) => {
-        if (e.target === emojiPickerBtn || emojiPickerBtn.contains(e.target)) {
-          document.body.classList.toggle('show-chat-emoji-picker');
-        } else {
-          document.body.classList.remove('show-chat-emoji-picker');
-        }
+        if (e.target === emojiPickerBtn || emojiPickerBtn.contains(e.target)) return;
+        hidePicker();
       },
     });
-    // Mount picker relative to the chat form
-    const chatForm = document.querySelector('#bottomPanel .chat-form');
-    if (chatForm) chatForm.appendChild(picker);
-    emojiPickerBtn.addEventListener('click', () => {
-      document.body.classList.toggle('show-chat-emoji-picker');
+    wrapper.appendChild(picker);
+    chatPickerEl = wrapper;
+
+    function showPicker() {
+      wrapper.style.display = 'block';
+
+      const btnRect = emojiPickerBtn.getBoundingClientRect();
+      const pickerRect = wrapper.getBoundingClientRect();
+      const pickerW = pickerRect.width || 352;
+      const pickerH = pickerRect.height || 400;
+      const margin = 8;
+
+      // Constrain right edge to the main chat area (not over right sidebar)
+      const chatArea = document.querySelector('.main-chat-area');
+      const chatAreaRect = chatArea
+        ? chatArea.getBoundingClientRect()
+        : { left: margin, right: window.innerWidth - margin };
+      const maxRight = chatAreaRect.right - margin;
+      const minLeft  = chatAreaRect.left  + margin;
+
+      // Vertical: prefer above the button, fall back to below
+      let top = btnRect.top - pickerH - margin;
+      if (top < margin) top = btnRect.bottom + margin;
+
+      // Horizontal: align to button left, clamp inside chat area
+      let left = btnRect.left;
+      if (left + pickerW > maxRight) left = maxRight - pickerW;
+      if (left < minLeft) left = minLeft;
+
+      wrapper.style.top  = top  + 'px';
+      wrapper.style.left = left + 'px';
+      chatPickerVisible = true;
+    }
+
+    function hidePicker() {
+      wrapper.style.display = 'none';
+      chatPickerVisible = false;
+    }
+
+    emojiPickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      chatPickerVisible ? hidePicker() : showPicker();
     });
-  }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!chatPickerVisible) return;
+      if (wrapper.contains(e.target) || e.target === emojiPickerBtn) return;
+      hidePicker();
+    });
+  };
+
+  document.getElementById('toggleBottomPanel')?.addEventListener('click', initChatEmoji);
+  document.getElementById('closeBottomPanel')?.addEventListener('click', () => {
+    chatPickerEl && (chatPickerEl.style.display = 'none');
+    chatPickerVisible = false;
+  });
 }
 

@@ -1083,15 +1083,15 @@ main.chat-main-section {
    ============================================================ */
 
 #bottomPanel {
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
   border-top: 1px solid hsl(210, 20%, 88%);
-  /* flexible height: clamp between 160px and 30% of viewport height */
   height: clamp(16rem, 25vh, 30rem);
   width: 100%;
+  position: relative;
 }
 
-/* collapsed: JS sets display:none — no CSS display rule here to conflict */
+/* collapsed: JS sets display:none */
 #bottomPanel.panel-collapsed {
   border-top: none;
 }
@@ -1171,22 +1171,4 @@ main.chat-main-section {
   display: block;
 }
 
-/* Chat emoji picker — shown when body has show-chat-emoji-picker class */
-#bottomPanel .chat-form {
-  position: relative;
-}
-
-#bottomPanel em-emoji-picker {
-  position: absolute;
-  bottom: 56px;
-  left: 0;
-  width: 100%;
-  max-width: 320px;
-  max-height: 300px;
-  visibility: hidden;
-  z-index: 100;
-}
-
-body.show-chat-emoji-picker #bottomPanel em-emoji-picker {
-  visibility: visible;
-}
+/* Chat emoji picker — mounted on body via JS, no CSS needed */

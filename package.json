@@ -17,7 +17,7 @@
     "start:prod": "cross-env NODE_ENV=production nodemon server.js",
     "debug": "node --inspect server.js",
     "clean": "rimraf public/dist",
-    "watch:js": "env-cmd -f config.env npx parcel watch public/js/index.js --dist-dir public/dist/js --no-content-hash",
+    "watch:js": "env-cmd -f config.env npx parcel watch public/js/index.js --dist-dir public/dist/js --no-content-hash --no-hmr",
     "build:js": "env-cmd -f config.env npx parcel build public/js/index.js --dist-dir public/dist/js --no-content-hash",
     "dev:frontend": "env-cmd -f config.env npx parcel index.html"
   },

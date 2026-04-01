@@ -168,9 +168,10 @@ export function initSentBot() {
     fileuploadWrapper?.classList.remove('file-uploaded');
   });
 
-  // Emoji picker relies on global EmojiMart (as before)
+  // Emoji picker for sentbot
   const EmojiMart = window.EmojiMart;
-  if (EmojiMart?.Picker) {
+  const emojiBtn = document.querySelector('#emoji-picker');
+  if (EmojiMart?.Picker && emojiBtn) {
     const picker = new EmojiMart.Picker({
       theme: 'light',
       skinTonePosition: 'none',
@@ -179,16 +180,17 @@ export function initSentBot() {
         const { selectionStart: start, selectionEnd: end } = messageInput;
         messageInput.setRangeText(emoji.native, start, end, 'end');
         messageInput.focus();
+        document.body.classList.remove('show-emoji-picker');
       },
       onClickOutside: (e) => {
-        if (e.target.id === 'emoji-picker') {
-          document.body.classList.toggle('show-emoji-picker');
-        } else {
-          document.body.classList.remove('show-emoji-picker');
-        }
+        if (e.target === emojiBtn || emojiBtn.contains(e.target)) return;
+        document.body.classList.remove('show-emoji-picker');
       },
     });
-    document.querySelector('.chat-form')?.appendChild(picker);
+    document.querySelector('.chatbot-popup .chat-form')?.appendChild(picker);
+    emojiBtn.addEventListener('click', () => {
+      document.body.classList.toggle('show-emoji-picker');
+    });
   }
 
   sendMessageButton?.addEventListener('click', (e) => handleOutgoingMessage(e));
