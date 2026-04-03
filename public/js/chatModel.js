@@ -1,10 +1,54 @@
 /* eslint-disable */
 import axios from 'axios';
 
-const STORAGE_KEY = 'sentreader_chats';
+// ── User-scoped storage key ───────────────────────────────────
+// Each user gets their own localStorage key so user A never sees user B's data.
+// The userId is embedded in the key — derived from the JWT cookie via the /me endpoint.
+
+const BASE_KEY = 'sentreader_chats';
+
+function storageKey() {
+  // Read userId from a non-httpOnly cookie set at login, or fall back to 'guest'
+  const uid = getUserIdFromPage() || 'guest';
+  return `${BASE_KEY}_${uid}`;
+}
+
+/**
+ * Get the current user's ID from the page.
+ * The server renders res.locals.user into a meta tag so we can read it client-side.
+ * Falls back to a cookie value if the meta tag is absent.
+ */
+function getUserIdFromPage() {
+  // Try meta tag first (set by base.pug)
+  const meta = document.querySelector('meta[name="user-id"]');
+  if (meta?.content) return meta.content;
+
+  // Try data attribute on body
+  const body = document.body;
+  if (body?.dataset?.userId) return body.dataset.userId;
+
+  return null;
+}
+
+/**
+ * Clear ALL other users' cached chats from this browser.
+ * Called on login so a newly logged-in user starts clean.
+ */
+export function clearOtherUsersCaches(currentUserId) {
+  if (!currentUserId) return;
+  const ownKey = `${BASE_KEY}_${currentUserId}`;
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(BASE_KEY) && k !== ownKey) {
+      keysToRemove.push(k);
+    }
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+}
 
 export function loadChatsFromCache() {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = localStorage.getItem(storageKey());
   if (!stored) return [];
   try {
     const parsed = JSON.parse(stored);
@@ -15,7 +59,11 @@ export function loadChatsFromCache() {
 }
 
 export function saveChatsToCache(chats) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(chats || []));
+  localStorage.setItem(storageKey(), JSON.stringify(chats || []));
+}
+
+export function clearMyCache() {
+  localStorage.removeItem(storageKey());
 }
 
 export function ensureClientId(chat) {

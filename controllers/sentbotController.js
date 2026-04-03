@@ -3,6 +3,51 @@ const Chat = require('../model/chatsModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+// ── In-memory analytics log (replace with DB writes for production) ──
+const analyticsLog = [];
+
+/**
+ * POST /api/v1/sentbot/analytics
+ * Internal endpoint — receives meta-only data from the RAG module.
+ * Sentbot NEVER sees answer text or retrieved chunks.
+ * Only: tokenCount, timeTakenMs, docCount, chunkCount, tier, etc.
+ */
+exports.logAnalytics = (req, res) => {
+  const entry = {
+    ...req.body,
+    receivedAt: new Date().toISOString(),
+  };
+  analyticsLog.push(entry);
+  // Keep last 1000 entries in memory
+  if (analyticsLog.length > 1000) analyticsLog.shift();
+  console.log('[Sentbot Analytics]', JSON.stringify(entry));
+  res.status(200).json({ status: 'success' });
+};
+
+/**
+ * GET /api/v1/sentbot/analytics
+ * Returns aggregated analytics for the current user.
+ */
+exports.getAnalytics = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const userEntries = analyticsLog.filter((e) => e.userId === userId);
+
+  const totalTokens   = userEntries.reduce((s, e) => s + (e.tokenCount   || 0), 0);
+  const totalMs       = userEntries.reduce((s, e) => s + (e.timeTakenMs  || 0), 0);
+  const totalChats    = userEntries.length;
+  const avgMs         = totalChats ? Math.round(totalMs / totalChats) : 0;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      totalChats,
+      totalTokensUsed: totalTokens,
+      avgResponseTimeMs: avgMs,
+      recentEvents: userEntries.slice(-10).reverse(),
+    },
+  });
+});
+
 function buildContextBlock({ documents, chats }) {
   const docLines = (documents || []).map((d, i) => {
     const text =

@@ -1,5 +1,6 @@
 const Stripe = require('stripe');
 const User = require('../model/userModel');
+const StripeEvent = require('../model/stripeEventModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
@@ -81,18 +82,93 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createBillingPortalSession = catchAsync(async (req, res, next) => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return next(new AppError('Stripe is not configured (missing key).', 503));
+  }
+
+  const user = await User.findById(req.user.id);
+  if (!user || !user.stripeCustomerId) {
+    return next(new AppError('No Stripe customer found for user.', 404));
+  }
+
+  const returnUrl = req.body.returnUrl || `${req.protocol}://${req.get('host')}/account`;
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: user.stripeCustomerId,
+    return_url: returnUrl,
+  });
+
+  res.status(200).json({ status: 'success', data: { url: session.url } });
+});
+
+exports.cancelSubscription = catchAsync(async (req, res, next) => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return next(new AppError('Stripe is not configured (missing key).', 503));
+  }
+
+  const { immediately } = req.body || {};
+  const user = await User.findById(req.user.id);
+  if (!user || !user.stripeSubscriptionId) {
+    return next(new AppError('No active subscription found for user.', 404));
+  }
+
+  if (immediately) {
+    await stripe.subscriptions.del(user.stripeSubscriptionId);
+  } else {
+    // cancel at period end
+    await stripe.subscriptions.update(user.stripeSubscriptionId, {
+      cancel_at_period_end: true,
+    });
+  }
+
+  // Update local user record optimistically; actual webhook will provide final state
+  user.subscriptionStatus = 'cancelled';
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({ status: 'success', data: { message: 'Subscription cancellation requested.' } });
+});
+
+exports.getMySubscription = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('-password');
+  if (!user) return next(new AppError('User not found', 404));
+
+  res.status(200).json({ status: 'success', data: { subscription: {
+    tier: user.subscriptionTier || 'free',
+    status: user.subscriptionStatus || 'free',
+    stripeCustomerId: user.stripeCustomerId,
+    stripeSubscriptionId: user.stripeSubscriptionId,
+    currentPeriodEnd: user.currentPeriodEnd,
+    trialEndsAt: user.trialEndsAt,
+  } } });
+});
+
 exports.stripeWebhook = async (req, res) => {
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    // Webhook secret not configured — reject to avoid processing unsigned events
+    return res.status(503).send('Stripe webhook secret not configured');
+  }
+
   const sig = req.headers['stripe-signature'];
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET,
-    );
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Idempotency: ignore duplicate events we've already processed
+  try {
+    const existing = await StripeEvent.findOne({ eventId: event.id });
+    if (existing) {
+      return res.status(200).json({ received: true, note: 'already processed' });
+    }
+    await StripeEvent.create({ eventId: event.id, type: event.type, payload: event });
+  } catch (err) {
+    // If DB check fails, continue processing to avoid missing critical updates
+    // but log
+    console.error('StripeEvent lookup/create error', err);
   }
 
   const upsertFromSubscription = async (subscription) => {

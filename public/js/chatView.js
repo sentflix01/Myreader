@@ -11,7 +11,7 @@ export function getChatDom() {
     uploadArea: document.getElementById('chatUploadArea'),
     chatList: document.getElementById('chatHistoryList'),
     chatContent: document.getElementById('chatMessagesArea'),
-    chatInputArea: document.getElementById('bottomPanel'),       // bottom panel IS the input area
+    chatInputArea: document.getElementById('bottomPanel'),
     messageInput: document.querySelector('#bottomPanel .message-input'),
     sendBtn: document.getElementById('send-message-btn'),
     chatTitle: document.getElementById('chatTitle'),
@@ -30,6 +30,14 @@ export function getChatDom() {
     sidebarDocTitle: document.querySelector('.sidebar-doc-title'),
     tocView: document.getElementById('tocView'),
     docsView: document.getElementById('docsView'),
+    // RAG bottom panel tab content areas
+    ragLangSelect: document.getElementById('ragLangSelect'),
+    errorLog: document.getElementById('errorLog'),
+    tokenInfo: document.getElementById('tokenInfo'),
+    modelInfo: document.getElementById('modelInfo'),
+    ragInfo: document.getElementById('ragInfo'),
+    usageInfo: document.getElementById('usageInfo'),
+    subscriptionInfo: document.getElementById('subscriptionInfo'),
   };
 }
 
@@ -270,16 +278,54 @@ export function truncateToTwoWords(title) {
 export function renderTocView(dom, ragData) {
   if (!dom.tocView) return;
   if (!ragData || ragData.length === 0) {
-    dom.tocView.innerHTML = '<p>No table of contents available</p>';
+    dom.tocView.innerHTML = '<p style="padding:1.2rem 1.6rem;font-size:1.3rem;color:hsl(210,40%,65%)">No table of contents available</p>';
     return;
   }
+
   const ul = document.createElement('ul');
+  ul.style.cssText = 'list-style:none;padding:0;margin:0';
+
   ragData.forEach((item) => {
     const li = document.createElement('li');
+    const indent = (item.level - 1) * 12;
+    const fontSize = item.level === 1 ? '1.35rem' : item.level === 2 ? '1.25rem' : '1.15rem';
+    const fontWeight = item.level === 1 ? '600' : '400';
+    const opacity = item.level === 1 ? '1' : item.level === 2 ? '0.9' : '0.75';
+
     li.dataset.sectionId = item.id;
-    li.textContent = item.label;
+    li.style.cssText = [
+      `padding: .6rem 1.6rem .6rem ${1.6 + indent / 10}rem`,
+      `font-size: ${fontSize}`,
+      `font-weight: ${fontWeight}`,
+      `opacity: ${opacity}`,
+      'cursor: pointer',
+      'color: hsl(210,40%,78%)',
+      'border-left: 2px solid transparent',
+      'transition: all .15s',
+      'line-height: 1.4',
+      'display: flex',
+      'align-items: flex-start',
+      'gap: .5rem',
+    ].join(';');
+
+    // Level indicator dot/dash
+    const marker = item.level === 1 ? '▸' : item.level === 2 ? '–' : '·';
+    li.innerHTML = `<span style="opacity:.5;flex-shrink:0;margin-top:.1rem">${marker}</span><span>${item.label}</span>`;
+
+    li.addEventListener('mouseenter', () => {
+      li.style.color = 'white';
+      li.style.borderLeftColor = 'hsl(210,66%,60%)';
+      li.style.background = 'rgba(255,255,255,.06)';
+    });
+    li.addEventListener('mouseleave', () => {
+      li.style.color = `hsl(210,40%,${item.level === 1 ? 78 : 70}%)`;
+      li.style.borderLeftColor = 'transparent';
+      li.style.background = '';
+    });
+
     ul.appendChild(li);
   });
+
   dom.tocView.innerHTML = '';
   dom.tocView.appendChild(ul);
 }
@@ -355,3 +401,150 @@ export function renderConversationTopics(dom, { chats, currentChatId, onSelect }
   });
 }
 
+
+// ── RAG bottom panel tab renderers ───────────────────────────
+
+/**
+ * Render RAG retrieval info into the RAG INFO tab.
+ * Called after each successful RAG chat response.
+ */
+export function renderRagInfo(dom, { sources = [], chunkCount = 0, timeTakenMs = 0, groupId = '', processedQuery = '' }) {
+  if (!dom.ragInfo) return;
+  if (!sources.length) {
+    dom.ragInfo.innerHTML = '<p class="rag-tab-empty">No retrieval data yet.</p>';
+    return;
+  }
+  const rows = [
+    { label: 'Group ID',       value: groupId || '—' },
+    { label: 'Processed query', value: processedQuery || '—' },
+    { label: 'Chunks used',    value: chunkCount },
+    { label: 'Response time',  value: `${timeTakenMs}ms` },
+  ];
+  const statsHtml = rows.map(r =>
+    `<div class="rag-stat-row"><span class="rag-stat-label">${r.label}</span><span class="rag-stat-value">${r.value}</span></div>`
+  ).join('');
+
+  const sourcesHtml = sources.map(s =>
+    `<div class="rag-source-item">
+      <i class="fas fa-file-alt"></i>
+      <span>[${s.index}] ${s.filename || s.docId}</span>
+      <span style="margin-left:auto;color:hsl(210,20%,60%);font-size:1.1rem">
+        hybrid ${s.score} · vec ${s.vectorScore} · kw ${s.keywordScore}
+      </span>
+    </div>`
+  ).join('');
+
+  dom.ragInfo.innerHTML = `
+    <div style="margin-bottom:8px">${statsHtml}</div>
+    <div style="font-size:1.2rem;font-weight:600;color:hsl(210,40%,40%);margin:8px 0 4px">Sources (re-ranked)</div>
+    ${sourcesHtml}
+  `;
+}
+
+/**
+ * Render token usage into the TOKEN USED tab.
+ */
+export function renderTokenInfo(dom, { tokenCount = 0, timeTakenMs = 0 }) {
+  if (!dom.tokenInfo) return;
+  dom.tokenInfo.innerHTML = `
+    <div class="rag-stat-row"><span class="rag-stat-label">Tokens used</span><span class="rag-stat-value">${tokenCount.toLocaleString()}</span></div>
+    <div class="rag-stat-row"><span class="rag-stat-label">Response time</span><span class="rag-stat-value">${timeTakenMs}ms</span></div>
+  `;
+}
+
+/**
+ * Render model info into the MODEL USED tab.
+ */
+export function renderModelInfo(dom, { model = 'Gemini (text-embedding-004)', apiUrl = '' }) {
+  if (!dom.modelInfo) return;
+  dom.modelInfo.innerHTML = `
+    <div class="rag-stat-row"><span class="rag-stat-label">LLM</span><span class="rag-stat-value">${model}</span></div>
+    <div class="rag-stat-row"><span class="rag-stat-label">Embedding</span><span class="rag-stat-value">text-embedding-004</span></div>
+    <div class="rag-stat-row"><span class="rag-stat-label">Vector store</span><span class="rag-stat-value">Pinecone / in-memory</span></div>
+  `;
+}
+
+/**
+ * Log an error into the ERROR tab.
+ */
+export function logRagError(dom, message) {
+  if (!dom.errorLog) return;
+  const existing = dom.errorLog.querySelector('.rag-tab-empty');
+  if (existing) existing.remove();
+  const item = document.createElement('div');
+  item.className = 'rag-error-item';
+  item.textContent = `${new Date().toLocaleTimeString()} — ${message}`;
+  dom.errorLog.prepend(item);
+}
+
+/**
+ * Render RAG group docs into the left sidebar Docs view.
+ * Replaces the generic renderDocsView for RAG-aware content.
+ */
+export function renderRagDocsView(dom, { docs = [], onSelect }) {
+  if (!dom.docsView) return;
+  if (!docs.length) {
+    dom.docsView.innerHTML = '<p class="rag-empty-hint" style="padding:1.2rem 1.6rem;font-size:1.3rem;color:hsl(210,40%,65%)"><i class="fas fa-folder-open" style="margin-right:.6rem"></i>No documents in this group yet</p>';
+    return;
+  }
+  const ul = document.createElement('ul');
+  ul.style.cssText = 'list-style:none;padding:0;margin:0';
+  docs.forEach((doc) => {
+    const li = document.createElement('li');
+    li.style.cssText = 'padding:.8rem 1.6rem;cursor:pointer;font-size:1.3rem;color:hsl(210,40%,75%);border-left:2px solid transparent;transition:all .15s';
+    li.innerHTML = `<i class="fas fa-file-alt" style="margin-right:.6rem;color:hsl(210,66%,60%)"></i>${doc.originalFilename}`;
+    li.title = `${doc.chunkCount} chunks · ${doc.sourceType}`;
+    li.addEventListener('mouseenter', () => { li.style.background = 'rgba(255,255,255,.08)'; li.style.color = 'white'; li.style.borderLeftColor = 'hsl(210,66%,60%)'; });
+    li.addEventListener('mouseleave', () => { li.style.background = ''; li.style.color = 'hsl(210,40%,75%)'; li.style.borderLeftColor = 'transparent'; });
+    if (onSelect) li.addEventListener('click', () => onSelect(doc));
+    ul.appendChild(li);
+  });
+  dom.docsView.innerHTML = '';
+  dom.docsView.appendChild(ul);
+}
+
+// ── Ingest loading helpers ────────────────────────────────────
+
+/**
+ * Show a spinner in the TOC view while the file is being processed.
+ */
+export function showTocSpinner(dom, filename) {
+  if (!dom.tocView) return;
+  dom.tocView.innerHTML = `
+    <div style="padding:2rem 1.6rem;display:flex;flex-direction:column;align-items:center;gap:1.2rem">
+      <div class="toc-spinner"></div>
+      <p style="font-size:1.3rem;color:hsl(210,40%,70%);text-align:center;line-height:1.5">
+        Processing<br>
+        <span style="font-size:1.1rem;opacity:.8">${filename}</span>
+      </p>
+    </div>
+  `;
+  // Switch to TOC view so the spinner is visible
+  if (dom.tocView) dom.tocView.style.display = 'block';
+  if (dom.docsView) dom.docsView.style.display = 'none';
+  if (dom.sidebarFileBtn) dom.sidebarFileBtn.classList.add('sidebar-head-btn-active');
+  if (dom.sidebarFolderBtn) dom.sidebarFolderBtn.classList.remove('sidebar-head-btn-active');
+}
+
+/**
+ * Lock or unlock the chat input area during file processing.
+ * When locked: textarea is disabled, send button is disabled,
+ * and a "Processing document..." placeholder is shown.
+ */
+export function setInputLocked(dom, locked) {
+  if (dom.messageInput) {
+    dom.messageInput.disabled = locked;
+    dom.messageInput.placeholder = locked
+      ? '⏳ Processing document, please wait...'
+      : 'Type your message... / ጥያቄዎን ይጻፉ...';
+    dom.messageInput.style.opacity = locked ? '0.5' : '1';
+  }
+  if (dom.sendBtn) {
+    dom.sendBtn.disabled = locked;
+    dom.sendBtn.style.opacity = locked ? '0.4' : '1';
+  }
+  // Also disable the lang select
+  if (dom.ragLangSelect) {
+    dom.ragLangSelect.disabled = locked;
+  }
+}

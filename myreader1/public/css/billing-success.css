@@ -1,0 +1,135 @@
+/* Billing Success Page Styles */
+.success-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.success__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #51cf66, #40c057);
+  color: white;
+  border-radius: 50%;
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(64, 192, 87, 0.3);
+}
+
+.success__message {
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.subscription-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border-left: 4px solid #51cf66;
+}
+
+.subscription-note {
+  font-style: italic;
+  color: #666;
+  font-size: 1.4rem;
+}
+
+.success__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+
+.success__actions .btn {
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.success__actions .btn--green {
+  background: #51cf66;
+  color: white;
+  border: 2px solid #51cf66;
+}
+
+.success__actions .btn--green:hover {
+  background: #40c057;
+  border-color: #40c057;
+  transform: translateY(-2px);
+}
+
+.success__actions .btn--white {
+  background: white;
+  color: #51cf66;
+  border: 2px solid #51cf66;
+}
+
+.success__actions .btn--white:hover {
+  background: #51cf66;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.success__actions .btn--outline {
+  background: transparent;
+  color: #666;
+  border: 2px solid #ddd;
+}
+
+.success__actions .btn--outline:hover {
+  background: #f8f9fa;
+  border-color: #51cf66;
+  color: #51cf66;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .success-content {
+    padding: 1rem;
+  }
+  
+  .success__icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+  
+  .success__message {
+    font-size: 1.4rem;
+  }
+  
+  .subscription-details {
+    padding: 1.5rem;
+  }
+}
+
+/* Animation for success icon */
+@keyframes successPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success__icon {
+  animation: successPulse 0.6s ease-out;
+}

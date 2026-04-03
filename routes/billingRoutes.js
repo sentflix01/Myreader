@@ -10,5 +10,23 @@ router.post(
   billingController.createCheckoutSession,
 );
 
+router.post(
+  '/create-portal-session',
+  authController.protect,
+  billingController.createBillingPortalSession,
+);
+
+router.post(
+  '/cancel-subscription',
+  authController.protect,
+  billingController.cancelSubscription,
+);
+
+router.get(
+  '/my-subscription',
+  authController.protect,
+  billingController.getMySubscription,
+);
+
 module.exports = router;
 

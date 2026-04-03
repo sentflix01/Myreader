@@ -38,6 +38,8 @@ router.post(
   authController.protect,
   viewsControllers.updateUserData,
 );
+
+// RAG knowledge base views — integrated into /chat, no separate pages needed
 // router.get('/success', authController.isLoggedIn, viewsControllers.getSuccess);
 
 module.exports = router;

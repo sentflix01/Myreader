@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
     subscriptionStatus: {
       type: String,
       enum: ['active', 'cancelled', 'expired', 'pending'],
+      default: 'active',
     },
     password: {
       type: String,
@@ -76,6 +77,17 @@ const userSchema = new mongoose.Schema(
     stripeCustomerId: String,
     stripeSubscriptionId: String,
     stripePriceId: String,
+    billingInterval: {
+      type: String,
+      enum: ['monthly', 'yearly'],
+      default: 'monthly',
+    },
+    billingProvider: {
+      type: String,
+      enum: ['direct', 'stripe', 'manual'],
+      default: 'direct',
+    },
+    subscriptionUpdatedAt: Date,
     trialEndsAt: Date,
     currentPeriodEnd: Date,
     storageLimit: {
@@ -87,23 +99,35 @@ const userSchema = new mongoose.Schema(
       enum: ['gpt-4', 'claude-3'],
       default: 'gpt-4',
     },
-    documentsUploadedCount: Number,
-    totalChatMessages: Number,
-    totalTokensUsed: Number,
+    documentsUploadedCount: { type: Number, default: 0 },
+    totalQueriesAsked: { type: Number, default: 0 },
+    totalChatMessages: { type: Number, default: 0 },
+    totalTokensUsed: { type: Number, default: 0 },
+    dailyUsage: {
+      windowStartedAt: { type: Date, default: Date.now },
+      uploads: { type: Number, default: 0 },
+      queries: { type: Number, default: 0 },
+      messages: { type: Number, default: 0 },
+      chatSessions: { type: Number, default: 0 },
+      tokensUsed: { type: Number, default: 0 },
+    },
     lastActiveAt: Date,
   },
   { timestamps: true },
 );
 
-userSchema.pre('save', async function () {
-  // Async middleware in Mongoose is promise-based; do not use `next`.
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return;
-
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirm = undefined;
+  try {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+  } catch (error) {
+    console.error('Password hashing error:', error);
+    throw error;
+  }
 });
 
-userSchema.pre('save', async function () {
+userSchema.pre('save', function () {
   if (!this.isModified('password') || this.isNew) return;
   this.passwordChangedAt = Date.now() - 1000;
 });
@@ -131,7 +155,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-userSchema.methods.correctResetToken = function () {
+userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto

@@ -166,6 +166,18 @@ exports.getSuccess = (req, res) => {
     title: 'Success',
   });
 };
+
+exports.getRag = (req, res) => {
+  res.status(200).render('rag/index', {
+    title: 'Knowledge Bases',
+  });
+};
+
+exports.getRagChat = (req, res) => {
+  res.status(200).render('rag/chat', {
+    title: 'RAG Chat',
+  });
+};
 exports.getSentbot = (req, res) => {
   res.status(200).render('sentbot', {
     title: 'Sentbot',
