@@ -31,7 +31,14 @@ export const logout = async () => {
       method: 'GET',
       url: '/api/v1/users/logout',
     });
-    if (res.data.status === 'success') location.reload(true);
+    if (res.data.status === 'success') {
+      // Clear this user's cached chats so the next user starts clean
+      const metaUserId = document.querySelector('meta[name="user-id"]')?.content;
+      if (metaUserId) {
+        localStorage.removeItem(`sentreader_chats_${metaUserId}`);
+      }
+      location.reload(true);
+    }
   } catch (err) {
     showAlert('error', err.response?.data?.message || 'Error logging out! Try again.');
   }

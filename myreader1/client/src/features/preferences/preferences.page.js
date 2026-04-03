@@ -1,0 +1,903 @@
+const STORAGE_KEYS = {
+  language: 'myreader_language',
+  theme: 'myreader_theme',
+};
+
+const LEGACY_STORAGE_KEYS = {
+  language: 'sentreader_language',
+  theme: 'sentreader_theme',
+};
+
+const TRANSLATIONS = {
+  en: {
+    'nav.chat': 'Chat',
+    'nav.dashboard': 'Dashboard',
+    'nav.pricing': 'Pricing',
+    'nav.services': 'Services',
+    'nav.features': 'Features',
+    'nav.account': 'Account Settings',
+    'nav.support': 'Support',
+    'nav.logout': 'Logout',
+    'nav.login': 'Log in',
+    'nav.signup': 'Sign up',
+    'controls.language': 'Language',
+    'controls.themeDark': 'Dark',
+    'controls.themeLight': 'Light',
+    'controls.themeSwitchToLight': 'Switch to light mode',
+    'controls.themeSwitchToDark': 'Switch to dark mode',
+    'controls.themeLabel': 'Theme',
+    'controls.tour': 'Tour',
+    'controls.tourTooltip': 'Open the guided tour',
+    'auth.loginTitle': 'Log into your account',
+    'auth.signupTitle': 'Sign Up for an Account',
+    'auth.name': 'Name',
+    'auth.email': 'Email address',
+    'auth.password': 'Password',
+    'auth.passwordConfirm': 'Confirm password',
+    'auth.showPassword': 'Show or hide password',
+    'auth.loginButton': 'Login',
+    'auth.signupButton': 'Sign Up',
+    'auth.noAccount': "Don't have an account?",
+    'auth.createOne': 'Create one',
+    'auth.haveAccount': 'Already have an account?',
+    'auth.loginLink': 'Log in',
+    'auth.loginSuccess': 'Logged in successfully!',
+    'auth.loginError': 'Login failed.',
+    'auth.signupSuccess': 'Signup successful!',
+    'auth.signupError': 'Signup failed. Please try again!',
+    'auth.signingUp': 'Signing up...',
+    'auth.signupDone': 'Success!',
+    'overview.heroTitle':
+      'Upload any file, and MyReader will intelligently answer your questions in seconds',
+    'overview.heroCta': 'Try MyReader for free',
+    'overview.heroLearnMore': 'Learn more',
+    'overview.trustedBy': 'Trusted By',
+    'overview.howItWorks': 'How it works',
+    'overview.howItWorksTitle':
+      'How to Use MyReader AI (Chat with Files and More)',
+    'overview.pricing': 'Pricing',
+    'overview.pricingTitle': 'Read smarter without losing your time',
+    'overview.ctaTitle': 'Get your first read for free!',
+    'overview.ctaText':
+      'Ready to save your time and read smarter? Sign up free today and feel the difference in minutes.',
+    'overview.form.name': 'Full Name',
+    'overview.form.email': 'Email address',
+    'overview.form.source': 'Where did you hear from us?',
+    'overview.form.optionPlaceholder': 'Please choose one option:',
+    'overview.form.submit': 'Sign up now',
+    'dashboard.welcomeBack': 'Welcome back,',
+    'dashboard.publicWelcome': 'Welcome to MyReader',
+    'dashboard.publicTitle': 'Public Dashboard',
+    'dashboard.documentsUploaded': 'Documents uploaded',
+    'dashboard.chatsStarted': 'Chats started',
+    'dashboard.reviewsLeft': 'Reviews left',
+    'dashboard.totalUsers': 'Total Users',
+    'dashboard.totalDocuments': 'Total Documents',
+    'dashboard.totalReviews': 'Total Reviews',
+    'dashboard.usersBySubscriptionTier': 'Users by Subscription Tier',
+    'dashboard.recentReviews': 'Recent reviews',
+    'dashboard.noReviews':
+      'No reviews yet. Once you start using MyReader, your recent activity will appear here.',
+    'dashboard.recentChats': 'Recent chats',
+    'dashboard.noChats': 'No chats yet. Start a chat from the Chat page.',
+    'dashboard.openChat': 'Open chat',
+    'dashboard.adminAnalytics': 'Admin analytics',
+    'dashboard.usersByTierPie': 'Users by Tier (Pie)',
+    'dashboard.table.user': 'User',
+    'dashboard.table.document': 'Document',
+    'dashboard.table.chat': 'Chat',
+    'dashboard.table.rating': 'Rating',
+    'dashboard.table.date': 'Date',
+    'dashboard.table.uploadedDocument': 'Uploaded document',
+    'dashboard.table.lastActivity': 'Last activity',
+    'dashboard.table.messages': 'Messages',
+    'dashboard.table.open': 'Open',
+    'chat.recentChats': 'Recent Chats',
+    'chat.clearAll': 'Clear all',
+    'chat.pageTitleNew': 'New Chat',
+    'chat.newChat': 'New Chat',
+    'chat.settings': 'Settings',
+    'chat.help': 'Help',
+    'chat.welcomeTitle': 'No Chats Available',
+    'chat.welcomeText':
+      'Please upload a file to start a new chat. MyReader can process documents and help you analyze and discuss their content.',
+    'chat.uploadTitle': 'Upload a file to start chatting',
+    'chat.uploadHint': 'Drag and drop your file here or click to browse',
+    'chat.chooseFile': 'Choose File',
+    'chat.chooseFolder': 'Choose Folder',
+    'chat.folderUploadHint':
+      'Enterprise users can upload a local folder and ask questions across all of its documents.',
+    'chat.folderUpgradeHint':
+      'Upgrade to Enterprise to upload entire folders and chat with grouped documents.',
+    'chat.composerNote':
+      'Answers will be grounded in your uploaded document.',
+    'chat.composerNoteFolder':
+      'Answers will be grounded only in the selected folder documents.',
+    'chat.composerPlaceholderDisabled':
+      'Upload a file to start asking questions...',
+    'chat.composerPlaceholderReady':
+      'Ask anything about the uploaded document...',
+    'chat.composerPlaceholderFolder':
+      'Ask anything about the uploaded folder...',
+    'chat.history': 'History',
+    'chat.uploadHistory': 'Upload History',
+    'chat.deleteAll': 'Delete all',
+    'chat.conversationTopics': 'Conversation Topics',
+    'chat.currentScopeTitle': 'Selected Documents',
+    'chat.currentScopeEmpty':
+      'Open a chat to see the document or folder contents here.',
+    'chat.currentScopeFolderLabel': 'Folder documents',
+    'chat.currentScopeFileLabel': 'Selected document',
+    'chat.scopeReady': 'Ready for chat',
+    'chat.scopeNotReady': 'Needs re-upload',
+    'chat.noChats': 'No chats available',
+    'chat.noUploads': 'No uploads yet',
+    'chat.noTopics': 'No topics yet',
+    'chat.clear': 'Clear',
+    'chat.delete': 'Delete',
+    'chat.assistantName': 'MyReader',
+    'chat.you': 'You',
+    'chat.sources': 'Sources',
+    'chat.messageCountSingular': '{{count}} message',
+    'chat.messageCountPlural': '{{count}} messages',
+    'chat.chatAbout': 'Chat about {{name}}',
+    'chat.chatAboutFolder': 'Folder chat: {{name}}',
+    'chat.chatFallback': 'Chat',
+    'chat.topicFallback': 'Topic',
+    'chat.processedFileIntro':
+      'I have processed your file "{{fileName}}". What would you like to know about it?',
+    'chat.processedFolderIntro':
+      'Your folder "{{folderName}}" is ready. Ask me questions and I will answer only from the uploaded documents in this folder.',
+    'chat.previousUploadIntro':
+      'You previously uploaded a file named "{{fileName}}".',
+    'chat.previousFolderIntro':
+      'You previously uploaded the folder "{{folderName}}". Open the document list on the right to review everything inside it.',
+    'chat.processingFile': 'Processing your file...',
+    'chat.processingFolder': 'Processing your folder...',
+    'chat.uploadWarning':
+      'This file was uploaded, but RAG processing did not finish successfully. Please try another file or re-upload this one.',
+    'chat.uploadFailed': 'File upload failed. Please try again.',
+    'chat.folderUploadFailed':
+      'Folder upload failed. Please try again or upload fewer files at once.',
+    'chat.folderUploadPartial':
+      'Folder uploaded with {{ready}} ready documents out of {{total}} files. Some files still need attention.',
+    'chat.folderUploadNoReady':
+      'The folder upload finished, but none of the files are ready for chat yet.',
+    'chat.folderEnterpriseOnly':
+      'Folder upload is available on the Enterprise plan.',
+    'chat.settingsAlert':
+      'Use the header controls to switch theme or language. The guided tour can walk you through the rest of the workspace.',
+    'chat.helpAlert':
+      'Use the tour for a step-by-step guide: upload a file, open a chat, ask questions, and review your history from the side panels.',
+    'sentbot.title': 'Sentbot',
+    'sentbot.intro.line1': 'Hey there',
+    'sentbot.intro.line2':
+      'I can help with support, usage, dashboard stats, subscriptions, and billing.',
+    'sentbot.intro.line3':
+      'For document-content questions, please use the Chat page.',
+    'sentbot.suggestionLabel': 'Try asking Sentbot about:',
+    'sentbot.placeholder':
+      'Ask about usage, plans, billing, or dashboard info...',
+    'sentbot.prompt.queries': 'How many queries have I used today?',
+    'sentbot.prompt.uploads': 'How many uploads do I have in my account?',
+    'sentbot.prompt.chatCounts': 'Show my chat and message totals.',
+    'sentbot.prompt.plan': 'What plan am I on right now?',
+    'sentbot.prompt.upgrade': 'How can I upgrade to Enterprise?',
+    'sentbot.prompt.publicTotals': 'Show the public dashboard totals.',
+    'sentbot.prompt.usersByTier': 'How many users are on each tier?',
+    'sentbot.prompt.features': 'What can MyReader help me do?',
+    'tour.progress': 'Step {{current}} of {{total}}',
+    'tour.skip': 'Skip',
+    'tour.previous': 'Previous',
+    'tour.next': 'Next',
+    'tour.finish': 'Finish',
+    'tour.common.controls.title': 'Your workspace controls',
+    'tour.common.controls.description':
+      'Use these controls on every page to switch language, change theme, and replay the tour.',
+    'tour.overview.hero.title': 'Start here before you sign in',
+    'tour.overview.hero.description':
+      'The homepage introduces MyReader and shows new visitors where to begin with the free trial.',
+    'tour.overview.how.title': 'See the step-by-step flow',
+    'tour.overview.how.description':
+      'This section explains the usual path: create an account, upload documents, and start chatting with them.',
+    'tour.overview.pricing.title': 'Check the plans',
+    'tour.overview.pricing.description':
+      'Compare Free, Premium, and Enterprise to decide how much upload and chat capacity you need.',
+    'tour.overview.cta.title': 'Create your account',
+    'tour.overview.cta.description':
+      'The sign-up area is the fastest way for a new user to move from browsing into uploading and chatting.',
+    'tour.login.form.title': 'Log in to continue',
+    'tour.login.form.description':
+      'Enter your email and password here to open your private dashboard and chat workspace.',
+    'tour.login.alt.title': 'Need an account first?',
+    'tour.login.alt.description':
+      'Use the sign-up link below the form if you have not created your account yet.',
+    'tour.signup.form.title': 'Create your account',
+    'tour.signup.form.description':
+      'Fill in your basic details here so you can start uploading files and using RAG chat.',
+    'tour.signup.alt.title': 'Already registered?',
+    'tour.signup.alt.description':
+      'If you already have an account, the login link takes you back to the sign-in form.',
+    'tour.dashboard.summary.title': 'Your key numbers',
+    'tour.dashboard.summary.description':
+      'After login, the dashboard highlights document uploads, chats, reviews, and plan-level activity.',
+    'tour.dashboard.reviews.title': 'Recent activity',
+    'tour.dashboard.reviews.description':
+      'This table shows your latest reviews and helps you keep track of ongoing document work.',
+    'tour.dashboard.chats.title': 'Jump back into chats',
+    'tour.dashboard.chats.description':
+      'Your recent chats appear here so you can return to ongoing conversations quickly.',
+    'tour.chat.sidebar.title': 'Your chat list',
+    'tour.chat.sidebar.description':
+      'Use the left sidebar to start fresh chats and reopen previous conversations.',
+    'tour.chat.upload.title': 'Upload files or folders',
+    'tour.chat.upload.description':
+      'Upload a single file here, or upload a full folder if you are on Enterprise, before asking document-grounded questions.',
+    'tour.chat.composer.title': 'Ask grounded questions',
+    'tour.chat.composer.description':
+      'Once processing finishes, ask questions here and MyReader will answer only from the uploaded scope.',
+    'tour.chat.history.title': 'Review uploads and topics',
+    'tour.chat.history.description':
+      'The right sidebar keeps your upload history, conversation topics, and the active document list together.',
+    'tour.chat.sentbot.title': 'Open Sentbot support',
+    'tour.chat.sentbot.description':
+      'Sentbot helps with usage, billing, plans, and product support. For document content, stay in the Chat page.',
+    // pricing page
+    'pricing.title': 'Read smarter without losing your time',
+    'pricing.free.name': 'Free',
+    'pricing.free.period': 'FOREVER',
+    'pricing.free.f1': '5 queries per day',
+    'pricing.free.f2': 'Files up to 10 MB',
+    'pricing.free.f3': 'Basic chat & summaries',
+    'pricing.free.f4': 'Great for testing the waters',
+    'pricing.free.cta': 'Start Free',
+    'pricing.starter.name': 'Starter',
+    'pricing.starter.period': 'per month (or $90/year – save 17%)',
+    'pricing.starter.f1': 'Everything in Free',
+    'pricing.starter.f2': 'Up to 20,000 pages total',
+    'pricing.starter.f3': 'Advanced multi-file analysis & citations',
+    'pricing.starter.f4': 'Built for researchers and professionals',
+    'pricing.starter.ctaMonthly': 'Start Premium Monthly',
+    'pricing.starter.ctaYearly': 'Start Premium Yearly',
+    'pricing.enterprise.name': 'Enterprise',
+    'pricing.enterprise.price': 'Custom pricing',
+    'pricing.enterprise.f1': 'Unlimited scale',
+    'pricing.enterprise.f2': 'Team seats & admin controls',
+    'pricing.enterprise.f3': 'Custom integrations & dedicated support',
+    'pricing.enterprise.f4': 'Contact us for a personalized demo',
+    'pricing.enterprise.cta': 'Start Enterprise',
+    'pricing.details': 'All plans are fast, secure, and ad-free. Cancel anytime with one click.',
+    'pricing.stripeNote': 'Paid subscriptions are processed securely with Stripe checkout.',
+    'pricing.feat1.title': 'Save Your Time!',
+    'pricing.feat1.l1': 'No more endless scrolling or re-reading paragraphs to find what you need.',
+    'pricing.feat1.l2': 'Get insights from a 300-page report in minutes instead of hours.',
+    'pricing.feat2.title': 'Read Smarter',
+    'pricing.feat2.l1': "Reading isn't just about speed; it's about understanding and retaining more.",
+    'pricing.feat2.l2': 'Walk away with deeper comprehension and smarter insights without mental fatigue.',
+    'pricing.feat3.title': 'Ask Questions',
+    'pricing.feat3.l1': 'Turn passive reading into an active conversation.',
+    'pricing.feat3.l2': 'Upload your PDF, book, or report and simply ask anything.',
+    'pricing.feat4.title': 'Be Productive',
+    'pricing.feat4.l1': "Productivity isn't just doing more — it's achieving more with less effort.",
+    'pricing.feat4.l2': 'Students finish faster. Professionals prepare in minutes. Researchers stay ahead.',
+    // features page
+    'features.title': 'How to Use MyReader AI (Chat with Files and More)',
+    'features.step1.title': 'Sign Up for an Account',
+    'features.step1.l1': 'Visit the official website at myreader.ai.',
+    'features.step1.l2': 'Click "Try for free" to create an account using your email or other quick methods.',
+    'features.step1.l3': 'Free trials are available, with paid plans for more features like unlimited uploads.',
+    'features.step2.title': 'Upload Your Files',
+    'features.step2.l1': 'Select a single document, a collection, or your entire library from the sidebar.',
+    'features.step2.l2': 'Start typing questions in the chat interface, like "Summarize chapter 3".',
+    'features.step2.l3': 'The AI provides instant answers with in-line citations linking back to exact pages.',
+    'features.step2.l4': 'Chat across multiple books at once for comparative insights.',
+    'features.step3.title': 'Chat with Your Documents',
+    'features.step3.l1': 'Once logged in, go to your library or the upload section.',
+    'features.step3.l2': 'Drag and drop or select files: PDFs, EPUBs, Word docs, PowerPoint, web links, or YouTube videos.',
+    'features.step3.l3': 'Upload up to 20,000 pages total. Files are stored securely and kept private.',
+    'features.step3.l4': 'Tip: Organize uploads into collections for easier access later.',
+    // services page
+    'services.title': 'MyReader AI reading from 5,000+ Documents',
+    'services.reviews.title': 'Once you try it, you can\'t go back',
+    'services.noReviews': 'No reviews yet. Be the first to share your experience!',
+    'services.formats.title': 'Works with any Documents:',
+    // account page
+    'account.settings': 'Your account settings',
+    'account.password': 'Password change',
+    'account.currentPassword': 'Current password',
+    'account.newPassword': 'New password',
+    'account.confirmPassword': 'Confirm password',
+    'account.saveSettings': 'Save settings',
+    'account.savePassword': 'Save password',
+    'account.subscription': 'Subscription',
+    'account.currentPlan': 'Current plan:',
+    'account.status': 'Status:',
+    'account.trialEnds': 'Trial ends:',
+    'account.periodEnds': 'Current period ends:',
+    'account.choosePlan': 'Choose a plan to upgrade your account:',
+    'account.stripeNote': 'Paid plans open secure Stripe checkout and return here with confirmation.',
+    'account.reviews': 'My reviews',
+    'account.noReviews': 'You have not submitted any reviews yet.',
+    'account.billing': 'Billing',
+    'account.stripeActive': 'Active Stripe subscription:',
+    'account.nextBilling': 'Next billing date:',
+    'account.viewPricing': 'View pricing plans',
+    'account.contactSupport': 'Contact support',
+    'account.cancelSub': 'Cancel subscription',
+    // tour keys for new pages
+    'tour.pricing.plans.title': 'Compare plans',
+    'tour.pricing.plans.description': 'This page shows all available plans. Compare features and pick the one that fits your needs.',
+    'tour.pricing.free.title': 'Free plan',
+    'tour.pricing.free.description': 'Start for free with 5 queries per day and files up to 10 MB. No credit card needed.',
+    'tour.pricing.starter.title': 'Starter plan',
+    'tour.pricing.starter.description': 'Upgrade to Starter for up to 20,000 pages, advanced analysis, and citations.',
+    'tour.pricing.enterprise.title': 'Enterprise plan',
+    'tour.pricing.enterprise.description': 'Enterprise gives you unlimited scale, team seats, custom integrations, and dedicated support.',
+    'tour.pricing.features.title': 'Why upgrade?',
+    'tour.pricing.features.description': 'These four benefits explain the value of upgrading: save time, read smarter, ask questions, and be more productive.',
+    'tour.services.docs.title': 'Document services',
+    'tour.services.docs.description': 'MyReader processes thousands of documents across many formats so you can chat with any of them.',
+    'tour.services.formats.title': 'Supported formats',
+    'tour.services.formats.description': 'PDF, Word, Web, PPT, Excel, Images, and Screenshots are all supported for upload and chat.',
+    'tour.services.reviews.title': 'User reviews',
+    'tour.services.reviews.description': 'See what real users say about MyReader after using it for research, work, and study.',
+    'tour.services.gallery.title': 'Gallery',
+    'tour.services.gallery.description': 'A visual showcase of MyReader in action across different document types and use cases.',
+    'tour.features.intro.title': 'How it works',
+    'tour.features.intro.description': 'This page walks you through the three steps to get started: sign up, upload files, and chat.',
+    'tour.features.step1.title': 'Step 1 — Sign up',
+    'tour.features.step1.description': 'Create your free account in seconds. No credit card required to start.',
+    'tour.features.step2.title': 'Step 2 — Upload',
+    'tour.features.step2.description': 'See how the upload and chat interface looks before you try it yourself.',
+    'tour.account.nav.title': 'Account navigation',
+    'tour.account.nav.description': 'Use the left menu to switch between Profile, Subscription, Reviews, and Billing sections.',
+    'tour.account.profile.title': 'Edit your profile',
+    'tour.account.profile.description': 'Update your name, email, and profile photo here.',
+    'tour.account.password.title': 'Change password',
+    'tour.account.password.description': 'Set a new password for your account from this section.',
+    'tour.account.subscription.title': 'Your subscription',
+    'tour.account.subscription.description': 'View your current plan and upgrade to Premium or Enterprise directly from here.',
+  },
+  am: {
+    'nav.chat': 'ቻት',
+    'nav.dashboard': 'ዳሽቦርድ',
+    'nav.pricing': 'ዋጋ',
+    'nav.services': 'አገልግሎቶች',
+    'nav.features': 'ባህሪያት',
+    'nav.account': 'የመለያ ቅንብሮች',
+    'nav.support': 'ድጋፍ',
+    'nav.logout': 'ውጣ',
+    'nav.login': 'ግባ',
+    'nav.signup': 'ተመዝገብ',
+    'controls.language': 'ቋንቋ',
+    'controls.themeDark': 'ጨለማ',
+    'controls.themeLight': 'ብርሃን',
+    'controls.themeSwitchToLight': 'ወደ ብርሃን ገጽታ ቀይር',
+    'controls.themeSwitchToDark': 'ወደ ጨለማ ገጽታ ቀይር',
+    'controls.themeLabel': 'ገጽታ',
+    'controls.tour': 'መመሪያ',
+    'controls.tourTooltip': 'የእርምጃ መመሪያውን ክፈት',
+    'auth.loginTitle': 'ወደ መለያዎ ይግቡ',
+    'auth.signupTitle': 'አዲስ መለያ ይፍጠሩ',
+    'auth.name': 'ስም',
+    'auth.email': 'ኢሜይል አድራሻ',
+    'auth.password': 'የይለፍ ቃል',
+    'auth.passwordConfirm': 'የይለፍ ቃሉን ያረጋግጡ',
+    'auth.showPassword': 'የይለፍ ቃልን አሳይ ወይም ደብቅ',
+    'auth.loginButton': 'ግባ',
+    'auth.signupButton': 'ተመዝገብ',
+    'auth.noAccount': 'መለያ የለዎትም?',
+    'auth.createOne': 'አዲስ ፍጠር',
+    'auth.haveAccount': 'መለያ አለዎት?',
+    'auth.loginLink': 'ግባ',
+    'auth.loginSuccess': 'በተሳካ ሁኔታ ገብተዋል!',
+    'auth.loginError': 'መግባት አልተሳካም።',
+    'auth.signupSuccess': 'ምዝገባው ተሳክቷል!',
+    'auth.signupError': 'ምዝገባው አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
+    'auth.signingUp': 'በመመዝገብ ላይ...',
+    'auth.signupDone': 'ተሳክቷል!',
+    'overview.heroTitle':
+      'ማንኛውንም ፋይል ይጫኑ፣ MyReader ጥያቄዎችዎን በጥቂት ሰከንዶች ውስጥ ይመልሳል',
+    'overview.heroCta': 'MyReaderን በነጻ ይሞክሩ',
+    'overview.heroLearnMore': 'ተጨማሪ ይወቁ',
+    'overview.trustedBy': 'የሚታመንበት',
+    'overview.howItWorks': 'እንዴት እንደሚሰራ',
+    'overview.howItWorksTitle':
+      'MyReader AIን እንዴት እንደሚጠቀሙ (ከፋይሎች ጋር ቻት)',
+    'overview.pricing': 'ዋጋ',
+    'overview.pricingTitle': 'ጊዜዎን ሳያጠፉ በብልህ ሁኔታ ያንብቡ',
+    'overview.ctaTitle': 'የመጀመሪያ ንባብዎን በነጻ ያግኙ!',
+    'overview.ctaText':
+      'ጊዜዎን ለማዳን እና በብልህ ሁኔታ ለማንበብ ዝግጁ ነዎት? ዛሬ በነጻ ይመዝገቡ።',
+    'overview.form.name': 'ሙሉ ስም',
+    'overview.form.email': 'ኢሜይል አድራሻ',
+    'overview.form.source': 'ስለ እኛ ከየት ሰሙ?',
+    'overview.form.optionPlaceholder': 'አንድ አማራጭ ይምረጡ:',
+    'overview.form.submit': 'አሁን ይመዝገቡ',
+    'dashboard.welcomeBack': 'እንኳን ደህና መጡ,',
+    'dashboard.publicWelcome': 'ወደ MyReader እንኳን ደህና መጡ',
+    'dashboard.publicTitle': 'የህዝብ ዳሽቦርድ',
+    'dashboard.documentsUploaded': 'የተጫኑ ሰነዶች',
+    'dashboard.chatsStarted': 'የተጀመሩ ቻቶች',
+    'dashboard.reviewsLeft': 'የቀሩ ግምገማዎች',
+    'dashboard.totalUsers': 'ጠቅላላ ተጠቃሚዎች',
+    'dashboard.totalDocuments': 'ጠቅላላ ሰነዶች',
+    'dashboard.totalReviews': 'ጠቅላላ ግምገማዎች',
+    'dashboard.usersBySubscriptionTier': 'ተጠቃሚዎች በፕላን',
+    'dashboard.recentReviews': 'የቅርብ ጊዜ ግምገማዎች',
+    'dashboard.noReviews':
+      'እስካሁን ግምገማ የለም። MyReaderን መጠቀም ሲጀምሩ እንቅስቃሴዎ እዚህ ይታያል።',
+    'dashboard.recentChats': 'የቅርብ ጊዜ ቻቶች',
+    'dashboard.noChats': 'እስካሁን ቻት የለም። ከ Chat ገጽ አዲስ ቻት ይጀምሩ።',
+    'dashboard.openChat': 'ቻቱን ክፈት',
+    'dashboard.adminAnalytics': 'የአስተዳዳሪ ትንታኔ',
+    'dashboard.usersByTierPie': 'ተጠቃሚዎች በፕላን (Pie)',
+    'dashboard.table.user': 'ተጠቃሚ',
+    'dashboard.table.document': 'ሰነድ',
+    'dashboard.table.chat': 'ቻት',
+    'dashboard.table.rating': 'ደረጃ',
+    'dashboard.table.date': 'ቀን',
+    'dashboard.table.uploadedDocument': 'የተጫነ ሰነድ',
+    'dashboard.table.lastActivity': 'የመጨረሻ እንቅስቃሴ',
+    'dashboard.table.messages': 'መልዕክቶች',
+    'dashboard.table.open': 'ክፈት',
+    'chat.recentChats': 'የቅርብ ጊዜ ቻቶች',
+    'chat.clearAll': 'ሁሉንም አጥፋ',
+    'chat.pageTitleNew': 'አዲስ ቻት',
+    'chat.newChat': 'አዲስ ቻት',
+    'chat.settings': 'ቅንብሮች',
+    'chat.help': 'እርዳታ',
+    'chat.welcomeTitle': 'እስካሁን ቻት የለም',
+    'chat.welcomeText':
+      'አዲስ ቻት ለመጀመር ፋይል ይጫኑ። MyReader ሰነዶችን ያቀናብራል እና ይዘታቸውን እንዲመረምሩ ይረዳዎታል።',
+    'chat.uploadTitle': 'ቻት ለመጀመር ፋይል ይጫኑ',
+    'chat.uploadHint': 'ፋይልዎን ይጎትቱ ወይም ለመምረጥ ጠቅ ያድርጉ',
+    'chat.chooseFile': 'ፋይል ይምረጡ',
+    'chat.chooseFolder': 'ፎልደር ይምረጡ',
+    'chat.folderUploadHint':
+      'የ Enterprise ተጠቃሚዎች የአካባቢ ፎልደር ጭነት ማድረግ እና በውስጡ ባሉ ሰነዶች ላይ መጠየቅ ይችላሉ።',
+    'chat.folderUpgradeHint':
+      'ፎልደሮችን ለመጫን እና በቡድን ሰነዶች ላይ ለመቻት ወደ Enterprise ያሻሽሉ።',
+    'chat.composerNote': 'መልሶች በተጫነው ሰነድ ላይ ብቻ ይመሰረታሉ።',
+    'chat.composerNoteFolder':
+      'መልሶች በተመረጠው ፎልደር ውስጥ ባሉ ሰነዶች ላይ ብቻ ይመሰረታሉ።',
+    'chat.composerPlaceholderDisabled': 'መጠየቅ ለመጀመር ፋይል ይጫኑ...',
+    'chat.composerPlaceholderReady': 'ስለ ተጫነው ሰነድ ማንኛውንም ይጠይቁ...',
+    'chat.composerPlaceholderFolder': 'ስለ ተጫነው ፎልደር ማንኛውንም ይጠይቁ...',
+    'chat.history': 'ታሪክ',
+    'chat.uploadHistory': 'የጭነት ታሪክ',
+    'chat.deleteAll': 'ሁሉንም ሰርዝ',
+    'chat.conversationTopics': 'የውይይት ርዕሶች',
+    'chat.currentScopeTitle': 'የተመረጡ ሰነዶች',
+    'chat.currentScopeEmpty':
+      'የአሁኑን ሰነድ ወይም ፎልደር ዝርዝር ለማየት ቻት ይክፈቱ።',
+    'chat.currentScopeFolderLabel': 'የፎልደር ሰነዶች',
+    'chat.currentScopeFileLabel': 'የተመረጠ ሰነድ',
+    'chat.scopeReady': 'ለቻት ዝግጁ',
+    'chat.scopeNotReady': 'እንደገና መጫን ያስፈልጋል',
+    'chat.noChats': 'ቻቶች የሉም',
+    'chat.noUploads': 'እስካሁን ጭነት የለም',
+    'chat.noTopics': 'እስካሁን ርዕስ የለም',
+    'chat.clear': 'አጥፋ',
+    'chat.delete': 'ሰርዝ',
+    'chat.assistantName': 'MyReader',
+    'chat.you': 'እርስዎ',
+    'chat.sources': 'ምንጮች',
+    'chat.messageCountSingular': '{{count}} መልዕክት',
+    'chat.messageCountPlural': '{{count}} መልዕክቶች',
+    'chat.chatAbout': 'ስለ {{name}} ቻት',
+    'chat.chatAboutFolder': 'የፎልደር ቻት: {{name}}',
+    'chat.chatFallback': 'ቻት',
+    'chat.topicFallback': 'ርዕስ',
+    'chat.processedFileIntro':
+      '"{{fileName}}" የተባለውን ፋይል አቀናብሬዋለሁ። ምን ማወቅ ይፈልጋሉ?',
+    'chat.processedFolderIntro':
+      '"{{folderName}}" ፎልደር ዝግጁ ነው። ጥያቄዎችን ይጠይቁ እና እኔ ከዚህ ፎልደር ሰነዶች ብቻ እመልሳለሁ።',
+    'chat.previousUploadIntro':
+      'ከዚህ በፊት "{{fileName}}" የተባለ ፋይል ጭነው ነበር።',
+    'chat.previousFolderIntro':
+      'ከዚህ በፊት "{{folderName}}" ፎልደር ጭነው ነበር። በቀኝ በኩል ያለውን ዝርዝር በመክፈት ውስጡን ይመልከቱ።',
+    'chat.processingFile': 'ፋይልዎ በመቀናበር ላይ ነው...',
+    'chat.processingFolder': 'ፎልደርዎ በመቀናበር ላይ ነው...',
+    'chat.uploadWarning':
+      'ፋይሉ ተጫኗል፣ ነገር ግን የ RAG ሂደቱ ሙሉ በሙሉ አልተጠናቀቀም።',
+    'chat.uploadFailed': 'የፋይል ጭነት አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
+    'chat.folderUploadFailed':
+      'የፎልደር ጭነት አልተሳካም። እባክዎ እንደገና ይሞክሩ ወይም ትንሽ ፋይሎችን ይምረጡ።',
+    'chat.folderUploadPartial':
+      'ፎልደሩ ተጭኗል፣ ከ {{total}} ፋይሎች {{ready}} ብቻ ለቻት ዝግጁ ናቸው።',
+    'chat.folderUploadNoReady':
+      'የፎልደሩ ጭነት ተጠናቋል፣ ነገር ግን ለቻት ዝግጁ የሆነ ፋይል የለም።',
+    'chat.folderEnterpriseOnly': 'የፎልደር ጭነት በ Enterprise ፕላን ብቻ ይገኛል።',
+    'chat.settingsAlert':
+      'ገጽታ ወይም ቋንቋ ለመቀየር የላይኛውን መቆጣጠሪያ ይጠቀሙ።',
+    'chat.helpAlert':
+      'የእርምጃ መመሪያውን በመጠቀም ፋይል ይጫኑ፣ ቻት ይክፈቱ እና ጥያቄዎችን ይጠይቁ።',
+    'sentbot.title': 'ሴንትቦት',
+    'sentbot.intro.line1': 'ሰላም',
+    'sentbot.intro.line2':
+      'ስለ ድጋፍ፣ አጠቃቀም፣ ዳሽቦርድ ቁጥሮች፣ ምዝገባ እና ክፍያ ልረዳዎ እችላለሁ።',
+    'sentbot.intro.line3':
+      'ስለ ሰነድ ይዘት ጥያቄዎች እባክዎ Chat ገጽን ይጠቀሙ።',
+    'sentbot.suggestionLabel': 'Sentbotን ሊጠይቁት የሚችሉት:',
+    'sentbot.placeholder':
+      'ስለ አጠቃቀም፣ ፕላኖች፣ ክፍያ ወይም ዳሽቦርድ መረጃ ይጠይቁ...',
+    'sentbot.prompt.queries': 'ዛሬ ስንት ጥያቄ ተጠቅመሁ?',
+    'sentbot.prompt.uploads': 'በመለያዬ ውስጥ ስንት ጭነቶች አሉ?',
+    'sentbot.prompt.chatCounts': 'የቻት እና መልዕክት ቁጥሮቼን አሳይ።',
+    'sentbot.prompt.plan': 'አሁን በየትኛው ፕላን ላይ ነኝ?',
+    'sentbot.prompt.upgrade': 'ወደ Enterprise እንዴት ላሻሽል?',
+    'sentbot.prompt.publicTotals': 'የህዝብ ዳሽቦርድ ጠቅላላ ቁጥሮችን አሳይ።',
+    'sentbot.prompt.usersByTier': 'በእያንዳንዱ ፕላን ስንት ተጠቃሚዎች አሉ?',
+    'sentbot.prompt.features': 'MyReader ምን ሊረዳኝ ይችላል?',
+    'tour.progress': 'ደረጃ {{current}} ከ {{total}}',
+    'tour.skip': 'ዝለል',
+    'tour.previous': 'ቀዳሚ',
+    'tour.next': 'ቀጣይ',
+    'tour.finish': 'ጨርስ',
+    'tour.common.controls.title': 'የስራ ቦታ መቆጣጠሪያዎች',
+    'tour.common.controls.description':
+      'ቋንቋን ለመቀየር፣ ገጽታን ለመቀየር እና መመሪያውን ለመድገም እነዚህን ይጠቀሙ።',
+    'tour.overview.hero.title': 'ከመግባትዎ በፊት ከዚህ ይጀምሩ',
+    'tour.overview.hero.description':
+      'የመነሻ ገጹ ለአዲስ ጎብኚዎች የመጀመሪያ እርምጃን ያሳያል።',
+    'tour.overview.how.title': 'የእርምጃ ፍሰቱን ይመልከቱ',
+    'tour.overview.how.description':
+      'ይህ ክፍል መመዝገብ፣ ሰነዶችን መጫን እና ከእነሱ ጋር መቻት እንዴት እንደሚሆን ያሳያል።',
+    'tour.overview.pricing.title': 'ፕላኖችን ያረጋግጡ',
+    'tour.overview.pricing.description':
+      'Free፣ Premium እና Enterprise ፕላኖችን ያነፃፅሩ።',
+    'tour.overview.cta.title': 'መለያዎን ይፍጠሩ',
+    'tour.overview.cta.description':
+      'ከመመልከት ወደ መጫን እና መቻት ለመግባት ይህ ፈጣኑ መንገድ ነው።',
+    'tour.login.form.title': 'ለመቀጠል ይግቡ',
+    'tour.login.form.description':
+      'የግል ዳሽቦርድዎን እና የቻት የስራ ቦታዎን ለመክፈት ኢሜይልና የይለፍ ቃል ያስገቡ።',
+    'tour.login.alt.title': 'መጀመሪያ መለያ ያስፈልጋል?',
+    'tour.login.alt.description':
+      'መለያ ካልፈጠሩ በታች ያለውን የምዝገባ አገናኝ ይጠቀሙ።',
+    'tour.signup.form.title': 'መለያዎን ይፍጠሩ',
+    'tour.signup.form.description':
+      'ፋይሎችን ለመጫን እና RAG ቻት ለመጠቀም መረጃዎን እዚህ ያስገቡ።',
+    'tour.signup.alt.title': 'ቀድሞ ተመዝግበዋል?',
+    'tour.signup.alt.description':
+      'ከዚህ አገናኝ በመጠቀም ወደ መግቢያ ገጹ ይመለሱ።',
+    'tour.dashboard.summary.title': 'ዋና ቁጥሮችዎ',
+    'tour.dashboard.summary.description':
+      'ከመግቢያ በኋላ ዳሽቦርዱ ሰነድ ጭነቶችን፣ ቻቶችን እና እንቅስቃሴን ያሳያል።',
+    'tour.dashboard.reviews.title': 'የቅርብ ጊዜ እንቅስቃሴ',
+    'tour.dashboard.reviews.description':
+      'ይህ ሰንጠረዥ የቅርብ ጊዜ ግምገማዎችዎን ያሳያል።',
+    'tour.dashboard.chats.title': 'ወደ ቻቶች በፍጥነት ይመለሱ',
+    'tour.dashboard.chats.description':
+      'የቅርብ ጊዜ ቻቶችዎ እዚህ ይታያሉ።',
+    'tour.chat.sidebar.title': 'የቻት ዝርዝርዎ',
+    'tour.chat.sidebar.description':
+      'ከግራ በኩል አዲስ ቻት ይጀምሩ ወይም የቀድሞ ቻቶችን ይክፈቱ።',
+    'tour.chat.upload.title': 'ፋይሎችን ወይም ፎልደሮችን ይጫኑ',
+    'tour.chat.upload.description':
+      'ነጠላ ፋይል ይጫኑ፣ ወይም Enterprise ላይ ከሆኑ ሙሉ ፎልደር ይጫኑ።',
+    'tour.chat.composer.title': 'በምንጭ የተመሠረቱ ጥያቄዎችን ይጠይቁ',
+    'tour.chat.composer.description':
+      'ሂደቱ ከተጠናቀቀ በኋላ እዚህ ይጠይቁ እና MyReader ከተመረጠው ምንጭ ብቻ ይመልሳል።',
+    'tour.chat.history.title': 'ጭነትን እና ርዕሶችን ይመልከቱ',
+    'tour.chat.history.description':
+      'በቀኝ በኩል ያለው ክፍል የጭነት ታሪክን፣ ርዕሶችን እና የሰነድ ዝርዝርን ያያያዛል።',
+    'tour.chat.sentbot.title': 'የSentbot ድጋፍን ክፈት',
+    'tour.chat.sentbot.description':
+      'Sentbot በአጠቃቀም፣ ክፍያ እና ፕላን ጥያቄዎች ይረዳል። ለሰነድ ይዘት ጥያቄዎች Chat ገጹ ላይ ይቆዩ።',
+    // pricing page
+    'pricing.title': 'ጊዜዎን ሳያጠፉ በብልህ ሁኔታ ያንብቡ',
+    'pricing.free.name': 'ነጻ',
+    'pricing.free.period': 'ለዘላለም',
+    'pricing.free.f1': 'በቀን 5 ጥያቄዎች',
+    'pricing.free.f2': 'እስከ 10 MB ፋይሎች',
+    'pricing.free.f3': 'መሰረታዊ ቻት እና ማጠቃለያ',
+    'pricing.free.f4': 'ለሙከራ ተስማሚ',
+    'pricing.free.cta': 'ነጻ ጀምር',
+    'pricing.starter.name': 'ስታርተር',
+    'pricing.starter.period': 'በወር (ወይም $90/ዓመት – 17% ቁጠባ)',
+    'pricing.starter.f1': 'ሁሉም ነጻ ባህሪያት',
+    'pricing.starter.f2': 'እስከ 20,000 ገጾች',
+    'pricing.starter.f3': 'የላቀ ብዙ-ፋይል ትንታኔ እና ጥቅሶች',
+    'pricing.starter.f4': 'ለተመራማሪዎች እና ባለሙያዎች',
+    'pricing.starter.ctaMonthly': 'ፕሪሚየም ወርሃዊ ጀምር',
+    'pricing.starter.ctaYearly': 'ፕሪሚየም ዓመታዊ ጀምር',
+    'pricing.enterprise.name': 'ኢንተርፕራይዝ',
+    'pricing.enterprise.price': 'ብጁ ዋጋ',
+    'pricing.enterprise.f1': 'ያልተገደበ ልኬት',
+    'pricing.enterprise.f2': 'የቡድን መቀመጫዎች እና አስተዳዳሪ ቁጥጥር',
+    'pricing.enterprise.f3': 'ብጁ ውህደቶች እና ልዩ ድጋፍ',
+    'pricing.enterprise.f4': 'ለግል ማሳያ ያግኙን',
+    'pricing.enterprise.cta': 'ኢንተርፕራይዝ ጀምር',
+    'pricing.details': 'ሁሉም ፕላኖች ፈጣን፣ ደህንነቱ የተጠበቀ እና ማስታወቂያ-ነጻ ናቸው። በማንኛውም ጊዜ ይሰርዙ።',
+    'pricing.stripeNote': 'የሚከፈሉ ምዝገባዎች በ Stripe ቼክአውት ደህንነቱ በተጠበቀ ሁኔታ ይካሄዳሉ።',
+    'pricing.feat1.title': 'ጊዜዎን ይቆጥቡ!',
+    'pricing.feat1.l1': 'ምን እንደሚፈልጉ ለማግኘት ማለቂያ የሌለው ማሸብለል አያስፈልግም።',
+    'pricing.feat1.l2': 'ከ300 ገጽ ሪፖርት ግንዛቤ ከሰዓታት ይልቅ በደቂቃዎች ያግኙ።',
+    'pricing.feat2.title': 'በብልህ ሁኔታ ያንብቡ',
+    'pricing.feat2.l1': 'ማንበብ ስለ ፍጥነት ብቻ አይደለም፤ ስለ መረዳት እና ማስታወስ ነው።',
+    'pricing.feat2.l2': 'ጥልቅ ግንዛቤ እና ብልህ ግንዛቤ ያለ አእምሮ ድካም ያግኙ።',
+    'pricing.feat3.title': 'ጥያቄዎችን ይጠይቁ',
+    'pricing.feat3.l1': 'ተገብሮ ማንበብን ወደ ንቁ ውይይት ይቀይሩ።',
+    'pricing.feat3.l2': 'PDF፣ መጽሐፍ ወይም ሪፖርት ጭነው ማንኛውንም ይጠይቁ።',
+    'pricing.feat4.title': 'ምርታማ ይሁኑ',
+    'pricing.feat4.l1': 'ምርታማነት ብዙ ማድረግ ብቻ አይደለም — ያነሰ ጥረት ብዙ ማሳካት ነው።',
+    'pricing.feat4.l2': 'ተማሪዎች ፈጥነው ይጨርሳሉ። ባለሙያዎች በደቂቃዎች ይዘጋጃሉ።',
+    // features page
+    'features.title': 'MyReader AIን እንዴት እንደሚጠቀሙ (ከፋይሎች ጋር ቻት)',
+    'features.step1.title': 'መለያ ይፍጠሩ',
+    'features.step1.l1': 'ኦፊሴላዊ ድህረ ገጹን myreader.ai ይጎብኙ።',
+    'features.step1.l2': 'ኢሜይልዎን ወይም ሌሎች ፈጣን ዘዴዎችን በመጠቀም መለያ ለመፍጠር "ነጻ ሞክር" ጠቅ ያድርጉ።',
+    'features.step1.l3': 'ነጻ ሙከራዎች ይገኛሉ፣ ለተጨማሪ ባህሪያት የሚከፈሉ ፕላኖች አሉ።',
+    'features.step2.title': 'ፋይሎችዎን ይጫኑ',
+    'features.step2.l1': 'ነጠላ ሰነድ፣ ስብስብ ወይም ሙሉ ቤተ-መጻሕፍትዎን ከጎን አሞሌ ይምረጡ።',
+    'features.step2.l2': 'እንደ "ምዕራፍ 3ን ጠቅለል አድርግ" ያሉ ጥያቄዎችን ይጻፉ።',
+    'features.step2.l3': 'AI ወዲያውኑ ወደ ትክክለኛ ገጾች የሚያገናኙ ጥቅሶች ያለው መልስ ይሰጣል።',
+    'features.step2.l4': 'ለንጽጽር ግንዛቤ በብዙ መጻሕፍት ላይ በአንድ ጊዜ ቻት ያድርጉ።',
+    'features.step3.title': 'ከሰነዶችዎ ጋር ቻት ያድርጉ',
+    'features.step3.l1': 'ከገቡ በኋላ ወደ ቤተ-መጻሕፍትዎ ወይም የጭነት ክፍሉ ይሂዱ።',
+    'features.step3.l2': 'ፋይሎችን ይጎትቱ ወይም ይምረጡ: PDFs፣ EPUBs፣ Word ሰነዶች፣ PowerPoint፣ የድር አገናኞች።',
+    'features.step3.l3': 'እስከ 20,000 ገጾች ይጫኑ። ፋይሎች ደህንነቱ በተጠበቀ ሁኔታ ይቀመጣሉ።',
+    'features.step3.l4': 'ጠቃሚ ምክር: ጭነቶችን ወደ ስብስቦች ያደራጁ።',
+    // services page
+    'services.title': 'MyReader AI ከ5,000+ ሰነዶች ያነባል',
+    'services.reviews.title': 'አንዴ ከሞከሩ ወደ ኋላ አይመለሱም',
+    'services.noReviews': 'እስካሁን ምንም ግምገማ የለም። የመጀመሪያው ይሁኑ!',
+    'services.formats.title': 'ከማንኛውም ሰነድ ጋር ይሰራል:',
+    // account page
+    'account.settings': 'የመለያ ቅንብሮችዎ',
+    'account.password': 'የይለፍ ቃል ለውጥ',
+    'account.currentPassword': 'የአሁኑ የይለፍ ቃል',
+    'account.newPassword': 'አዲስ የይለፍ ቃል',
+    'account.confirmPassword': 'የይለፍ ቃሉን ያረጋግጡ',
+    'account.saveSettings': 'ቅንብሮችን አስቀምጥ',
+    'account.savePassword': 'የይለፍ ቃሉን አስቀምጥ',
+    'account.subscription': 'ምዝገባ',
+    'account.currentPlan': 'የአሁኑ ፕላን:',
+    'account.status': 'ሁኔታ:',
+    'account.trialEnds': 'ሙከራ ያበቃል:',
+    'account.periodEnds': 'የአሁኑ ጊዜ ያበቃል:',
+    'account.choosePlan': 'መለያዎን ለማሻሻል ፕላን ይምረጡ:',
+    'account.stripeNote': 'የሚከፈሉ ፕላኖች ደህንነቱ የተጠበቀ Stripe ቼክአውት ይከፍታሉ።',
+    'account.reviews': 'ግምገማዎቼ',
+    'account.noReviews': 'እስካሁን ምንም ግምገማ አላስገቡም።',
+    'account.billing': 'ክፍያ',
+    'account.stripeActive': 'ንቁ Stripe ምዝገባ:',
+    'account.nextBilling': 'ቀጣይ የክፍያ ቀን:',
+    'account.viewPricing': 'የዋጋ ፕላኖችን ይመልከቱ',
+    'account.contactSupport': 'ድጋፍ ያግኙ',
+    'account.cancelSub': 'ምዝገባ ሰርዝ',
+    // tour keys for new pages
+    'tour.pricing.plans.title': 'ፕላኖችን ያወዳድሩ',
+    'tour.pricing.plans.description': 'ይህ ገጽ ሁሉንም ፕላኖች ያሳያል። ባህሪያቱን ያወዳድሩ እና ለፍላጎትዎ የሚስማማውን ይምረጡ።',
+    'tour.pricing.free.title': 'ነጻ ፕላን',
+    'tour.pricing.free.description': 'በቀን 5 ጥያቄዎች እና እስከ 10 MB ፋይሎች ነጻ ይጀምሩ። ክሬዲት ካርድ አያስፈልግም።',
+    'tour.pricing.starter.title': 'ስታርተር ፕላን',
+    'tour.pricing.starter.description': 'እስከ 20,000 ገጾች፣ የላቀ ትንታኔ እና ጥቅሶች ለማግኘት ወደ ስታርተር ያሻሽሉ።',
+    'tour.pricing.enterprise.title': 'ኢንተርፕራይዝ ፕላን',
+    'tour.pricing.enterprise.description': 'ኢንተርፕራይዝ ያልተገደበ ልኬት፣ የቡድን መቀመጫዎች እና ልዩ ድጋፍ ይሰጣል።',
+    'tour.pricing.features.title': 'ለምን ያሻሽሉ?',
+    'tour.pricing.features.description': 'እነዚህ አራት ጥቅሞች የማሻሻሉን ዋጋ ያብራራሉ: ጊዜ ቆጥቡ፣ ብልህ ሁኑ፣ ይጠይቁ፣ ምርታማ ይሁኑ።',
+    'tour.services.docs.title': 'የሰነድ አገልግሎቶች',
+    'tour.services.docs.description': 'MyReader በብዙ ቅርጸቶች ሺዎች ሰነዶችን ያቀናብራል።',
+    'tour.services.formats.title': 'የሚደገፉ ቅርጸቶች',
+    'tour.services.formats.description': 'PDF፣ Word፣ Web፣ PPT፣ Excel፣ ምስሎች እና ቅጽበታዊ ገጽ ዕይታዎች ሁሉም ይደገፋሉ።',
+    'tour.services.reviews.title': 'የተጠቃሚ ግምገማዎች',
+    'tour.services.reviews.description': 'ለምርምር፣ ስራ እና ጥናት MyReaderን ከተጠቀሙ በኋላ ተጠቃሚዎች ምን እንደሚሉ ይመልከቱ።',
+    'tour.services.gallery.title': 'ጋለሪ',
+    'tour.services.gallery.description': 'MyReader በተለያዩ ሰነድ ዓይነቶች ላይ ሲሰራ የሚያሳይ ምስላዊ ማሳያ።',
+    'tour.features.intro.title': 'እንዴት እንደሚሰራ',
+    'tour.features.intro.description': 'ይህ ገጽ ለመጀመር ሶስቱን እርምጃዎች ያሳያል: ይመዝገቡ፣ ፋይሎችን ይጫኑ፣ ቻት ያድርጉ።',
+    'tour.features.step1.title': 'እርምጃ 1 — ይመዝገቡ',
+    'tour.features.step1.description': 'ነጻ መለያዎን በጥቂት ሰከንዶች ይፍጠሩ። ለመጀመር ክሬዲት ካርድ አያስፈልግም።',
+    'tour.features.step2.title': 'እርምጃ 2 — ይጫኑ',
+    'tour.features.step2.description': 'ራስዎ ከመሞከርዎ በፊት የጭነት እና ቻት ገጽ ምን እንደሚመስል ይመልከቱ።',
+    'tour.account.nav.title': 'የመለያ ናቪጌሽን',
+    'tour.account.nav.description': 'ፕሮፋይል፣ ምዝገባ፣ ግምገማዎች እና ክፍያ ክፍሎች መካከል ለመቀያየር የግራ ምናሌን ይጠቀሙ።',
+    'tour.account.profile.title': 'ፕሮፋይልዎን ያርትዑ',
+    'tour.account.profile.description': 'ስምዎን፣ ኢሜይልዎን እና የፕሮፋይል ፎቶዎን እዚህ ያዘምኑ።',
+    'tour.account.password.title': 'የይለፍ ቃል ይቀይሩ',
+    'tour.account.password.description': 'ለመለያዎ አዲስ የይለፍ ቃል ከዚህ ክፍል ያዘጋጁ።',
+    'tour.account.subscription.title': 'ምዝገባዎ',
+    'tour.account.subscription.description': 'የአሁኑን ፕላን ይመልከቱ እና ወደ ፕሪሚየም ወይም ኢንተርፕራይዝ ቀጥታ ከዚህ ያሻሽሉ።',
+  },
+};
+
+function normalizeTheme(value = '') {
+  return String(value || '').toLowerCase() === 'dark' ? 'dark' : 'light';
+}
+
+function normalizeLanguage(value = '') {
+  return String(value || '').toLowerCase().startsWith('am') ? 'am' : 'en';
+}
+
+function getStoredPreference(key) {
+  try {
+    const currentValue = localStorage.getItem(STORAGE_KEYS[key]);
+    if (currentValue !== null) return currentValue;
+
+    const legacyValue = localStorage.getItem(LEGACY_STORAGE_KEYS[key]);
+    if (legacyValue !== null) {
+      localStorage.setItem(STORAGE_KEYS[key], legacyValue);
+    }
+    return legacyValue;
+  } catch (_err) {
+    return null;
+  }
+}
+
+function migrateLegacyPreferences() {
+  getStoredPreference('language');
+  getStoredPreference('theme');
+}
+
+function getStoredTheme() {
+  const storedTheme = getStoredPreference('theme');
+  return normalizeTheme(
+    storedTheme ||
+      (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'),
+  );
+}
+
+function getStoredLanguage() {
+  return normalizeLanguage(getStoredPreference('language') || 'en');
+}
+
+function interpolate(template, values = {}) {
+  return Object.entries(values).reduce(
+    (result, [key, value]) =>
+      result.replace(new RegExp(`{{${key}}}`, 'g'), String(value)),
+    String(template || ''),
+  );
+}
+
+export function getCurrentLanguage() {
+  return normalizeLanguage(
+    document.documentElement.dataset.language || getStoredLanguage(),
+  );
+}
+
+export function getCurrentTheme() {
+  return normalizeTheme(document.documentElement.dataset.theme || getStoredTheme());
+}
+
+export function t(key, values = {}, fallback = '') {
+  const language = getCurrentLanguage();
+  const template =
+    TRANSLATIONS[language]?.[key] || TRANSLATIONS.en[key] || fallback || '';
+  return interpolate(template, values);
+}
+
+function updateThemeToggle() {
+  const button = document.getElementById('themeToggle');
+  if (!button) return;
+
+  const theme = getCurrentTheme();
+  const icon = button.querySelector('i');
+  const label = button.querySelector('[data-theme-label]');
+
+  if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+  if (label) {
+    label.textContent =
+      theme === 'dark' ? t('controls.themeDark') : t('controls.themeLight');
+  }
+
+  button.setAttribute(
+    'title',
+    theme === 'dark'
+      ? t('controls.themeSwitchToLight')
+      : t('controls.themeSwitchToDark'),
+  );
+  button.setAttribute('aria-label', t('controls.themeLabel'));
+}
+
+function syncLanguageSelect() {
+  const select = document.getElementById('languageSelect');
+  if (select) select.value = getCurrentLanguage();
+}
+
+export function applyTranslations(root = document) {
+  root.querySelectorAll('[data-i18n]').forEach((element) => {
+    const key = element.getAttribute('data-i18n');
+    if (!key) return;
+    const mode = element.getAttribute('data-i18n-mode') || 'text';
+    const translated = t(key, {}, element.textContent || '');
+    if (mode === 'html') element.innerHTML = translated;
+    else element.textContent = translated;
+  });
+
+  root.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (key) element.setAttribute('placeholder', t(key, {}, element.placeholder));
+  });
+
+  root.querySelectorAll('[data-i18n-title]').forEach((element) => {
+    const key = element.getAttribute('data-i18n-title');
+    if (key) element.setAttribute('title', t(key, {}, element.title));
+  });
+
+  root.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+    const key = element.getAttribute('data-i18n-aria-label');
+    if (key) {
+      element.setAttribute('aria-label', t(key, {}, element.getAttribute('aria-label')));
+    }
+  });
+
+  updateThemeToggle();
+  syncLanguageSelect();
+}
+
+function emitPreferenceEvent() {
+  window.dispatchEvent(
+    new CustomEvent('app:preferences-changed', {
+      detail: {
+        language: getCurrentLanguage(),
+        theme: getCurrentTheme(),
+      },
+    }),
+  );
+}
+
+function setTheme(theme, { persist = true, emit = true } = {}) {
+  const normalized = normalizeTheme(theme);
+  document.documentElement.dataset.theme = normalized;
+  document.body?.setAttribute('data-theme', normalized);
+  if (persist) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.theme, normalized);
+    } catch (_err) {}
+  }
+  updateThemeToggle();
+  if (emit) emitPreferenceEvent();
+}
+
+function setLanguage(language, { persist = true, emit = true } = {}) {
+  const normalized = normalizeLanguage(language);
+  document.documentElement.dataset.language = normalized;
+  document.documentElement.lang = normalized;
+  document.body?.setAttribute('data-language', normalized);
+
+  if (persist) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.language, normalized);
+    } catch (_err) {}
+  }
+
+  applyTranslations(document);
+  if (emit) emitPreferenceEvent();
+}
+
+function attachGlobalHelpers() {
+  window.__appI18n = {
+    t: (key, values = {}, fallback = '') => t(key, values, fallback),
+    getLanguage: getCurrentLanguage,
+    getTheme: getCurrentTheme,
+    translateRoot: applyTranslations,
+  };
+}
+
+export function initPreferences() {
+  attachGlobalHelpers();
+  migrateLegacyPreferences();
+
+  setTheme(getStoredTheme(), { persist: false, emit: false });
+  setLanguage(getStoredLanguage(), { persist: false, emit: false });
+  applyTranslations(document);
+
+  const themeToggle = document.getElementById('themeToggle');
+  const languageSelect = document.getElementById('languageSelect');
+
+  themeToggle?.addEventListener('click', () => {
+    const nextTheme = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+  });
+
+  languageSelect?.addEventListener('change', (event) => {
+    setLanguage(event.target.value);
+  });
+}
+

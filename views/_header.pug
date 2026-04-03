@@ -19,11 +19,13 @@ header.header
       if user
         li
           //- a.main-nav-link(href="/profile") Profile
-          .profile-toggle-container
+.profile-toggle-container
             button#profileToggle.profile-toggle-btn
               .user-avatar-small= user.name.split(' ').map(n => n[0]).join('').toUpperCase()
               span.user-name-small= user.name.split(' ')[0]  
               i.fas.fa-chevron-down.toggle-arrow
+            // Theme/Lang toggles
+            .nav-utility(data-theme-toggle data-language-toggle)
             // Profile Dropdown
             #profileDropdown.profile-dropdown
               .profile-content  
@@ -62,13 +64,13 @@ header.header
                   .action-icon
                     i.fas.fa-headset
                   span.action-text Support
-                a#logout.action-item(href='/logout')
-                  .action-icon
-                    i.fas.fa-sign-out-alt
-                  span.action-text Logout
+a#logout.action-item(href='/logout')
+  .action-icon
+    i.fas.fa-sign-out-alt
+  span.action-text Logout
       else
-        a.main-nav-link(href="/login") Log in
-        a.main-nav-link(href="/signup") Sign up
+  a.main-nav-link(href="/login") Log in
+  a.main-nav-link(href="/signup") Sign up
 // Overlay to close dropdown when clicking outside
 #dropdownOverlay.dropdown-overlay
 button.btn-mobile-nav

@@ -1,0 +1,438 @@
+/* Mobile-Optimized Animations and Transitions */
+
+/* Base Animation Settings */
+:root {
+  --animation-duration-fast: 0.2s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Reduce animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Loading Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translate3d(100%, 0, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Touch Feedback Animations */
+@keyframes touchRipple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes buttonPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile-Specific Component Animations */
+
+/* Navigation Menu */
+.main-nav {
+  animation: slideInDown var(--animation-duration-normal) var(--animation-easing);
+}
+
+.nav-open .main-nav {
+  animation: slideInDown var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Chat Sidebar */
+.chat-sidebar {
+  transition: transform var(--animation-duration-normal) var(--animation-easing);
+}
+
+.chat-sidebar.show-sidebar {
+  animation: slideInLeft var(--animation-duration-normal) var(--animation-easing);
+}
+
+/* Sentbot */
+.chatbot {
+  transition: transform var(--animation-duration-normal) var(--animation-easing-bounce);
+}
+
+.show-chatbot .chatbot {
+  animation: scaleIn var(--animation-duration-normal) var(--animation-easing-bounce);
+}
+
+.chatbot-toggler {
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.chatbot-toggler:active {
+  animation: buttonPress var(--animation-duration-fast) var(--animation-easing);
+}
+
+/* Messages */
+.message {
+  animation: slideInUp var(--animation-duration-fast) var(--animation-easing);
+}
+
+.message--sent {
+  animation: slideInRight var(--animation-duration-fast) var(--animation-easing);
+}
+
+.message--received {
+  animation: slideInLeft var(--animation-duration-fast) var(--animation-easing);
+}
+
+/* Buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Loading States */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.loading-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #007bff;
+  animation: pulse 1.4s infinite ease-in-out;
+}
+
+.loading-dots .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Form Animations */
+.form__input {
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.form__input:focus {
+  transform: scale(1.02);
+}
+
+/* Alert Animations */
+.alert {
+  animation: slideInDown var(--animation-duration-normal) var(--animation-easing);
+}
+
+.alert.alert--hide {
+  animation: slideInUp var(--animation-duration-normal) var(--animation-easing) reverse;
+}
+
+/* Upload Area */
+.upload-area {
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.upload-area:hover,
+.upload-area:active {
+  transform: scale(1.02);
+}
+
+.upload-area.dragover {
+  animation: pulse 1s infinite;
+}
+
+/* Pricing Cards */
+.pricing-plan {
+  transition: transform var(--animation-duration-fast) var(--animation-easing);
+}
+
+.pricing-plan:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+  .pricing-plan:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Success Page */
+.success__icon {
+  animation: scaleIn var(--animation-duration-slow) var(--animation-easing-bounce);
+}
+
+.success__message {
+  animation: fadeIn var(--animation-duration-normal) var(--animation-easing) 0.3s both;
+}
+
+.success__actions {
+  animation: slideInUp var(--animation-duration-normal) var(--animation-easing) 0.5s both;
+}
+
+/* Pull to Refresh */
+.pull-to-refresh-indicator {
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+}
+
+.pull-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+}
+
+.pull-spinner.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* Context Menu */
+.touch-context-menu {
+  animation: scaleIn var(--animation-duration-fast) var(--animation-easing);
+}
+
+.context-menu-item {
+  transition: background-color var(--animation-duration-fast) var(--animation-easing);
+  padding: 12px 16px;
+  cursor: pointer;
+}
+
+.context-menu-item:hover,
+.context-menu-item:active {
+  background-color: #f8f9fa;
+}
+
+/* Gesture Feedback */
+.gesture-feedback {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 123, 255, 0.3);
+  animation: touchRipple 0.6s ease-out;
+}
+
+/* Swipe Indicators */
+.swipe-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #007bff;
+  opacity: 0;
+  transition: opacity var(--animation-duration-fast) var(--animation-easing);
+}
+
+.swipe-indicator.left {
+  left: 20px;
+  animation: slideInLeft var(--animation-duration-fast) var(--animation-easing);
+}
+
+.swipe-indicator.right {
+  right: 20px;
+  animation: slideInRight var(--animation-duration-fast) var(--animation-easing);
+}
+
+.swipe-indicator.show {
+  opacity: 1;
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth scrolling for mobile */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Hardware acceleration for animations */
+.animate {
+  will-change: transform, opacity;
+}
+
+.animate:not(:hover):not(:active):not(:focus) {
+  will-change: auto;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Faster animations on mobile for better performance */
+  :root {
+    --animation-duration-fast: 0.15s;
+    --animation-duration-normal: 0.25s;
+    --animation-duration-slow: 0.4s;
+  }
+  
+  /* Reduce complex animations on mobile */
+  .complex-animation {
+    animation: none;
+  }
+  
+  /* Optimize transforms for mobile */
+  .mobile-optimized {
+    transform: translateZ(0);
+  }
+}
+
+/* High refresh rate displays */
+@media (min-resolution: 120dpi) {
+  :root {
+    --animation-duration-fast: 0.1s;
+    --animation-duration-normal: 0.2s;
+  }
+}
+
+/* Battery saving mode */
+@media (prefers-reduced-motion: reduce) {
+  .battery-save * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

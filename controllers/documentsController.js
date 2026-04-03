@@ -1,140 +1,161 @@
-const Document = require('./../model/documentsModel');
-// require('./../utils/catchAsync');
-// const APIFeatures = require('./../utils/apiFeatures');
-// const fs = require('fs');
-// const path = require('path');
-// const crypto = require('crypto');
-// GET ALL documents
-exports.getAllDocument = async (req, res) => {
-  try {
-    // BUILD QUERY
-    // 1A) FILTEREING
-    const queryObj = { ...req.query };
-    const excludeFields = ['page', 'sort', 'fields', 'limit'];
-    excludeFields.forEach((el) => delete queryObj[el]);
-    // 1B) ADVANCED FILTERING
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|ge|lte|lt)\b/g, (match) => `$${match}`);
-    // console.log(JSON.stringify(queryStr));
-    let query = Document.find(JSON.parse(queryStr));
-    // 2) sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-      // console.log(sortBy);
-    } else {
-      query = query.sort('-createdAt');
-    }
+'use strict';
 
-    // 3) Fied limiting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.fields(fields);
-    } else {
-      query = query.select('-embeddings');
-    }
+const Document   = require('../model/documentsModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError   = require('../utils/appError');
 
-    // 4) Pagination
+// ── Helpers ───────────────────────────────────────────────────
 
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 100;
-    const skip = (page - 1) * limit;
+/** Ensure the requesting user owns the document (or is Admin). */
+async function findOwnedDoc(req, next) {
+  const doc = await Document.findById(req.params.id);
+  if (!doc) return next(new AppError('No document found with that ID', 404));
 
-    query = query.skip(skip).limit(limit);
+  const isAdmin = req.user.role === 'Admin';
+  const isOwner = doc.user?.toString() === req.user.id;
 
-    if (req.query.page) {
-      const numDocuments = await Document.countDocuments();
-      if (skip > numTours) throw new Error('This Page does not exist');
-    }
-    // EXCUTE QUERY
-    const documents = await query;
-    // the query have all the methods in the above which is query.sort().filter().sort().limit()
-    // const documents =  await Document.find(req.query)
-    // const documents = Document.find().where('role').equals('Document').where('plan').equals('free')
-    res.status(200).json({
-      status: 'success',
-      results: documents.length,
-      data: {
-        documents,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+  if (!isAdmin && !isOwner) {
+    return next(new AppError('You do not have permission to access this document', 403));
   }
-};
+  return doc;
+}
 
-// GET Document BY ID
-exports.getDocument = async (req, res) => {
-  try {
-    const docum = await Document.findById(req.params.id);
-    // Document.findOne({_id: req.param.id}) === Document.findById(req.params.id)
-    res.status(200).json({
-      status: 'success',
-      data: {
-        docum,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
-// CREATE Document
-exports.createDocument = (req, res) => {
-  // const documents = readdocuments();
+// ── User-scoped handlers ──────────────────────────────────────
 
-  // const newDocum = {
-  //   _id: crypto.randomUUID(),
-  //   ...req.body,
-  // };
+/** GET /api/v1/documents — returns only the logged-in user's documents */
+exports.getMyDocuments = catchAsync(async (req, res) => {
+  const queryObj = { user: req.user.id };
 
-  // documents.push(newDocum);
-  // writedocuments(documents);
+  // Optional filters from query string
+  if (req.query.fileType) queryObj.fileType = req.query.fileType;
+  if (req.query.status)   queryObj.status   = req.query.status;
 
-  res.status(201).json({
+  const page  = Math.max(1, parseInt(req.query.page  || '1',  10));
+  const limit = Math.min(100, parseInt(req.query.limit || '50', 10));
+  const skip  = (page - 1) * limit;
+
+  const [documents, total] = await Promise.all([
+    Document.find(queryObj)
+      .select('-embeddings')
+      .sort(req.query.sort || '-createdAt')
+      .skip(skip)
+      .limit(limit),
+    Document.countDocuments(queryObj),
+  ]);
+
+  res.status(200).json({
     status: 'success',
-    // data: { docum: newDocum },
+    results: documents.length,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+    data: { documents },
   });
-};
+});
 
-// UPDATE Document
-exports.updateDocument = async (req, res) => {
-  try {
-    const docum = await Document.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      // runValidators: true
-    });
-    res.status(200).json({
-      status: 'success',
-      data: {
-        docum,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+/** GET /api/v1/documents/:id — user can only read their own doc */
+exports.getDocument = catchAsync(async (req, res, next) => {
+  const doc = await findOwnedDoc(req, next);
+  if (!doc) return;
 
-// DELETE Document
-exports.deleteDocument = async (req, res) => {
-  try {
-    const docum = await Document.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  res.status(200).json({ status: 'success', data: { document: doc } });
+});
+
+/** POST /api/v1/documents — create a doc owned by the logged-in user */
+exports.createDocument = catchAsync(async (req, res) => {
+  // Force owner to be the logged-in user — never trust req.body.user
+  req.body.user  = req.user.id;
+  req.body.owner = req.user.id;
+
+  const doc = await Document.create(req.body);
+
+  res.status(201).json({ status: 'success', data: { document: doc } });
+});
+
+/** PATCH /api/v1/documents/:id — user can only update their own doc */
+exports.updateDocument = catchAsync(async (req, res, next) => {
+  const existing = await findOwnedDoc(req, next);
+  if (!existing) return;
+
+  // Prevent changing ownership
+  delete req.body.user;
+  delete req.body.owner;
+
+  const doc = await Document.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({ status: 'success', data: { document: doc } });
+});
+
+/** DELETE /api/v1/documents/:id — user can only delete their own doc */
+exports.deleteDocument = catchAsync(async (req, res, next) => {
+  const existing = await findOwnedDoc(req, next);
+  if (!existing) return;
+
+  await Document.findByIdAndDelete(req.params.id);
+
+  res.status(204).json({ status: 'success', data: null });
+});
+
+// ── Admin-only handlers ───────────────────────────────────────
+
+/** GET /api/v1/documents/admin/all — admin sees ALL documents */
+exports.adminGetAllDocuments = catchAsync(async (req, res) => {
+  const page  = Math.max(1, parseInt(req.query.page  || '1',  10));
+  const limit = Math.min(200, parseInt(req.query.limit || '50', 10));
+  const skip  = (page - 1) * limit;
+
+  const filter = {};
+  if (req.query.userId)   filter.user     = req.query.userId;
+  if (req.query.fileType) filter.fileType = req.query.fileType;
+  if (req.query.status)   filter.status   = req.query.status;
+
+  const [documents, total] = await Promise.all([
+    Document.find(filter)
+      .select('-embeddings')
+      .populate('user', 'name email subscriptionTier')
+      .sort(req.query.sort || '-createdAt')
+      .skip(skip)
+      .limit(limit),
+    Document.countDocuments(filter),
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    results: documents.length,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+    data: { documents },
+  });
+});
+
+/** GET /api/v1/documents/admin/:id — admin reads any document */
+exports.adminGetDocument = catchAsync(async (req, res, next) => {
+  const doc = await Document.findById(req.params.id)
+    .populate('user', 'name email subscriptionTier');
+  if (!doc) return next(new AppError('No document found with that ID', 404));
+
+  res.status(200).json({ status: 'success', data: { document: doc } });
+});
+
+/** PATCH /api/v1/documents/admin/:id — admin updates any document */
+exports.adminUpdateDocument = catchAsync(async (req, res, next) => {
+  const doc = await Document.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!doc) return next(new AppError('No document found with that ID', 404));
+
+  res.status(200).json({ status: 'success', data: { document: doc } });
+});
+
+/** DELETE /api/v1/documents/admin/:id — admin deletes any document */
+exports.adminDeleteDocument = catchAsync(async (req, res, next) => {
+  const doc = await Document.findByIdAndDelete(req.params.id);
+  if (!doc) return next(new AppError('No document found with that ID', 404));
+
+  res.status(204).json({ status: 'success', data: null });
+});

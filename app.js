@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const { xss } = require('express-xss-sanitizer');
 const cookieParser = require('cookie-parser');
+const langSupport = require('./utils/languageSupport');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -17,6 +18,7 @@ const documentRouter = require('./routes/documentRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 // const assistantRouter = require('./routes/asistantRoutes');
 const sentbotRouter = require('./routes/sentbotRoutes');
+const ragRouter = require('./routes/ragRoutes');
 
 const app = express();
 
@@ -82,6 +84,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Language middleware: make language available to templates
+app.use((req, res, next) => {
+  const headerLang = req.headers['x-app-language'];
+  const cookieLang = req.cookies && (req.cookies.myreader_language || req.cookies.language);
+  const userLang = res.locals.user && res.locals.user.preferredLanguage;
+  res.locals.language = userLang || cookieLang || headerLang || 'en';
+  res.locals.t = (key, replacements) => langSupport.getLocalizedCopy(res.locals.language, key, replacements || {});
+  next();
+});
+
 // 3) ROUTES
 app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
@@ -91,6 +103,7 @@ app.use('/api/v1/billing', billingRouter);
 app.use('/api/v1/documents', documentRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/sentbot', sentbotRouter);
+app.use('/api/v1/rag', ragRouter);
 
 app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

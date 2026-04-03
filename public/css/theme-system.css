@@ -1,0 +1,25 @@
+/* Theme System CSS Variables */
+:root {
+  --app-bg: #fdf2e9;
+  --app-surface: #ffffff;
+  --app-text: #1e293b;
+  --app-brand: hsl(210, 66%, 50%);
+}
+
+[data-theme='dark'] {
+  --app-bg: #0f172a;
+  --app-surface: #1e293b;
+  --app-text: #f1f5f9;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+.header {
+  background: var(--app-surface);
+}
+
+.theme-toggle {
+  transition: all 0.25s ease;
+}

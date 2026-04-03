@@ -1,0 +1,638 @@
+/* ============================================================
+   ACCOUNT PAGE — Full responsive + dark theme
+   ============================================================ */
+
+.main {
+  background-color: #f7f7f7;
+  padding: 4rem 3.2rem;
+  flex: 1;
+  position: relative;
+  min-height: 100vh;
+}
+
+.user-view {
+  background-color: #fff;
+  max-width: 120rem;
+  margin: 0 auto;
+  min-height: calc(100vh - 9.6rem);
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: row;
+}
+
+/* ---- Sidebar ---- */
+.user-view__menu {
+  flex: 0 0 26rem;
+  background: linear-gradient(180deg, hsl(210, 66%, 20%) 0%, hsl(210, 66%, 10%) 100%);
+  padding: 3.2rem 0;
+  border-radius: 8px 0 0 8px;
+}
+
+.side-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.side-nav li {
+  margin: 0.4rem 0;
+  border-left: 3px solid transparent;
+  transition: all 0.25s;
+}
+
+.side-nav--active,
+.side-nav li:hover {
+  border-left: 3px solid #fff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.side-nav a:link,
+.side-nav a:visited {
+  padding: 1.2rem 3.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s;
+  letter-spacing: 0.05em;
+}
+
+.side-nav--active a,
+.side-nav li:hover a {
+  color: #fff;
+}
+
+.side-nav svg {
+  height: 1.8rem;
+  width: 1.8rem;
+  fill: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.side-nav--active svg,
+.side-nav li:hover svg {
+  fill: #fff;
+}
+
+.admin-nav {
+  margin-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 2rem;
+}
+
+.admin-nav__heading {
+  margin: 0 3.2rem 1.2rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Content area ---- */
+.user-view__content {
+  flex: 1;
+  padding: 4rem 0;
+  min-width: 0;
+  overflow: visible;
+}
+
+.user-view__section {
+  display: none;
+}
+
+.user-view__section--active {
+  display: block !important;
+}
+
+.user-view__form-container {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+/* ---- Form elements ---- */
+.form__group:not(:last-child) {
+  margin-bottom: 2.4rem;
+}
+
+.form__label {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #374151;
+}
+
+.form__input {
+  display: block;
+  font-family: inherit;
+  font-size: 1.5rem;
+  color: #111827;
+  padding: 1.2rem 1.6rem;
+  border: 1.5px solid #d1d5db;
+  width: 100%;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form__input:focus {
+  border-color: hsl(210, 66%, 50%);
+  box-shadow: 0 0 0 3px hsla(210, 66%, 50%, 0.15);
+}
+
+.form__input:focus:invalid {
+  border-color: #ef4444;
+}
+
+.form__input::placeholder {
+  color: #9ca3af;
+}
+
+.form__photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.form__user-photo {
+  height: 7.5rem;
+  width: 7.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.form__upload {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.form__upload + label {
+  color: hsl(210, 66%, 50%);
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 1px solid hsl(210, 66%, 50%);
+  padding: 3px 6px;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+
+.form__upload + label:hover {
+  background-color: hsl(210, 66%, 50%);
+  color: #fff;
+  border-radius: 4px;
+}
+
+/* ---- Subscription / billing plan buttons ---- */
+.account-plan-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+
+.account-plan-btns .btn {
+  flex: 1 1 auto;
+  min-width: 12rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---- Subscription summary ---- */
+.subscription-summary,
+.billing-summary {
+  background-color: #f9fafb;
+  border-radius: 1rem;
+  padding: 2rem 2.4rem;
+  margin-bottom: 2.4rem;
+  border: 1px solid #e5e7eb;
+}
+
+.subscription-summary p,
+.billing-summary p {
+  font-size: 1.5rem;
+  color: #4b5563;
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.subscription-summary strong,
+.billing-summary strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* ---- Divider ---- */
+.line {
+  margin: 4rem 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+/* ---- Buttons ---- */
+.btn,
+.btn:link,
+.btn:visited {
+  font-size: 1.5rem;
+  padding: 1.2rem 2.4rem;
+  border-radius: 8px;
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.25s;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn--small {
+  padding: 1rem 2rem !important;
+  font-size: 1.3rem !important;
+}
+
+.btn--green {
+  background: linear-gradient(135deg, hsl(210, 66%, 55%), hsl(210, 66%, 40%));
+  color: #fff;
+}
+
+.btn--green:hover {
+  background: linear-gradient(135deg, hsl(210, 66%, 45%), hsl(210, 66%, 30%));
+}
+
+.btn--white {
+  background-color: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-text:link,
+.btn-text:visited {
+  color: hsl(210, 66%, 50%);
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 1px solid hsl(210, 66%, 50%);
+  padding: 3px;
+  transition: all 0.2s;
+}
+
+.btn-text:hover {
+  background-color: hsl(210, 66%, 50%);
+  color: #fff;
+}
+
+.right {
+  text-align: right !important;
+}
+
+.ma-bt-md {
+  margin-bottom: 2.4rem !important;
+}
+
+.ma-bt-lg {
+  margin-bottom: 3.2rem !important;
+}
+
+/* ============================================================
+   RESPONSIVE — Tablet (≤944px): sidebar on top
+   ============================================================ */
+@media (max-width: 59em) {
+  .main {
+    padding: 2.4rem 1.6rem;
+  }
+
+  .user-view {
+    flex-direction: column;
+    min-height: auto;
+    border-radius: 8px;
+  }
+
+  .user-view__menu {
+    flex: none;
+    width: 100%;
+    padding: 1.6rem 0;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .side-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0 1.2rem;
+  }
+
+  .side-nav li {
+    border-left: none !important;
+    border-bottom: 2px solid transparent;
+    margin: 0;
+    border-radius: 6px;
+  }
+
+  .side-nav--active,
+  .side-nav li:hover {
+    border-left: none !important;
+    border-bottom: 2px solid #fff !important;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .side-nav a:link,
+  .side-nav a:visited {
+    padding: 0.8rem 1.4rem;
+    font-size: 1.3rem;
+    gap: 0.8rem;
+  }
+
+  .side-nav svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  .admin-nav {
+    margin-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 0.8rem;
+  }
+
+  .admin-nav__heading {
+    margin: 0 1.2rem 0.6rem;
+    font-size: 1rem;
+  }
+
+  .user-view__content {
+    padding: 2.4rem 0;
+  }
+
+  .user-view__form-container {
+    padding: 0 2rem;
+    max-width: 100%;
+  }
+
+  .account-plan-btns {
+    flex-direction: column;
+  }
+
+  .account-plan-btns .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — Small tablet (≤704px)
+   ============================================================ */
+@media (max-width: 44em) {
+  .main {
+    padding: 1.6rem 1.2rem;
+  }
+
+  .user-view {
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .side-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 0 1rem;
+    padding-bottom: 0.4rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .side-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .side-nav li {
+    flex-shrink: 0;
+  }
+
+  .side-nav a:link,
+  .side-nav a:visited {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+  }
+
+  .user-view__form-container {
+    padding: 0 1.6rem;
+  }
+
+  .form__photo-upload {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dashboard-table {
+    min-width: 48rem;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — Phone (≤544px)
+   ============================================================ */
+@media (max-width: 34em) {
+  .main {
+    padding: 1.2rem 0.8rem;
+  }
+
+  .user-view {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  .user-view__menu {
+    border-radius: 0;
+  }
+
+  .user-view__form-container {
+    padding: 0 1.2rem;
+  }
+
+  .form__input {
+    font-size: 1.4rem;
+    padding: 1rem 1.2rem;
+  }
+
+  .form__label {
+    font-size: 1.4rem;
+  }
+
+  .btn--small {
+    padding: 1rem 1.6rem !important;
+    font-size: 1.2rem !important;
+    width: 100%;
+    text-align: center;
+  }
+
+  .right {
+    text-align: left !important;
+  }
+
+  .line {
+    margin: 2.4rem 0;
+  }
+}
+
+/* ============================================================
+   DARK THEME — Full account page
+   ============================================================ */
+html[data-theme='dark'] .main {
+  background-color: var(--app-bg) !important;
+}
+
+html[data-theme='dark'] .user-view {
+  background-color: var(--app-surface) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+
+html[data-theme='dark'] .user-view__menu {
+  background: linear-gradient(180deg, #0d1f35 0%, #081120 100%) !important;
+}
+
+html[data-theme='dark'] .user-view__content {
+  background-color: var(--app-surface) !important;
+}
+
+html[data-theme='dark'] .user-view__section--active {
+  display: block !important;
+  background-color: var(--app-surface) !important;
+}
+
+html[data-theme='dark'] .form__label {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .form__input {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .form__input:focus {
+  border-color: var(--app-brand) !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+}
+
+html[data-theme='dark'] .form__input::placeholder {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .form__upload + label {
+  color: var(--app-brand) !important;
+  border-bottom-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .form__upload + label:hover {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .subscription-summary,
+html[data-theme='dark'] .billing-summary {
+  background-color: var(--app-surface-alt) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .subscription-summary p,
+html[data-theme='dark'] .billing-summary p {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .subscription-summary strong,
+html[data-theme='dark'] .billing-summary strong {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .line {
+  background-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .btn--green {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .btn--white {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .side-nav a:link,
+html[data-theme='dark'] .side-nav a:visited {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html[data-theme='dark'] .side-nav--active a,
+html[data-theme='dark'] .side-nav li:hover a {
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .admin-nav__heading {
+  color: rgba(255, 255, 255, 0.45) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-theme='dark'] .dashboard-table thead {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .dashboard-table th,
+html[data-theme='dark'] .dashboard-table td {
+  color: var(--app-text) !important;
+  border-bottom-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .dashboard-table tbody tr:nth-child(even) {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .dashboard-table tbody tr:hover {
+  background-color: rgba(96, 165, 250, 0.08) !important;
+}
+
+html[data-theme='dark'] .dashboard-table-wrapper {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .user-view__form-container p {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .form__user-photo {
+  border-color: var(--app-border) !important;
+}

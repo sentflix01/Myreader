@@ -26,12 +26,29 @@ import {
   renderUploadHistory,
   renderWelcome,
   truncateToTwoWords,
+  renderRagInfo,
+  renderTokenInfo,
+  renderModelInfo,
+  logRagError,
+  renderRagDocsView,
+  renderTocView,
+  showTocSpinner,
+  setInputLocked,
 } from './chatView';
 
 import { setBottomPanelOpen } from './sidebarToggle';
 
 export function initChat() {
   if (!isOnChatPage()) return;
+
+  // ── Clear any other users' cached data from this browser ───
+  // Reads the current user ID from the meta tag injected by base.pug
+  const metaUserId = document.querySelector('meta[name="user-id"]')?.content;
+  if (metaUserId) {
+    import('./chatModel').then(({ clearOtherUsersCaches }) => {
+      clearOtherUsersCaches(metaUserId);
+    }).catch(() => {});
+  }
 
   const dom = getChatDom();
 
@@ -90,49 +107,122 @@ export function initChat() {
   };
 
   // Initial render + background hydrate
+  // Clear any stale ragGroupIds from sessions where the server was restarted
+  // (vectors are gone, re-upload is required)
+  chats = chats.map(c => {
+    if (c.ragGroupId) {
+      // Keep ragGroupId but mark it as needing verification
+      return c;
+    }
+    return c;
+  });
   refreshLists();
   hydrateFromServer();
+
+  // RAG state — tracks the active group for the current session
+  let ragGroupId = null;
 
   function triggerFileUpload() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.pdf,.docx,.txt,.jpg,.jpeg,.png,.csv';
+    fileInput.accept = '.pdf,.docx,.xlsx,.txt,.html';
     fileInput.onchange = (e) => {
       if (e.target.files.length > 0) startNewChat(e.target.files[0]);
     };
     fileInput.click();
   }
 
-  function startNewChat(file) {
-    const chatId = Date.now();
-    const chatName =
-      file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+  async function startNewChat(file) {
+    const chatId   = Date.now();
+    const chatName = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
     const fileType = file.name.split('.').pop().toUpperCase();
     const fileSize = formatFileSize(file.size);
 
     const newChat = {
-      id: chatId,
-      clientId: null,
-      serverId: null,
-      name: chatName,
-      fileType,
-      fileSize,
+      id: chatId, clientId: null, serverId: null,
+      name: chatName, fileType, fileSize,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      messages: [],
-      firstUserMessage: null,
+      messages: [], firstUserMessage: null,
     };
     ensureClientId(newChat);
-
     chats.unshift(newChat);
     currentChatId = chatId;
     persist();
 
     renderChatInterface(dom, file);
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = truncateToTwoWords(newChat.name);
+
+    // ── Show processing state ───────────────────────────────
+    // 1. Show spinner in TOC view
+    showTocSpinner(dom, file.name);
+
+    // 2. Disable input + send button while processing
+    setInputLocked(dom, true);
+
+    // 3. Open bottom panel but keep input locked
     setBottomPanelOpen(true);
     initChatEmoji();
-    dom.messageInput?.focus();
     refreshLists();
+
+    // ── RAG ingest ──────────────────────────────────────────
+    try {
+      const formData = new FormData();
+      formData.append('files', file);
+      formData.append('groupName', chatName);
+
+      const res  = await fetch('/api/v1/rag/ingest', { method: 'POST', body: formData, credentials: 'include' });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || 'Ingest failed');
+
+      // Check if the doc actually succeeded (not just HTTP 201)
+      const docs = data.data.docs || [];
+      const failedDoc = docs.find(d => d.status === 'failed');
+      if (failedDoc) throw new Error(failedDoc.error || 'Document processing failed');
+      if (!docs.length || !docs[0].docId) throw new Error('No documents were processed');
+
+      ragGroupId = data.data.groupId;
+      newChat.ragGroupId = ragGroupId;
+
+      // Cache TOC on the chat object so it survives page reloads
+      const firstDoc = docs[0];
+      const toc = firstDoc?.toc || [];
+      newChat.toc = toc;
+      persist();
+
+      // Populate left sidebar Docs view
+      renderRagDocsView(dom, { docs });
+
+      // Populate TOC from real extracted headings
+      if (toc.length > 0) {
+        renderTocView(dom, toc);
+      } else {
+        renderTocView(dom, [{ id: 'toc-1', label: chatName, level: 1 }]);
+      }
+
+      // Switch left sidebar to TOC view to confirm upload
+      if (dom.tocView) dom.tocView.style.display = 'block';
+      if (dom.docsView) dom.docsView.style.display = 'none';
+      if (dom.sidebarFileBtn) dom.sidebarFileBtn.classList.add('sidebar-head-btn-active');
+      if (dom.sidebarFolderBtn) dom.sidebarFolderBtn.classList.remove('sidebar-head-btn-active');
+
+      // Update model info tab
+      renderModelInfo(dom, {});
+
+      console.log(`[RAG] Ingested into group: ${ragGroupId}, TOC items: ${toc.length}`);
+
+    } catch (err) {
+      console.error('[RAG] Ingest error:', err.message);
+      logRagError(dom, `Ingest failed: ${err.message}`);
+      // Show error in TOC
+      if (dom.tocView) {
+        dom.tocView.innerHTML = `<p style="padding:1.2rem 1.6rem;font-size:1.3rem;color:#e53e3e"><i class="fas fa-exclamation-circle" style="margin-right:.6rem"></i>Processing failed: ${err.message}</p>`;
+      }
+    } finally {
+      // Always unlock input when done (success or failure)
+      setInputLocked(dom, false);
+      dom.messageInput?.focus();
+    }
 
     if (window.innerWidth <= 1200) {
       dom.leftSidebar?.classList.remove('show-sidebar');
@@ -142,12 +232,37 @@ export function initChat() {
 
   function setCurrentChat(chat) {
     currentChatId = chat.id;
+    ragGroupId = chat.ragGroupId || null;
     if (dom.chatTitle) dom.chatTitle.textContent = `Chat about ${chat.name || 'Chat'}`;
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = truncateToTwoWords(chat.name);
     renderExistingChat(dom, chat);
     setBottomPanelOpen(true);
+    // Always unlock input when switching chats — it may have been left locked
+    setInputLocked(dom, false);
     initChatEmoji();
     dom.messageInput?.focus();
+
+    // Restore TOC from cached data if available
+    if (chat.toc && chat.toc.length > 0) {
+      renderTocView(dom, chat.toc);
+      if (dom.tocView) dom.tocView.style.display = 'block';
+      if (dom.docsView) dom.docsView.style.display = 'none';
+      if (dom.sidebarFileBtn) dom.sidebarFileBtn.classList.add('sidebar-head-btn-active');
+      if (dom.sidebarFolderBtn) dom.sidebarFolderBtn.classList.remove('sidebar-head-btn-active');
+    }
+
+    // If ragGroupId exists but vectors may be gone (server restart), re-ingest silently
+    if (ragGroupId) {
+      fetch(`/api/v1/rag/groups/${ragGroupId}/docs`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(data => {
+          if (data.status === 'success') {
+            renderRagDocsView(dom, { docs: data.data.docs || [] });
+          }
+        })
+        .catch(() => {});
+    }
+
     refreshLists();
     if (window.innerWidth <= 1200) {
       dom.leftSidebar?.classList.remove('show-sidebar');
@@ -171,6 +286,7 @@ export function initChat() {
     if (dom.chatTitle) dom.chatTitle.textContent = 'New Chat';
     if (dom.sidebarDocTitle) dom.sidebarDocTitle.textContent = 'No Document';
     setBottomPanelOpen(false);
+    ragGroupId = null;
     currentChatId = null;
     refreshLists();
     if (window.innerWidth <= 1200) {
@@ -203,7 +319,7 @@ export function initChat() {
   }
 
   function sendMessage() {
-    if (!dom.messageInput || !currentChatId) return;
+    if (!dom.messageInput || dom.messageInput.disabled || !currentChatId) return;
     const messageText = dom.messageInput.value.trim();
     if (!messageText) return;
 
@@ -211,8 +327,7 @@ export function initChat() {
     if (!chat) return;
 
     chat.messages.push({
-      type: 'sent',
-      text: messageText,
+      type: 'sent', text: messageText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     });
     if (!chat.firstUserMessage) chat.firstUserMessage = messageText;
@@ -222,6 +337,62 @@ export function initChat() {
     persist();
     refreshLists();
 
+    // ── RAG path: use RAG service when a group is active ───
+    if (ragGroupId) {
+      const language = dom.ragLangSelect?.value || 'auto';
+
+      // Pass last 8 messages as conversation history for context
+      const history = (chat.messages || [])
+        .slice(-8)
+        .map(m => ({ role: m.type, text: m.text }));
+
+      fetch('/api/v1/rag/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          question: messageText,
+          groupId: ragGroupId,
+          language,
+          history,
+        }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data.data) {
+            // If group not found (server restart wiped vectors), clear ragGroupId
+            // and tell user to re-upload
+            if (data.message && data.message.includes('not found')) {
+              ragGroupId = null;
+              const currentChat = chats.find((c) => c.id === currentChatId);
+              if (currentChat) { currentChat.ragGroupId = null; persist(); }
+              throw new Error('Document session expired. Please upload the file again to continue using RAG.');
+            }
+            throw new Error(data.message || 'RAG chat failed');
+          }
+          const { answer, sources, meta } = data.data;
+
+          chat.messages.push({
+            type: 'received', text: answer,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          });
+          renderMessages(dom, chat);
+          persist();
+          refreshLists();
+
+          renderRagInfo(dom, { sources, chunkCount: meta.chunkCount, timeTakenMs: meta.timeTakenMs, groupId: ragGroupId, processedQuery: data.data.processedQuery || '' });
+          renderTokenInfo(dom, { tokenCount: meta.tokenCount, timeTakenMs: meta.timeTakenMs });
+          renderModelInfo(dom, {});
+        })
+        .catch((err) => {
+          logRagError(dom, err.message);
+          chat.messages.push({ type: 'received', text: `⚠ ${err.message}`, time: '' });
+          renderMessages(dom, chat);
+        });
+      return;
+    }
+
+    // ── Fallback: original server chat path ────────────────
     (async () => {
       try {
         await ensureServerChat(chat);
@@ -238,14 +409,11 @@ export function initChat() {
         try {
           if (chat.serverId) {
             await syncChatOnServer({
-              serverId: chat.serverId,
-              clientId: chat.clientId,
-              title: chat.name,
+              serverId: chat.serverId, clientId: chat.clientId, title: chat.name,
               description: '',
               messages: chat.messages.map((m) => ({
                 role: m.type === 'sent' ? 'user' : 'assistant',
-                text: m.text,
-                createdAt: new Date().toISOString(),
+                text: m.text, createdAt: new Date().toISOString(),
               })),
               lastActivityAt: new Date().toISOString(),
             });
@@ -265,8 +433,8 @@ export function initChat() {
   dom.newChatBtn?.addEventListener('click', resetToInitialState);
 
   dom.sendBtn?.addEventListener('click', sendMessage);
-  dom.messageInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  dom.messageInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !dom.messageInput.disabled) {
       e.preventDefault();
       sendMessage();
     }

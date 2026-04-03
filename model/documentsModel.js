@@ -47,6 +47,15 @@ const documentSchema = new mongoose.Schema(
     },
     mimeType: String,
     fileSize: Number,
+    relativePath: String,
+    folderId: String,
+    folderName: String,
+    uploadKind: {
+      type: String,
+      enum: ['file', 'folder'],
+      default: 'file',
+    },
+    failedReason: String,
 
     // Storage
     storagePath: String,
@@ -114,8 +123,9 @@ const documentSchema = new mongoose.Schema(
       vector: [Number],
       chunkVectors: [
         {
-          chunkId: mongoose.Schema.ObjectId,
+          chunkId: String,
           vector: [Number],
+          embeddingId: String,
         },
       ],
     },

@@ -217,3 +217,53 @@ exports.deleteAllMyChats = catchAsync(async (req, res) => {
   await Chat.deleteMany({ user: req.user.id });
   res.status(204).json({ status: 'success', data: null });
 });
+
+// ── Admin-only handlers ───────────────────────────────────────
+
+exports.adminGetAllChats = catchAsync(async (req, res) => {
+  const page  = Math.max(1, parseInt(req.query.page  || '1',  10));
+  const limit = Math.min(100, parseInt(req.query.limit || '20', 10));
+  const skip  = (page - 1) * limit;
+
+  const [chats, total] = await Promise.all([
+    Chat.find()
+      .populate('user', 'name email role subscriptionTier')
+      .sort('-updatedAt')
+      .skip(skip)
+      .limit(limit),
+    Chat.countDocuments(),
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    results: chats.length,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+    data: { chats: chats.map(toClientChat) },
+  });
+});
+
+exports.adminGetUserChats = catchAsync(async (req, res) => {
+  const chats = await Chat.find({ user: req.params.userId })
+    .populate('user', 'name email')
+    .sort('-updatedAt');
+
+  res.status(200).json({
+    status: 'success',
+    results: chats.length,
+    data: { chats: chats.map(toClientChat) },
+  });
+});
+
+exports.adminDeleteChat = catchAsync(async (req, res, next) => {
+  const chat = await Chat.findByIdAndDelete(req.params.id);
+  if (!chat) return next(new AppError('No chat found with that ID', 404));
+
+  res.status(204).json({ status: 'success', data: null });
+});
+
+exports.adminDeleteUserChats = catchAsync(async (req, res) => {
+  await Chat.deleteMany({ user: req.params.userId });
+  res.status(204).json({ status: 'success', data: null });
+});

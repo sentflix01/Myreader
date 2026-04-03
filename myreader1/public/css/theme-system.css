@@ -1,0 +1,448 @@
+/* ============================================================
+   THEME SYSTEM — CSS Custom Properties + Dark/Light overrides
+   ============================================================ */
+
+/* ── Light theme (default) ─────────────────────────────────── */
+:root {
+  --app-bg:           #fdf2e9;
+  --app-surface:      #ffffff;
+  --app-surface-alt:  #f8fafc;
+  --app-text:         #1e293b;
+  --app-text-muted:   #64748b;
+  --app-border:       #e2e8f0;
+  --app-brand:        hsl(210,66%,50%);
+  --app-brand-hover:  hsl(210,66%,40%);
+  --app-shadow:       0 2.4rem 4.8rem rgba(0,0,0,.075);
+  --app-shadow-lg:    0 20px 40px rgba(15,23,42,.12);
+  --header-bg:        #fdf2e9;
+  --header-text:      #1e293b;
+  --btn-primary-bg:   hsl(210,66%,50%);
+  --btn-primary-text: #ffffff;
+  --sentbot-header:   #5350c4;
+  --sentbot-send:     #5350c4;
+  --sentbot-send-hov: #3d39ac;
+  --chat-bot-bubble:  #f2f2ff;
+  --chat-bot-text:    #1e293b;
+  --chat-user-bubble: #5350c4;
+  --chat-user-text:   #ffffff;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────── */
+[data-theme='dark'] {
+  --app-bg:           #0f172a;
+  --app-surface:      #1e293b;
+  --app-surface-alt:  #334155;
+  --app-text:         #f1f5f9;
+  --app-text-muted:   #94a3b8;
+  --app-border:       #334155;
+  --app-brand:        #60a5fa;
+  --app-brand-hover:  #3b82f6;
+  --app-shadow:       0 2.4rem 4.8rem rgba(0,0,0,.35);
+  --app-shadow-lg:    0 20px 40px rgba(0,0,0,.45);
+  --header-bg:        rgba(15,23,42,.97);
+  --header-text:      #f1f5f9;
+  --btn-primary-bg:   #3b82f6;
+  --btn-primary-text: #ffffff;
+  --sentbot-header:   #1e3a8a;
+  --sentbot-send:     #3b82f6;
+  --sentbot-send-hov: #2563eb;
+  --chat-bot-bubble:  #334155;
+  --chat-bot-text:    #f1f5f9;
+  --chat-user-bubble: #3b82f6;
+  --chat-user-text:   #ffffff;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  overflow-x: hidden;
+}
+
+/* ── Smooth theme transitions ───────────────────────────────── */
+*, *::before, *::after {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+.no-transitions *, .no-transitions *::before, .no-transitions *::after {
+  transition: none !important;
+}
+/* Keep transform/opacity transitions separate so they aren't overridden */
+.btn, .meal, .diets, .gallery-item img, .profile-dropdown, .chatbot-popup {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease,
+              transform .3s ease, opacity .25s ease, box-shadow .3s ease;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.header {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+}
+
+.main-nav-link:link,
+.main-nav-link:visited { color: var(--header-text); }
+
+.main-nav-link:hover,
+.main-nav-link:active  { color: var(--app-brand); }
+
+/* ── Nav utility buttons (language / theme / tour) ──────────── */
+.nav-util-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  padding: .45rem 1.1rem;
+  height: 3.4rem;
+  font-size: 1.35rem;
+  font-family: inherit;
+  color: var(--app-text);
+  cursor: pointer;
+  white-space: nowrap;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.nav-util-btn:hover {
+  background: var(--app-surface-alt);
+  border-color: var(--app-brand);
+  color: var(--app-brand);
+}
+
+/* Theme icon visibility */
+.theme-icon-moon { display: none; }
+[data-theme='dark'] .theme-icon-sun  { display: none; }
+[data-theme='dark'] .theme-icon-moon { display: inline; }
+
+/* Utility row always horizontal */
+.main-nav-utility {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: .8rem;
+  flex-wrap: nowrap;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn--full:link, .btn--full:visited, .btn--full {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.btn--full:hover, .btn--full:active {
+  background-color: var(--app-brand-hover);
+  color: var(--btn-primary-text);
+}
+.btn--outline:link, .btn--outline:visited {
+  background-color: var(--app-surface);
+  color: var(--app-text);
+}
+.btn--outline:hover, .btn--outline:active {
+  background-color: var(--app-surface-alt);
+  box-shadow: inset 0 0 0 3px var(--app-border);
+}
+
+/* ── Page sections ──────────────────────────────────────────── */
+.section-hero, .section-featured, .section-how,
+.section-meals, .section-pricing, .section-cta {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+.section-testimonials { background-color: var(--app-surface-alt); }
+
+/* ── Typography ─────────────────────────────────────────────── */
+.heading-primary, .heading-secondary, .heading-tertiary,
+.subheading, .plan-name, .plan-price, .plan-text,
+.feature-title, .feature-text, .step-number,
+.meal-title, .testimonial-name, .footer-heading,
+.contacts, .copyright, .plan-details,
+.list-item, .step-description, .meal-attribute, .delivered-text {
+  color: var(--app-text);
+}
+.subheading      { color: var(--app-brand); }
+.testimonial-text { color: var(--app-text-muted); }
+
+/* ── Feature icons ──────────────────────────────────────────── */
+.feature-icon {
+  color: var(--app-brand) !important;
+  background-color: hsla(210,66%,90%,1) !important;
+  height: 3.2rem;
+  width: 3.2rem;
+  margin-bottom: 3.2rem;
+  padding: 1.6rem;
+  border-radius: 50%;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+[data-theme='dark'] .feature-icon {
+  background-color: rgba(96,165,250,.15) !important;
+  color: var(--app-brand) !important;
+}
+
+/* ── Pricing cards ──────────────────────────────────────────── */
+.pricing-plan { display: flex; flex-direction: column; }
+.pricing-plan--complete-free       { background-color: hsla(210,66%,90%,1); }
+.pricing-plan--complete-starter    { background-color: hsla(210,66%,80%,1); }
+.pricing-plan--complete-enterprise { background-color: hsla(210,66%,70%,1); }
+
+.section-pricing .grid--3-cols { align-items: stretch; }
+
+[data-theme='dark'] .pricing-plan--complete-free,
+[data-theme='dark'] .pricing-plan--complete-starter,
+[data-theme='dark'] .pricing-plan--complete-enterprise {
+  background-color: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+}
+[data-theme='dark'] .pricing-plan--complete::after {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+[data-theme='dark'] .plan-name,
+[data-theme='dark'] .plan-price,
+[data-theme='dark'] .plan-text { color: var(--app-text) !important; }
+
+/* ── Meal / diets cards ─────────────────────────────────────── */
+.section-meals .grid--3-cols { align-items: stretch; }
+.meal, .diets { height: 100%; }
+
+[data-theme='dark'] .meal {
+  background-color: var(--app-surface) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+[data-theme='dark'] .meal-content { background-color: var(--app-surface) !important; }
+[data-theme='dark'] .diets {
+  background-color: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+}
+[data-theme='dark'] .tag--vegetarian,
+[data-theme='dark'] .tag--vegan {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+[data-theme='dark'] .meal-title,
+[data-theme='dark'] .meal-attribute { color: var(--app-text) !important; }
+
+/* ── Steps ──────────────────────────────────────────────────── */
+[data-theme='dark'] .step-img-box::before { background-color: rgba(96,165,250,.08) !important; }
+[data-theme='dark'] .step-img-box::after  { background-color: rgba(96,165,250,.15) !important; }
+[data-theme='dark'] .step-number          { color: var(--app-text-muted) !important; }
+
+/* ── Logos ──────────────────────────────────────────────────── */
+[data-theme='dark'] .logos img {
+  filter: brightness(0) invert(1) !important;
+  opacity: .4 !important;
+}
+
+/* ── Hero slideshow ─────────────────────────────────────────── */
+[data-theme='dark'] .hero-bg-slideshow { opacity: .15 !important; }
+[data-theme='dark'] .delivered-imgs img { border-color: var(--app-surface) !important; }
+
+/* ── Gallery ────────────────────────────────────────────────── */
+[data-theme='dark'] .gallery-item img { filter: brightness(.85) !important; }
+
+/* ── Testimonials ───────────────────────────────────────────── */
+[data-theme='dark'] .section-testimonials { background-color: var(--app-surface-alt) !important; }
+[data-theme='dark'] .testimonial-text     { color: var(--app-text-muted) !important; }
+[data-theme='dark'] .testimonial-name     { color: var(--app-text) !important; }
+
+/* ── CTA ────────────────────────────────────────────────────── */
+[data-theme='dark'] .cta {
+  background-image: linear-gradient(to right bottom, hsl(210,66%,20%), hsl(210,66%,10%)) !important;
+}
+[data-theme='dark'] .cta-text-box { color: var(--app-text) !important; }
+[data-theme='dark'] .cta-form input,
+[data-theme='dark'] .cta-form select {
+  background-color: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+[data-theme='dark'] .footer {
+  background-color: var(--app-surface) !important;
+  border-top-color: var(--app-border) !important;
+}
+[data-theme='dark'] .footer-link:link,
+[data-theme='dark'] .footer-link:visited { color: var(--app-text-muted) !important; }
+[data-theme='dark'] .footer-link:hover   { color: var(--app-brand) !important; }
+[data-theme='dark'] .footer-heading,
+[data-theme='dark'] .copyright,
+[data-theme='dark'] .contacts            { color: var(--app-text) !important; }
+
+/* ── Header dark ────────────────────────────────────────────── */
+[data-theme='dark'] .header {
+  background-color: var(--header-bg) !important;
+  border-bottom: 1px solid var(--app-border);
+}
+[data-theme='dark'] .main-nav-link:link,
+[data-theme='dark'] .main-nav-link:visited { color: var(--header-text) !important; }
+[data-theme='dark'] .main-nav-link:hover   { color: var(--app-brand) !important; }
+[data-theme='dark'] .main-nav             { background-color: rgba(15,23,42,.98) !important; }
+[data-theme='dark'] .list-icon            { color: var(--app-brand) !important; }
+
+/* ── Profile dropdown ───────────────────────────────────────── */
+.profile-dropdown {
+  background-color: var(--app-surface);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow-lg);
+}
+.action-item       { color: var(--app-text); }
+.action-item:hover { background-color: var(--app-surface-alt); }
+.action-icon       { background-color: var(--app-surface-alt); color: var(--app-text-muted); }
+.action-item:hover .action-icon { background-color: var(--app-brand); color: #fff; }
+
+[data-theme='dark'] .profile-dropdown {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+[data-theme='dark'] .action-item       { color: var(--app-text) !important; }
+[data-theme='dark'] .action-item:hover { background-color: var(--app-surface-alt) !important; }
+[data-theme='dark'] .action-icon       { background-color: var(--app-surface-alt) !important; color: var(--app-text-muted) !important; }
+[data-theme='dark'] .action-item:hover .action-icon { background-color: var(--app-brand) !important; color: #fff !important; }
+[data-theme='dark'] .profile-toggle-btn:hover { background-color: var(--app-surface-alt) !important; }
+[data-theme='dark'] .user-name-small   { color: var(--app-text) !important; }
+[data-theme='dark'] .toggle-arrow      { color: var(--app-text-muted) !important; }
+
+/* ── Sentbot / Chatbot ──────────────────────────────────────── */
+.chatbot-popup {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+}
+.chat-header { background: var(--sentbot-header) !important; }
+.chat-body   { background: var(--app-surface); }
+
+.chat-body .bot-message .message-text {
+  background: var(--chat-bot-bubble);
+  color: var(--chat-bot-text);
+  border-radius: 13px 13px 13px 3px;
+}
+.chat-body .user-message .message-text {
+  background: var(--chat-user-bubble);
+  color: var(--chat-user-text);
+  border-radius: 13px 13px 3px 13px;
+}
+
+.chat-footer {
+  background: var(--app-surface);
+  border-top: 1px solid var(--app-border);
+}
+.chat-footer .chat-form {
+  background: var(--app-surface);
+  outline: 1px solid var(--app-border);
+  border-radius: 32px;
+}
+.chat-footer .chat-form:focus-within { outline: 2px solid var(--app-brand); }
+
+.chat-form .message-input {
+  background: transparent;
+  color: var(--app-text);
+  caret-color: var(--app-brand);
+  border: none;
+  outline: none;
+}
+.chat-form .message-input::placeholder { color: var(--app-text-muted); opacity: 1; }
+
+.chat-suggestion-chip {
+  background: var(--app-surface-alt);
+  color: var(--app-text);
+  border: none;
+  border-radius: 999px;
+  padding: .8rem 1.2rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.chat-suggestion-chip:hover { background: var(--app-border); }
+.chat-suggestion-label      { color: var(--app-text-muted); font-size: 1.2rem; }
+
+.chat-predictive-list {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+}
+.chat-predictive-option       { color: var(--app-text); background: transparent; }
+.chat-predictive-option:hover { background: var(--app-surface-alt); }
+
+.chat-form .chat-controls button { color: var(--app-text-muted); background: transparent; border: none; cursor: pointer; }
+.chat-form .chat-controls button:hover { background: var(--app-surface-alt); color: var(--app-text); }
+
+.chat-form .chat-controls #send-message {
+  background: var(--sentbot-send);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0 1.4rem;
+  font-weight: 700;
+}
+.chat-form .chat-controls #send-message:hover { background: var(--sentbot-send-hov); }
+.chat-form .chat-controls #send-message:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ── Forms ──────────────────────────────────────────────────── */
+.form__input {
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+}
+.form__input:focus { border-color: var(--app-brand); }
+.form__label       { color: var(--app-text); }
+
+[data-theme='dark'] .form__input {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+[data-theme='dark'] .form__label { color: var(--app-text) !important; }
+[data-theme='dark'] .login-form  { background-color: var(--app-surface) !important; color: var(--app-text) !important; }
+
+/* ── Account page ───────────────────────────────────────────── */
+[data-theme='dark'] .main                { background-color: var(--app-bg) !important; }
+[data-theme='dark'] .user-view           { background-color: var(--app-surface) !important; }
+[data-theme='dark'] .user-view__menu     { background: linear-gradient(180deg,#0d1f35 0%,#081120 100%) !important; }
+[data-theme='dark'] .side-nav a:link,
+[data-theme='dark'] .side-nav a:visited  { color: var(--app-text-muted) !important; }
+[data-theme='dark'] .side-nav--active a,
+[data-theme='dark'] .side-nav li:hover a { color: #fff !important; }
+[data-theme='dark'] .user-view__content  { background-color: var(--app-surface) !important; }
+[data-theme='dark'] .subscription-summary,
+[data-theme='dark'] .billing-summary     { background-color: var(--app-surface-alt) !important; border-color: var(--app-border) !important; color: var(--app-text) !important; }
+[data-theme='dark'] .line                { background-color: var(--app-border) !important; }
+[data-theme='dark'] .admin-nav__heading  { color: var(--app-text-muted) !important; border-bottom-color: var(--app-border) !important; }
+
+/* ── Dashboard ──────────────────────────────────────────────── */
+[data-theme='dark'] .section-dashboard,
+[data-theme='dark'] .section-dashboard-list,
+[data-theme='dark'] .section-dashboard-admin { background-color: var(--app-bg) !important; }
+[data-theme='dark'] .dashboard-card,
+[data-theme='dark'] .dashboard-table-wrapper,
+[data-theme='dark'] .dashboard-engagement-graph,
+[data-theme='dark'] .dashboard-chart-container,
+[data-theme='dark'] .dashboard-user-chart { background-color: var(--app-surface) !important; border-color: var(--app-border) !important; }
+[data-theme='dark'] .dashboard-card__label  { color: var(--app-text-muted) !important; }
+[data-theme='dark'] .dashboard-card__value,
+[data-theme='dark'] .dashboard-chart__title,
+[data-theme='dark'] .dashboard-user__name   { color: var(--app-text) !important; }
+[data-theme='dark'] .dashboard-table thead  { background-color: var(--app-surface-alt) !important; }
+[data-theme='dark'] .dashboard-table th,
+[data-theme='dark'] .dashboard-table td     { border-bottom-color: var(--app-border) !important; color: var(--app-text) !important; }
+[data-theme='dark'] .dashboard-table tbody tr:nth-child(even) { background-color: var(--app-surface-alt) !important; }
+[data-theme='dark'] .dashboard-table tbody tr:hover           { background-color: rgba(96,165,250,.08) !important; }
+[data-theme='dark'] .dashboard-filter-btn        { background-color: var(--app-surface) !important; border-color: var(--app-border) !important; color: var(--app-text) !important; }
+[data-theme='dark'] .dashboard-filter-btn--active { background-color: var(--app-brand) !important; color: #fff !important; border-color: var(--app-brand) !important; }
+
+/* ── Tour card ──────────────────────────────────────────────── */
+[data-theme='dark'] .app-tour__card     { background: var(--app-surface) !important; color: var(--app-text) !important; border-color: var(--app-border) !important; }
+[data-theme='dark'] .app-tour__backdrop { background: rgba(4,8,17,.82) !important; }
+
+/* ── Error / Success ────────────────────────────────────────── */
+[data-theme='dark'] .error,
+[data-theme='dark'] .error__msg    { color: var(--app-text) !important; }
+[data-theme='dark'] .success__message { color: var(--app-text-muted) !important; }
+
+/* ── Sticky nav ─────────────────────────────────────────────── */
+.sticky .header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--header-bg) !important;
+  box-shadow: 0 1.2rem 3.2rem rgba(0,0,0,.06);
+  z-index: 9999;
+}
