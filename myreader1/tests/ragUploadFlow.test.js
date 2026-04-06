@@ -1,5 +1,4 @@
-const Document = require('../models/documentsModel');
-const { RAGService } = require('../services/rag/ragService');
+const Document = require('../models/documentsModel');\nconst { RAGService } = require('../services/rag/ragService');
 
 describe('RAG upload flow persistence', () => {
   let ragService;

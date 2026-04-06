@@ -67,10 +67,10 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
 
   const successUrl =
     process.env.STRIPE_SUCCESS_URL ||
-    `${req.protocol}://${req.get('host')}/dashboard?success=1`;
+    `${req.protocol}://${req.get('host')}/billing/success?tier=${tier}&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl =
     process.env.STRIPE_CANCEL_URL ||
-    `${req.protocol}://${req.get('host')}/pricing?canceled=1`;
+    `${req.protocol}://${req.get('host')}/billing/cancel`;
 
   let customerId = user.stripeCustomerId;
   if (!customerId) {

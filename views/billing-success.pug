@@ -1,0 +1,27 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      .success-content
+        .success__icon ✅
+        h2.heading-secondary.ma-bt-lg Subscription Activated!
+        p.success__message
+          | Welcome to your 
+          strong= tier === 'enterprise' ? 'Enterprise' : 'Premium'
+          |  plan. Your account has been upgraded and all features are now active.
+        .subscription-details(style='margin: 2rem 0; padding: 1.5rem; background: var(--color-grey-light-2, #f5f7fb); border-radius: 1rem; text-align: left;')
+          p(style='margin-bottom: 0.8rem')
+            ion-icon(name='checkmark-circle-outline' style='color: #51cf66; margin-right: 0.5rem; vertical-align: middle;')
+            | Plan: 
+            strong= tier === 'enterprise' ? 'Enterprise' : 'Premium'
+          p(style='margin-bottom: 0.8rem')
+            ion-icon(name='checkmark-circle-outline' style='color: #51cf66; margin-right: 0.5rem; vertical-align: middle;')
+            | Status: 
+            strong Active
+          p(style='margin-bottom: 0')
+            ion-icon(name='information-circle-outline' style='color: #339af0; margin-right: 0.5rem; vertical-align: middle;')
+            | A 7-day free trial has started. You won't be charged until the trial ends.
+        .success__actions
+          a.btn.btn--green(href='/chat') Start Using RAG
+          a.btn.btn--white(href='/account') View Account

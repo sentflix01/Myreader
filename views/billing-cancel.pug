@@ -1,0 +1,20 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      .success-content
+        .success__icon ❌
+        h2.heading-secondary.ma-bt-lg Payment Cancelled
+        p.success__message
+          | No charge was made. You can upgrade anytime from the pricing page.
+        .subscription-details(style='margin: 2rem 0; padding: 1.5rem; background: var(--color-grey-light-2, #f5f7fb); border-radius: 1rem; text-align: left;')
+          p(style='margin-bottom: 0.8rem')
+            ion-icon(name='information-circle-outline' style='color: #339af0; margin-right: 0.5rem; vertical-align: middle;')
+            | Your current plan remains unchanged.
+          p(style='margin-bottom: 0')
+            ion-icon(name='help-circle-outline' style='color: #f59f00; margin-right: 0.5rem; vertical-align: middle;')
+            | If you had trouble with payment, try a different card or contact support.
+        .success__actions
+          a.btn.btn--green(href='/pricing') View Plans
+          a.btn.btn--white(href='/dashboard') Go to Dashboard

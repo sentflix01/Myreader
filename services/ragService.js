@@ -58,7 +58,7 @@ exports.answer = async function answer({
     removeSpecial: !isAmharic,
     removeStops: false,
   });
-  console.log(`[RAG] Query: "${question}" → "${processedQuery}"`);
+
 
   // ── Step 2: Embed the preprocessed query ─────────────────────
   const queryVector = await embeddingsService.embedQuery(processedQuery);
@@ -91,7 +91,7 @@ exports.answer = async function answer({
     .sort((a, b) => b.hybridScore - a.hybridScore)
     .slice(0, FINAL_K);
 
-  console.log(`[RAG] Re-ranked ${candidates.length} → ${reranked.length} chunks`);
+
 
   // ── Step 5: Build numbered context block ─────────────────────
   const contextParts = reranked.map((m, i) => {
@@ -112,7 +112,7 @@ exports.answer = async function answer({
     : buildEnglishPrompt();
 
   // ── Step 8: Call LLM ──────────────────────────────────────────
-  console.log('[RAG] Calling LLM...');
+
   const { text: rawAnswer, tokenCount } = await callLLM({
     systemPrompt,
     contextBlock,

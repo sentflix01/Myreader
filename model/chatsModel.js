@@ -73,6 +73,11 @@ const chatSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // RAG: links this chat to a document group for context-aware answers
+    ragGroupId: {
+      type: String,
+      default: null,
+    },
     // Statistics
     messageCount: { type: Number, default: 0 },
     totalTokensUsed: { type: Number, default: 0 },

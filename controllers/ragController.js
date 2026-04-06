@@ -60,11 +60,9 @@ const {
   getPlan,
   ensureCanUpload,
   ensureCanQuery,
-  ensureCanStartChatSession,
   ensureCanSendMessage,
   recordUpload,
   recordQuery,
-  recordChatSession,
   recordMessage,
 } = require('../services/subscriptionService');
 const catchAsync    = require('../utils/catchAsync');
@@ -83,10 +81,7 @@ const GROUP_LIMITS = {
 // ── Helper: fire-and-forget analytics to Sentbot ─────────────
 async function notifySentbot(meta) {
   try {
-    // Internal call — no auth needed (same process, same server)
-    // In a microservice setup, use an internal API key here.
     const payload = JSON.stringify(meta);
-    // Using native fetch (Node 18+) or the existing fetch polyfill
     await fetch(`http://localhost:${process.env.PORT || 8000}/api/v1/sentbot/analytics`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -121,11 +116,7 @@ exports.ingest = catchAsync(async (req, res, next) => {
     return next(new AppError(`Group limit reached for ${plan.label} plan.`, 429));
   }
 
-  if (isNewGroup) {
-    await ensureCanStartChatSession(req.user);
-  }
 
-  console.log(`[RAG] Ingesting ${files.length} file(s) into group "${groupId}" for user ${userId}`);
 
   const results = [];
   let successfulUploads = 0;
@@ -142,7 +133,7 @@ exports.ingest = catchAsync(async (req, res, next) => {
       });
 
       // 1. Extract raw text from the file
-      console.log(`[RAG] Extracting text from: ${file.originalname}`);
+
       const rawText = await loaderService.extract(filePath, file.mimetype, ext);
 
       if (!rawText || rawText.trim().length < 10) {
@@ -150,7 +141,7 @@ exports.ingest = catchAsync(async (req, res, next) => {
       }
 
       // 2. Split into chunks
-      console.log(`[RAG] Splitting text (${rawText.length} chars)`);
+
       const chunks = splitter.split(rawText, {
         chunkSize: 800,
         overlap: 200,
@@ -160,14 +151,14 @@ exports.ingest = catchAsync(async (req, res, next) => {
         filename: file.originalname,
         sourceType: ext,
       });
-      console.log(`[RAG] Created ${chunks.length} chunks`);
+
 
       // 3. Generate embeddings for all chunks
-      console.log(`[RAG] Generating embeddings for ${chunks.length} chunks`);
+
       const embeddedChunks = await embeddings.embedChunks(chunks);
 
       // 4. Store vectors in Pinecone (or memory fallback)
-      console.log(`[RAG] Storing vectors`);
+
       await vectorStore.upsert(embeddedChunks);
 
       // 5. Extract document insights for the sidebar before persisting
@@ -205,7 +196,7 @@ exports.ingest = catchAsync(async (req, res, next) => {
       });
       successfulUploads += 1;
       await recordUpload(req.user);
-      console.log(`[RAG] ✓ Ingested: ${file.originalname} (${chunks.length} chunks)`);
+
 
     } catch (err) {
       console.error(`[RAG] ✗ Failed to ingest "${file.originalname}":`, err.message);
@@ -216,8 +207,27 @@ exports.ingest = catchAsync(async (req, res, next) => {
     }
   }
 
-  if (isNewGroup && successfulUploads > 0) {
-    await recordChatSession(req.user);
+  // Build compat response for /upload (single-file) route used by frontend
+  const isUploadRoute = req.path === '/upload' || req.originalUrl.endsWith('/upload');
+  if (isUploadRoute && results.length === 1) {
+    const doc = results[0];
+    return res.status(201).json({
+      status: doc.status === 'ready' ? 'success' : 'error',
+      message: doc.error || undefined,
+      data: {
+        document: {
+          _id: doc.docId,
+          originalFileName: doc.filename,
+          status: doc.status === 'ready' ? 'completed' : 'failed',
+          groupId,
+          toc: doc.toc,
+          questionSuggestions: doc.questionSuggestions,
+        },
+        chunkCount: doc.chunkCount || 0,
+        groupId,
+        groupName,
+      },
+    });
   }
 
   res.status(201).json({
@@ -241,7 +251,7 @@ exports.chat = catchAsync(async (req, res, next) => {
   const tier   = req.user.subscriptionTier || 'free';
   const startTime = Date.now();
 
-  console.log(`[RAG] Chat — user: ${userId}, group: ${groupId}, question: "${question.slice(0, 80)}"`);
+
 
   await ensureCanQuery(req.user);
   await ensureCanSendMessage(req.user, 2);

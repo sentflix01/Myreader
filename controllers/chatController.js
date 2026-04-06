@@ -1,4 +1,6 @@
 const Chat = require('../model/chatsModel');
+const RagDocument = require('../model/ragModel');
+const ragService = require('../services/ragService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const {
@@ -6,6 +8,7 @@ const {
   ensureCanSendMessage,
   recordChatSession,
   recordMessage,
+  recordQuery,
 } = require('../services/subscriptionService');
 
 const canAccessChat = (chat, userId) => {
@@ -75,7 +78,7 @@ exports.getChat = catchAsync(async (req, res, next) => {
 });
 
 exports.createChat = catchAsync(async (req, res) => {
-  const { clientId, title, description } = req.body || {};
+  const { clientId, title, description, ragGroupId } = req.body || {};
 
   await ensureCanStartChatSession(req.user);
 
@@ -84,6 +87,7 @@ exports.createChat = catchAsync(async (req, res) => {
     clientId: clientId || undefined,
     title: title || 'New Chat',
     description: description || '',
+    ragGroupId: ragGroupId || undefined,
     lastActivityAt: new Date(),
   });
 
@@ -229,6 +233,98 @@ exports.deleteChat = catchAsync(async (req, res, next) => {
 exports.deleteAllMyChats = catchAsync(async (req, res) => {
   await Chat.deleteMany({ user: req.user.id });
   res.status(204).json({ status: 'success', data: null });
+});
+
+// ── Stream message with RAG ───────────────────────────────────
+exports.streamMessage = catchAsync(async (req, res, next) => {
+  const chat = await Chat.findById(req.params.id);
+  if (!chat) return next(new AppError('No chat found with that ID', 404));
+  if (!canAccessChat(chat, req.user.id))
+    return next(new AppError('You do not have permission to update this chat', 403));
+
+  const { text } = req.body || {};
+  const cleanText = typeof text === 'string' ? text.trim() : '';
+  if (!cleanText) return next(new AppError('Message text is required', 400));
+
+  await ensureCanSendMessage(req.user, 2);
+
+  const userId = String(req.user.id);
+  const tier = req.user.subscriptionTier || 'free';
+  const language = req.headers['x-app-language'] || 'auto';
+
+  // Build conversation history from last 6 messages
+  const history = (chat.messages || []).slice(-6).map((m) => ({
+    role: m.role === 'user' ? 'user' : 'assistant',
+    text: m.text,
+  }));
+
+  // Find the RAG group for this chat — use docId stored on chat or look up by userId
+  let groupId = chat.ragGroupId || null;
+  if (!groupId) {
+    // Try to find the most recent group for this user
+    const latestDoc = await RagDocument.findOne({ userId }).sort('-createdAt');
+    groupId = latestDoc?.groupId || null;
+  }
+
+  // Save user message first
+  chat.messages.push({ role: 'user', text: cleanText });
+  chat.userMessageCount = (chat.userMessageCount || 0) + 1;
+  chat.messageCount = (chat.messageCount || 0) + 1;
+  chat.lastActivityAt = new Date();
+
+  let answerText = '';
+  let sources = [];
+
+  if (groupId) {
+    try {
+      const result = await ragService.answer({
+        question: cleanText,
+        groupId,
+        docIds: [],
+        userId,
+        tier,
+        language,
+        history,
+      });
+      answerText = result.answer;
+      sources = result.sources || [];
+      await recordQuery(req.user, result.tokenCount || 0);
+    } catch (err) {
+      console.error('[Chat] RAG error:', err.message);
+      answerText = 'Sorry, I could not process your question. Please try again.';
+    }
+  } else {
+    answerText = cannedAssistantResponse();
+  }
+
+  chat.messages.push({ role: 'assistant', text: answerText, sources });
+  chat.aiMessageCount = (chat.aiMessageCount || 0) + 1;
+  chat.messageCount = (chat.messageCount || 0) + 1;
+  chat.lastMessageAt = new Date();
+  chat.lastActivityAt = new Date();
+  await chat.save();
+  await recordMessage(req.user, 2);
+
+  // Return as newline-delimited JSON (NDJSON) for streaming compatibility
+  res.setHeader('Content-Type', 'application/x-ndjson');
+  res.setHeader('Transfer-Encoding', 'chunked');
+  res.setHeader('Cache-Control', 'no-cache');
+
+  // Send token-by-token simulation for smooth UX, then done event
+  const words = answerText.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    const chunk = (i === 0 ? '' : ' ') + words[i];
+    res.write(JSON.stringify({ type: 'token', text: chunk }) + '\n');
+  }
+
+  res.write(JSON.stringify({
+    type: 'done',
+    text: answerText,
+    sources,
+    chat: toClientChat(chat),
+  }) + '\n');
+
+  res.end();
 });
 
 // ── Admin-only handlers ───────────────────────────────────────
