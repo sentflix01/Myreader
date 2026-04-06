@@ -1,0 +1,1141 @@
+:root {
+  --app-bg: #f7f8fc;
+  --app-surface: #ffffff;
+  --app-surface-alt: #eef2ff;
+  --app-border: #dbe2ee;
+  --app-text: #11213a;
+  --app-text-muted: #52627b;
+  --app-brand: #3b82f6;
+  --app-brand-strong: #1d4ed8;
+  --app-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --app-bg: #081120;
+  --app-surface: #0f1b2d;
+  --app-surface-alt: #16243a;
+  --app-border: #263752;
+  --app-text: #e8eef8;
+  --app-text-muted: #b5c3d8;
+  --app-brand: #60a5fa;
+  --app-brand-strong: #93c5fd;
+  --app-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+html[data-language='am'] body,
+html[data-language='am'] button,
+html[data-language='am'] input,
+html[data-language='am'] textarea,
+html[data-language='am'] select {
+  font-family: 'Noto Sans Ethiopic', 'Rubik', sans-serif;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.main-nav-utility {
+  display: flex;
+  align-items: center;
+}
+
+.app-shell-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-left: 1.2rem;
+}
+
+.app-language-select,
+.app-shell-btn {
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-text);
+  border-radius: 999px;
+  min-height: 4.2rem;
+  padding: 0 1.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.app-language-select {
+  cursor: pointer;
+}
+
+.app-shell-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.app-shell-btn i {
+  font-size: 1.4rem;
+}
+
+.header,
+.login-form,
+.dashboard-card,
+.dashboard-table-wrapper,
+.dashboard-chart-container,
+.dashboard-engagement-graph,
+.dashboard-user-chart,
+.chat-container,
+.main-chat-area,
+.chat-area-header,
+.chat-input-container,
+.chat-upload-area,
+.chat-footer .chat-form,
+.message-content,
+.chatbot-popup,
+.chat-footer,
+.chat-predictive-list,
+.profile-dropdown {
+  box-shadow: var(--app-shadow);
+}
+
+html[data-theme='dark'] .header,
+html[data-theme='dark'] .login-form,
+html[data-theme='dark'] .dashboard-card,
+html[data-theme='dark'] .dashboard-table-wrapper,
+html[data-theme='dark'] .dashboard-chart-container,
+html[data-theme='dark'] .dashboard-engagement-graph,
+html[data-theme='dark'] .dashboard-user-chart,
+html[data-theme='dark'] .chat-container,
+html[data-theme='dark'] .main-chat-area,
+html[data-theme='dark'] .chat-area-header,
+html[data-theme='dark'] .chat-input-container,
+html[data-theme='dark'] .chat-upload-area,
+html[data-theme='dark'] .chat-footer .chat-form,
+html[data-theme='dark'] .message-content,
+html[data-theme='dark'] .chatbot-popup,
+html[data-theme='dark'] .chat-footer,
+html[data-theme='dark'] .chat-predictive-list,
+html[data-theme='dark'] .profile-dropdown {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .header {
+  background: rgba(8, 17, 32, 0.92) !important;
+  backdrop-filter: blur(16px);
+}
+
+html[data-theme='dark'] .main-nav-link,
+html[data-theme='dark'] .user-name-small,
+html[data-theme='dark'] .action-item,
+html[data-theme='dark'] .dashboard-card__value,
+html[data-theme='dark'] .dashboard-chart-container h4,
+html[data-theme='dark'] .chat-area-header h2,
+html[data-theme='dark'] .chat-welcome-state h3,
+html[data-theme='dark'] .chat-upload-area h4,
+html[data-theme='dark'] .form__label,
+html[data-theme='dark'] .logo-text {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .main-nav {
+  background-color: rgba(8, 17, 32, 0.98) !important;
+}
+
+html[data-theme='dark'] .main-nav-link:link,
+html[data-theme='dark'] .main-nav-link:visited {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .main-nav-link:hover,
+html[data-theme='dark'] .main-nav-link:active {
+  color: var(--app-brand-strong) !important;
+}
+
+html[data-theme='dark'] .heading-primary,
+html[data-theme='dark'] .heading-tertiary,
+html[data-theme='dark'] .heading-featured-in,
+html[data-theme='dark'] .dashboard-user__welcome,
+html[data-theme='dark'] .text-muted,
+html[data-theme='dark'] .chat-welcome-state p,
+html[data-theme='dark'] .chat-upload-area p,
+html[data-theme='dark'] .chat-composer-note,
+html[data-theme='dark'] .chat-history-item .chat-history-time,
+html[data-theme='dark'] .dashboard-card__label,
+html[data-theme='dark'] .dashboard-table th,
+html[data-theme='dark'] .dashboard-mini-list,
+html[data-theme='dark'] .form__input::placeholder,
+html[data-theme='dark'] .chat-suggestion-label,
+html[data-theme='dark'] .chat-predictive-option,
+html[data-theme='dark'] .chat-upload-note,
+html[data-theme='dark'] .message-sources,
+html[data-theme='dark'] .scope-document-path {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .section-dashboard,
+html[data-theme='dark'] .section-dashboard-list,
+html[data-theme='dark'] .section-dashboard-admin,
+html[data-theme='dark'] main.chat-main-section {
+  background: linear-gradient(180deg, #081120 0%, #102039 100%) !important;
+}
+
+html[data-theme='dark'] .dashboard-table thead,
+html[data-theme='dark'] .dashboard-table tbody tr:nth-child(even),
+html[data-theme='dark'] .message-input-wrapper,
+html[data-theme='dark'] .chat-body .bot-message .message-text,
+html[data-theme='dark'] .chat-suggestion-chip,
+html[data-theme='dark'] .chat-form .message-input,
+html[data-theme='dark'] .chat-footer .chat-form,
+html[data-theme='dark'] .chat-form .chat-controls button:hover,
+html[data-theme='dark'] .chat-predictive-option:hover,
+html[data-theme='dark'] .file-type-badge,
+html[data-theme='dark'] .file-info,
+html[data-theme='dark'] .scope-document-item,
+html[data-theme='dark'] .form__input,
+html[data-theme='dark'] .profile-toggle-btn:hover,
+html[data-theme='dark'] .action-item:hover {
+  background: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .dashboard-table th,
+html[data-theme='dark'] .dashboard-table td,
+html[data-theme='dark'] .dashboard-table-wrapper,
+html[data-theme='dark'] .message-input-wrapper,
+html[data-theme='dark'] .chat-upload-area,
+html[data-theme='dark'] .chat-footer .chat-form,
+html[data-theme='dark'] .form__input,
+html[data-theme='dark'] .profile-header,
+html[data-theme='dark'] .profile-status,
+html[data-theme='dark'] .chat-footer,
+html[data-theme='dark'] .chat-form {
+  border-color: var(--app-border) !important;
+  outline-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .message.sent .message-content,
+html[data-theme='dark'] .send-message-btn,
+html[data-theme='dark'] #chatbot-toggler,
+html[data-theme='dark'] .chat-form .chat-controls #send-message {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+}
+
+html[data-theme='dark'] .chat-body,
+html[data-theme='dark'] .chat-messages-area {
+  background: transparent !important;
+}
+
+html[data-theme='dark'] .chat-header {
+  background: linear-gradient(135deg, var(--app-brand), #1e3a8a) !important;
+}
+
+html[data-theme='dark'] .chat-footer .chat-form {
+  outline-color: var(--app-border) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+html[data-theme='dark'] .chat-footer .chat-form:focus-within {
+  outline: 2px solid rgba(147, 197, 253, 0.65) !important;
+}
+
+html[data-theme='dark'] .chat-form .message-input {
+  color: var(--app-text) !important;
+  caret-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .chat-form .message-input::placeholder {
+  color: var(--app-text-muted) !important;
+  opacity: 1 !important;
+}
+
+html[data-theme='dark'] .chat-form .message-input::placeholder,
+html[data-theme='dark'] .chat-message-input::placeholder {
+  color: var(--app-text-muted) !important;
+  opacity: 1 !important;
+}
+
+html[data-theme='dark'] .chat-form .chat-controls button {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-body .user-message .message-text {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+}
+
+html[data-theme='dark'] .chat-body .bot-message .message-text,
+html[data-theme='dark'] .chat-body .message .message-text {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .scope-document-name,
+html[data-theme='dark'] .chat-scope-preview__item,
+html[data-theme='dark'] .file-info {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .scope-document-item--empty {
+  background: transparent !important;
+}
+
+html[data-theme='dark'] .scope-document-status--ready {
+  color: #86efac !important;
+  background: rgba(34, 197, 94, 0.16) !important;
+}
+
+html[data-theme='dark'] .scope-document-status--warning {
+  color: #fdba74 !important;
+  background: rgba(249, 115, 22, 0.18) !important;
+}
+
+html[data-theme='dark'] .chat-body .bot-message .bot-avatar,
+html[data-theme='dark'] .header-info .chatbot-logo {
+  background: var(--app-brand) !important;
+  fill: #fff !important;
+}
+
+html[data-theme='dark'] .chat-history-item:hover,
+html[data-theme='dark'] .chat-history-item.active {
+  background: rgba(96, 165, 250, 0.18) !important;
+}
+
+body.tour-open {
+  /* do not lock scroll — we need scrollIntoView to work */
+}
+
+.app-tour {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.app-tour__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 8, 17, 0.72);
+  pointer-events: all;
+}
+
+/* Spotlight: absolute so it scrolls with the page */
+.app-tour__spotlight {
+  position: absolute;
+  display: none;
+  border: 3px solid rgba(96, 165, 250, 0.95);
+  border-radius: 1.2rem;
+  box-shadow:
+    0 0 0 4px rgba(96, 165, 250, 0.25),
+    0 0 32px rgba(96, 165, 250, 0.4);
+  pointer-events: none;
+  z-index: 9001;
+  transition: top 0.25s ease, left 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.app-tour__card {
+  position: fixed;
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  z-index: 9002;
+  pointer-events: all;
+}
+
+.app-tour__meta,
+.app-tour__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.app-tour__meta {
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.app-tour__progress {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--app-text-muted);
+}
+
+.app-tour__close,
+.app-tour__button {
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.app-tour__close {
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: 2rem;
+}
+
+.app-tour__title {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin-bottom: 0.8rem;
+}
+
+.app-tour__description {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--app-text-muted);
+  margin-bottom: 1.6rem;
+}
+
+.app-tour__spacer {
+  flex: 1;
+}
+
+.app-tour__button {
+  min-height: 4rem;
+  padding: 0 1.6rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.app-tour__button--primary {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong));
+  border-color: transparent;
+  color: #fff;
+}
+
+.tour-highlight {
+  /* kept for backward compat but no longer used for z-index tricks */
+  outline: 3px solid rgba(96, 165, 250, 0.85);
+  outline-offset: 4px;
+  border-radius: 1.8rem;
+}
+
+@media (max-width: 75em) {
+  .app-shell-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 44em) {
+  .app-shell-controls {
+    gap: 0.6rem;
+  }
+
+  .app-language-select,
+  .app-shell-btn {
+    min-height: 3.8rem;
+    font-size: 1.3rem;
+    padding: 0 1.1rem;
+  }
+
+  .app-tour__card {
+    left: 1.2rem !important;
+    right: 1.2rem !important;
+    top: auto !important;
+    bottom: 1.2rem !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   DARK THEME — GLOBAL FUNCTIONAL FIXES
+   All interactive components working correctly in dark mode
+   ============================================================ */
+
+/* --- Body & page background --- */
+html[data-theme='dark'] body {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* --- Header --- */
+html[data-theme='dark'] .header {
+  background-color: rgba(8, 17, 32, 0.97) !important;
+  border-bottom: 1px solid var(--app-border);
+}
+
+html[data-theme='dark'] .main-nav-link:link,
+html[data-theme='dark'] .main-nav-link:visited {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .main-nav-link:hover {
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .icon-mobile-nav {
+  color: var(--app-text) !important;
+}
+
+/* --- Mobile nav overlay --- */
+html[data-theme='dark'] .main-nav {
+  background-color: rgba(8, 17, 32, 0.98) !important;
+}
+
+/* --- App shell controls (theme/language/tour buttons) --- */
+html[data-theme='dark'] .app-language-select,
+html[data-theme='dark'] .app-shell-btn {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .app-language-select option {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+}
+
+/* --- Profile dropdown --- */
+html[data-theme='dark'] .profile-dropdown {
+  background-color: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+html[data-theme='dark'] .profile-toggle-btn {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .profile-toggle-btn:hover {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .user-name-small {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .toggle-arrow {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .action-item {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .action-item:hover {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .action-icon {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .action-item:hover .action-icon {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+
+/* --- Login / Signup forms --- */
+html[data-theme='dark'] .login-form {
+  background-color: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+
+html[data-theme='dark'] .form__label {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .form__input {
+  background-color: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .form__input:focus {
+  border-bottom-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .form__input::placeholder {
+  color: var(--app-text-muted) !important;
+}
+
+/* --- Buttons --- */
+html[data-theme='dark'] .btn--full,
+html[data-theme='dark'] .btn--full:link,
+html[data-theme='dark'] .btn--full:visited {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .btn--full:hover {
+  background-color: var(--app-brand-strong) !important;
+}
+
+html[data-theme='dark'] .btn--outline,
+html[data-theme='dark'] .btn--outline:link,
+html[data-theme='dark'] .btn--outline:visited {
+  background-color: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  box-shadow: inset 0 0 0 2px var(--app-border) !important;
+}
+
+html[data-theme='dark'] .btn--form {
+  background-color: var(--app-brand) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .btn--form:hover {
+  background-color: var(--app-brand-strong) !important;
+}
+
+html[data-theme='dark'] .btn:focus {
+  background-color: var(--app-brand-strong) !important;
+  outline: none !important;
+}
+
+/* --- Alerts --- */
+html[data-theme='dark'] .alert--success {
+  background: #15803d !important;
+}
+
+html[data-theme='dark'] .alert--error {
+  background: #b91c1c !important;
+}
+
+html[data-theme='dark'] .form__status--pending {
+  color: #93c5fd;
+}
+
+html[data-theme='dark'] .form__status--success {
+  color: #86efac;
+}
+
+html[data-theme='dark'] .form__status--error {
+  color: #fca5a5;
+}
+
+html[data-theme='dark'] .password-toggle {
+  color: var(--app-text);
+}
+
+html[data-theme='dark'] .password-toggle:hover {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--app-text);
+}
+
+/* --- Dashboard --- */
+html[data-theme='dark'] .section-dashboard,
+html[data-theme='dark'] .section-dashboard-list,
+html[data-theme='dark'] .section-dashboard-admin {
+  background: linear-gradient(180deg, var(--app-bg) 0%, #102039 100%) !important;
+}
+
+html[data-theme='dark'] .dashboard-card {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .dashboard-card__label {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .dashboard-card__value {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .dashboard-table-wrapper {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .dashboard-table thead {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .dashboard-table th {
+  color: var(--app-text-muted) !important;
+  border-bottom-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .dashboard-table td {
+  color: var(--app-text) !important;
+  border-bottom-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .dashboard-table tbody tr:nth-child(even) {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .dashboard-table tbody tr:hover {
+  background-color: rgba(96, 165, 250, 0.08) !important;
+}
+
+html[data-theme='dark'] .dashboard-list__header h3,
+html[data-theme='dark'] .dashboard-user__name {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .dashboard-user__welcome,
+html[data-theme='dark'] .text-muted {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .dashboard-chart-container {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .dashboard-chart__title {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .dashboard-mini-list {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .dashboard-mini-list li strong {
+  color: var(--app-text) !important;
+}
+
+/* --- Chat page --- */
+html[data-theme='dark'] main.chat-main-section {
+  background: linear-gradient(135deg, var(--app-bg) 0%, #102039 100%) !important;
+}
+
+html[data-theme='dark'] .chat-container {
+  background: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+html[data-theme='dark'] .main-chat-area {
+  background: var(--app-bg) !important;
+}
+
+html[data-theme='dark'] .chat-area-header {
+  background: var(--app-surface) !important;
+  border-bottom-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .chat-area-header h2 {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-area-header button {
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .new-chat-btn {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .chat-input-container {
+  background: var(--app-surface) !important;
+  border-top-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .message-input-wrapper {
+  background: var(--app-surface-alt) !important;
+  outline-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .message-input-wrapper:focus-within {
+  outline-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .chat-message-input {
+  background: transparent !important;
+  color: var(--app-text) !important;
+  caret-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .chat-message-input::placeholder {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-composer-note {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-icon-btn {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-icon-btn:hover {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .chat-welcome-state h3 {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-welcome-state p {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-upload-area {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .chat-upload-area:hover {
+  border-color: var(--app-brand) !important;
+  background: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .chat-upload-area h4 {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-upload-area p,
+html[data-theme='dark'] .chat-upload-note {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .file-type-badge {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .message-content {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .message.sent .message-content {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .message-time {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .message.sent .message-time {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+html[data-theme='dark'] .file-info {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-history-item .chat-history-name {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-history-item .chat-history-time {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-history-item:hover {
+  background: rgba(96, 165, 250, 0.12) !important;
+}
+
+html[data-theme='dark'] .chat-history-item.active {
+  background: rgba(96, 165, 250, 0.18) !important;
+}
+
+/* --- Sentbot popup --- */
+html[data-theme='dark'] .chatbot-popup {
+  background: var(--app-surface) !important;
+}
+
+html[data-theme='dark'] .chat-body {
+  background: transparent !important;
+}
+
+html[data-theme='dark'] .chat-body .bot-message .message-text {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-body .user-message .message-text {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+  color: #fff !important;
+}
+
+html[data-theme='dark'] .chat-footer {
+  background: var(--app-surface) !important;
+  border-top-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .chat-footer .chat-form {
+  background: var(--app-surface-alt) !important;
+  outline-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .chat-footer .chat-form:focus-within {
+  outline-color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .chat-form .message-input {
+  background: transparent !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-form .message-input::placeholder {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-suggestion-chip {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-suggestion-chip:hover {
+  background: rgba(96, 165, 250, 0.15) !important;
+}
+
+html[data-theme='dark'] .chat-suggestion-label {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .chat-predictive-list {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .chat-predictive-option {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .chat-predictive-option:hover {
+  background: var(--app-surface-alt) !important;
+}
+
+/* --- Pricing page --- */
+html[data-theme='dark'] .section-pricing {
+  background-color: var(--app-bg) !important;
+}
+
+html[data-theme='dark'] .pricing-plan--complete-free {
+  background-color: var(--app-surface-alt) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+html[data-theme='dark'] .pricing-plan--complete-starter,
+html[data-theme='dark'] .pricing-plan--complete-enterprise {
+  background-color: var(--app-surface) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+html[data-theme='dark'] .plan-name,
+html[data-theme='dark'] .plan-price,
+html[data-theme='dark'] .plan-text,
+html[data-theme='dark'] .plan-details {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .list-item {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .list-icon {
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .feature-title {
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .feature-icon {
+  background-color: rgba(96, 165, 250, 0.12) !important;
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .step-description,
+html[data-theme='dark'] .step-description li {
+  color: var(--app-text-muted) !important;
+}
+
+/* --- Services page --- */
+html[data-theme='dark'] .section-meals {
+  background-color: var(--app-bg) !important;
+}
+
+html[data-theme='dark'] .meal {
+  background-color: var(--app-surface) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+
+html[data-theme='dark'] .meal-content {
+  background-color: var(--app-surface) !important;
+}
+
+html[data-theme='dark'] .meal-attribute {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .section-testimonials {
+  background-color: var(--app-surface-alt) !important;
+}
+
+html[data-theme='dark'] .testimonial-text {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .testimonial-name {
+  color: var(--app-text-muted) !important;
+}
+
+/* --- Footer --- */
+html[data-theme='dark'] .footer {
+  background-color: var(--app-surface) !important;
+  border-top-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .footer-heading {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .footer-link:link,
+html[data-theme='dark'] .footer-link:visited {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .footer-link:hover {
+  color: var(--app-brand) !important;
+}
+
+html[data-theme='dark'] .copyright {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .contacts {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .social-icon {
+  color: var(--app-text-muted) !important;
+  fill: var(--app-text-muted) !important;
+}
+
+/* --- Error / Success pages --- */
+html[data-theme='dark'] .error__msg,
+html[data-theme='dark'] .error__title {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .success__message {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .success-content {
+  color: var(--app-text) !important;
+}
+
+/* --- Tour --- */
+html[data-theme='dark'] .app-tour__card {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .app-tour__title {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .app-tour__description {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .app-tour__progress {
+  color: var(--app-text-muted) !important;
+}
+
+html[data-theme='dark'] .app-tour__close,
+html[data-theme='dark'] .app-tour__button {
+  background: var(--app-surface-alt) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+html[data-theme='dark'] .app-tour__button--primary {
+  background: linear-gradient(135deg, var(--app-brand), var(--app-brand-strong)) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+html[data-theme='dark'] .app-tour__backdrop {
+  background: rgba(4, 8, 17, 0.82) !important;
+}
+
+/* --- CTA form --- */
+html[data-theme='dark'] .cta-form label {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .cta-form input,
+html[data-theme='dark'] .cta-form select {
+  background-color: var(--app-surface) !important;
+  color: var(--app-text) !important;
+  border: 1px solid var(--app-border) !important;
+}
+
+html[data-theme='dark'] .cta-text {
+  color: var(--app-text-muted) !important;
+}
+
+/* --- Billing success page --- */
+html[data-theme='dark'] .billingSuccess,
+html[data-theme='dark'] .success-content {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* --- General text --- */
+html[data-theme='dark'] p,
+html[data-theme='dark'] li,
+html[data-theme='dark'] span,
+html[data-theme='dark'] label {
+  color: inherit;
+}
+
+html[data-theme='dark'] strong {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] h1,
+html[data-theme='dark'] h2,
+html[data-theme='dark'] h3,
+html[data-theme='dark'] h4,
+html[data-theme='dark'] h5 {
+  color: var(--app-text) !important;
+}
+
+/* heading-secondary uses background-clip:text so needs special handling */
+html[data-theme='dark'] .heading-secondary {
+  background-image: linear-gradient(to right, var(--app-brand), var(--app-brand-strong)) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+html[data-theme='dark'] .heading-primary {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .heading-tertiary {
+  color: var(--app-text) !important;
+}
+
+html[data-theme='dark'] .subheading {
+  color: var(--app-brand) !important;
+}

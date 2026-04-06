@@ -1,0 +1,445 @@
+extends  base
+
+block content
+    section#chat.section-hero
+      // Background slideshow images
+      .hero-bg-slideshow
+        .hero-bg-slide.slide-1
+        .hero-bg-slide.slide-2
+        .hero-bg-slide.slide-3
+        .hero-bg-slide.slide-4
+        .hero-bg-slide.slide-5
+      //
+        <video
+        class="hero-bg-video"
+        src="img/myreader video.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        ></video>
+      #how.hero
+        .hero-text-box
+          h1.heading-primary
+            = t('overview.heroTitle')
+          a.btn.btn--full.margin-right-sm(href='#cta')= t('overview.heroCta')
+          a.btn.btn--outline(href='#how')
+            | #{t('overview.heroLearnMore')} &darr;
+          .delivered-meals
+            .delivered-imgs
+              img(src='img/customers/customer-1.jpg' alt='Customer photo')
+              img(src='img/customers/customer-2.jpg' alt='Customer photo')
+              img(src='img/customers/customer-3.jpg' alt='Customer photo')
+              img(src='img/customers/customer-4.jpg' alt='Customer photo')
+              img(src='img/customers/customer-5.jpg' alt='Customer photo')
+              img(src='img/customers/customer-6.jpg' alt='Customer photo')
+            p.delivered-text
+              span 250,000+
+              |  #{t('overview.delivered')}
+          picture
+            //
+              <source srcset="img/hero.mp4" type="video/mp4" />
+              <source srcset="img/hero1.mp4" type="video/mp4" />
+            //
+              <img
+              src="img/hero-min.png"
+              class="hero-img"
+              alt="Woman enjoying food, meals in storage container, and food bowls on a table"
+              />
+            //
+              <img
+              src="img/hero.mp4"
+              class="hero-img"
+              alt="Woman enjoying food, meals in storage container, and food bowls on a table"
+              />
+          //
+            <video
+            class="hero-img"
+            src="img/hero1.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="img/hero1.mp4"
+            >
+          // Your browser does not support the video tag.
+          // </video>
+    section#how.section-featured
+      .container
+        h2.heading-featured-in= t('overview.trustedBy')
+        .logos
+          .logos-track
+            img(src='img/logos/techcrunch.png' alt='Techcrunch logo')
+            img(src='img/logos/business-insider.png' alt='Business Insider logo')
+            img(src='img/logos/the-new-york-times.png' alt='The New York Times logo')
+            img(src='img/logos/forbes.png' alt='Forbes logo')
+            img(src='img/logos/usa-today.png' alt='USA Today logo')
+            // duplicate for seamless loop
+            img(src='img/logos/techcrunch.png' alt='Techcrunch logo')
+            img(src='img/logos/business-insider.png' alt='Business Insider logo')
+            img(src='img/logos/the-new-york-times.png' alt='The New York Times logo')
+            img(src='img/logos/forbes.png' alt='Forbes logo')
+            img(src='img/logos/usa-today.png' alt='USA Today logo')
+    section#features.section-how
+      .container
+        span.subheading= t('overview.howItWorks')
+        h2.heading-secondary
+          = t('overview.howItWorksTitle')
+      .container.grid.grid--2-cols.grid--center-v
+        // STEP 01
+        .step-text-box
+          p.step-number 01
+          h3.heading-tertiary
+            = t('features.step1.title')
+          p.step-description
+            ul.step-description
+              li= t('features.step1.l1')
+              li= t('features.step1.l2')
+              li= t('features.step1.l3')
+        .step-img-box
+          video.step-img(src='img/app/video a1.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-1.png"
+            class="step-img"
+            alt="iPhone app
+            preferences selection screen"
+            />
+        // STEP 02
+        .step-img-box
+          video.step-img(src='img/app/video a2.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-2.png"
+            class="step-img"
+            alt="iPhone app
+            meal approving plan screen"
+            />
+        .step-text-box
+          p.step-number 02
+          h3.heading-tertiary= t('features.step2.title')
+          ul.step-description
+            li= t('features.step2.l1')
+            li= t('features.step2.l2')
+            li= t('features.step2.l3')
+            li= t('features.step2.l4')
+        // STEP 03
+        .step-text-box
+          p.step-number 03
+          h3.heading-tertiary= t('features.step3.title')
+          p.step-description
+            ul.step-description
+              li= t('features.step3.l1')
+              li= t('features.step3.l2')
+              li= t('features.step3.l3')
+              li= t('features.step3.l4')
+        .step-img-box
+          video.step-img(src='img/app/video a3.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-3.png"
+            class="step-img"
+            alt="iPhone app
+            delivery screen"
+            />
+    section#services.section-meals
+      .container.center-text
+        span.subheading= t('overview.tasks')
+        h2.heading-secondary
+          = t('services.title')
+      .container.grid.grid--3-cols.margin-bottom-md
+        .meal
+          video.meal-img(src='img/meals/video 2.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/meals/meal-1.jpg"
+            class="meal-img"
+            alt="Japanese Gyozas"
+            />
+          .meal-content
+            .meal-tags
+              span.tag.tag--vegetarian ChatPDF
+            p.meal-title
+            ul.meal-attributes
+              //
+                <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon>
+                <span><strong></strong></span>
+                </li>
+                <li class="meal-attribute">
+                <ion-icon
+                class="meal-icon"
+                name="restaurant-outline"
+                ></ion-icon>
+                <span> &reg; <strong></strong></span>
+                </li>
+              li.meal-attribute
+                ion-icon.meal-icon(name='star-outline')
+                span
+                  strong 4.9
+                  |  #{t('services.ratingLabel')} (537)
+        .meal
+          video.meal-img(src='img/meals/video 1.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/meals/meal-2.jpg"
+            class="meal-img"
+            alt="Avocado Salad"
+            />
+          .meal-content
+            .meal-tags
+              span.tag.tag--vegan AI generation
+              // <span class="tag tag--paleo">Rag</span>
+            p.meal-title
+            ul.meal-attributes
+              //
+                <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon>
+                <span><strong></strong></span>
+                </li>
+                <li class="meal-attribute">
+                <ion-icon
+                class="meal-icon"
+                name="restaurant-outline"
+                ></ion-icon>
+                <span><strong></strong></span>
+                </li>
+              li.meal-attribute
+                ion-icon.meal-icon(name='star-outline')
+                span
+                  strong 4.8
+                  |  #{t('services.ratingLabel')} (441)
+        .diets
+          h3.heading-tertiary= t('services.formats.title')
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span PDF
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span WORD
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span WEB
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span PPT
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span EXCEL
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span IMAGE
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span SCREENSHOT
+            //
+              <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span></span>
+              </li>
+              <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span></span>
+              </li>
+      .container.all-recipes
+        a.link(href='/features') #{t('overview.seeAllFeatures')} &rarr;
+    section#dashboard.section-testimonials
+      .testimonials-container
+        span.subheading= t('overview.testimonials')
+        h2.heading-secondary= t('services.reviews.title')
+        .testimonials
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Dave Bryson' src='img/customers/dave.jpg')
+            blockquote.testimonial-text
+              | &ldquo;#{t('overview.testimonial1.quote')}&rdquo;
+            p.testimonial-name &mdash; Dave Bryson
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Ben Hadley' src='img/customers/ben.jpg')
+            blockquote.testimonial-text
+              | &ldquo;#{t('overview.testimonial2.quote')}&rdquo;
+            p.testimonial-name &mdash; Ben Hadley
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Steve Miller' src='img/customers/steve.jpg')
+            blockquote.testimonial-text
+              | &ldquo;#{t('overview.testimonial3.quote')}&rdquo;
+            p.testimonial-name &mdash; Steve Miller
+          figure.testimonial
+            img.testimonial-img(alt='Photo of customer Hannah Smith' src='img/customers/hannah.jpg')
+            blockquote.testimonial-text
+              | &ldquo;#{t('overview.testimonial4.quote')}&rdquo;
+            p.testimonial-name &mdash; Hannah Smith
+      .gallery
+        figure.gallery-item
+          img(src='img/gallery/gallery-1.jpg' alt='Photo of beautifully\
+          arranged food')
+          // <figcaption>Caption</figcaption>
+        figure.gallery-item
+          img(src='img/gallery/gallery-2.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-3.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-4.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-5.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-6.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-7.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-8.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-9.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-10.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-11.jpg' alt='Photo of beautifully\
+          arranged food')
+        figure.gallery-item
+          img(src='img/gallery/gallery-12.jpg' alt='Photo of beautifully\
+          arranged food')
+    section#pricing.section-pricing
+      .container
+        span.subheading= t('overview.pricing')
+        h2.heading-secondary
+          = t('overview.pricingTitle')
+      .container.grid.grid--3-cols.margin-bottom-md
+        .pricing-plan.pricing-plan--complete-free
+          header.complete-free
+            p.plan-name= t('pricing.free.name')
+            p.plan-price
+              span /$
+              | 0
+            p.plan-text= t('pricing.free.period')
+          ul.list.list-free
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f4')
+            //
+              <li class="list-item">
+              <ion-icon class="list-icon" name="close-outline"></ion-icon>
+              <span>Premium level</span>
+              </li>
+          .plan-sing-up
+            a.btn.btn--full(href='#cta')= t('pricing.free.cta')
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-starter
+          header.plan-header
+            p.plan-name= t('pricing.starter.name')
+            p.plan-price
+              span $
+              | 9
+            p.plan-text= t('pricing.starter.period')
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f4')
+          .plan-sing-up
+            a.btn.btn--full(href='#' data-plan-tier='premium')= t('pricing.starter.ctaMonthly')
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-enterprise
+          header.complete-enterprise
+            p.plan-name= t('pricing.enterprise.name')
+            p.plan-price
+              span= t('pricing.enterprise.price')
+            p.plan-text
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f4')
+          .plan-sing-up
+            a.btn.btn--full(href='#' data-plan-tier='enterprise')= t('pricing.enterprise.cta')
+      .container.grid
+        aside.plan-details
+          span= t('pricing.details')
+      #contacts.container.grid.grid--4-cols
+        .feature
+          ion-icon.feature-icon(name='time')
+          p.feature-title= t('pricing.feat1.title')
+          ul.step-description
+            li= t('pricing.feat1.l1')
+            li= t('pricing.feat1.l2')
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='book-outline')
+          p.feature-title= t('pricing.feat2.title')
+          ul.step-description
+            li= t('pricing.feat2.l1')
+            li= t('pricing.feat2.l2')
+        .feature
+          ion-icon.feature-icon(name='help-outline')
+          p.feature-title= t('pricing.feat3.title')
+          ul.step-description
+            li= t('pricing.feat3.l1')
+            li= t('pricing.feat3.l2')
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='checkbox-outline')
+          p.feature-title= t('pricing.feat4.title')
+          ul.step-description
+            li= t('pricing.feat4.l1')
+            li= t('pricing.feat4.l2')
+    section#cta.section-cta
+      .container
+        .cta
+          .cta-text-box
+            h2.heading-secondary= t('overview.ctaTitle')
+            p.cta-text
+              = t('overview.ctaText')
+            form.cta-form(name='sign-up' netlify='')
+              div
+                label(for='full-name')= t('overview.form.name')
+                input#full-name(type='text' placeholder='John Smith' name='full-name' required='')
+              div
+                label(for='email')= t('overview.form.email')
+                input#email(type='email' placeholder='me@example.com' name='email' required='')
+              div
+                label(for='select-where')= t('overview.form.source')
+                select#select-where(name='select-where' required='')
+                  option(value='')= t('overview.form.optionPlaceholder')
+                  option(value='friends')= t('overview.form.optionFriends')
+                  option(value='youtube')= t('overview.form.optionYoutube')
+                  option(value='podcast')= t('overview.form.optionPodcast')
+                  option(value='ad')= t('overview.form.optionAd')
+                  option(value='others')= t('overview.form.optionOthers')
+              button.btn.btn--form= t('overview.form.submit')
+              //
+                <input type="checkbox" />
+                <input type="number" />
+          .cta-img-box(role='img' aria-label='Woman enjoying food')
+            video.cta-img-box(src='img/vieo 0.mp4' autoplay='' loop='' muted='' playsinline='')
+      

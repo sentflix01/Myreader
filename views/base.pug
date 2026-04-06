@@ -1,0 +1,71 @@
+doctype html
+html(lang=language || 'en' data-language=language || 'en' data-theme='light')
+  head
+    meta(charset="UTF-8")
+    meta(content="IE=edge" http-equiv="X-UA-Compatible")
+    meta(content="width=device-width, initial-scale=1.0" name="viewport")
+    meta(content="#f5f7fb" name="theme-color")
+    meta(content=t('meta.description') name="description")
+    if user
+      meta(name="user-id" content=user.id)
+    script.
+      (function () {
+        try {
+          var storedTheme = localStorage.getItem('myreader_theme');
+          var systemDark =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = storedTheme || (systemDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) {
+            themeColor.setAttribute('content', theme === 'dark' ? '#0b1220' : '#f5f7fb');
+          }
+        } catch (error) {}
+      })();
+    //- link(rel='shortcut icon', type='/image/png', href='logo\icon.png')
+    link(href="manifest.webmanifest" type="image/webmanifest" rel="manifest")
+    link(href="https://fonts.gstatic.com" rel="preconnect")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap")
+    link(
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      rel="stylesheet"
+      )
+    link(
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js" 
+      type="module"
+    )
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js")
+    script(type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js")
+    script(nomodule src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.js")
+    link(rel="stylesheet" href="css/chat.css")
+    link(href="css/general.css" rel="stylesheet")
+    link(href="css/style.css" rel="stylesheet")
+    link(href="css/queries.css" rel="stylesheet")
+    link(href="css/account.css" rel="stylesheet")
+    link(href="css/theme-system.css" rel="stylesheet")
+    
+    // Add this block for page-specific styles
+    block styles
+    
+    script(src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js")
+    script(src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js" defer="")
+    title SentReader | #{title}
+  body(data-user-id=user ? user.id : undefined data-authenticated=user ? 'true' : 'false')
+    // HEADER
+    include _header
+
+    // CONTENT
+    block content
+
+    // FOOTER
+    include _footer
+
+     // Floating AI assistant mount point
+    //- div#support-assistant-root(data-assistant-root='')
+    include _sentbot
+
+    script#myreader-i18n-data(type='application/json')!= clientI18nJson
+    //- layout.pug or index.pug
+    script(type="module" src="/dist/js/index.js")

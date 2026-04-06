@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Jonas Schmedtmann",
+    "email": "admin@natours.io",
+    "role": "admin",
+    "active": true,
+    "photo": "user-1.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Lourdes Browning",
+    "email": "loulou@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-2.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Sophie Louise Hart",
+    "email": "sophie@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-3.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Ayla Cornell",
+    "email": "ayls@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-4.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Leo Gillespie",
+    "email": "leo@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-5.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Jennifer Hardy",
+    "email": "jennifer@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-6.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Kate Morrison",
+    "email": "kate@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-7.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Eliana Stout",
+    "email": "eliana@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-8.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Cristian Vega",
+    "email": "chris@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-9.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Steve T. Scaife",
+    "email": "steve@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-10.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Aarav Lynn",
+    "email": "aarav@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-11.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Miyah Myles",
+    "email": "miyah@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-12.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Ben Hadley",
+    "email": "ben@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-13.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Laura Wilson",
+    "email": "laura@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-14.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Max Smith",
+    "email": "max@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-15.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Isabel Kirkland",
+    "email": "isabel@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-16.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Alexander Jones",
+    "email": "alex@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-17.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Eduardo Hernandez",
+    "email": "edu@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-18.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "John Riley",
+    "email": "john@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-19.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  },
+  {
+    "name": "Lisa Brown",
+    "email": "lisa@example.com",
+    "role": "user",
+    "active": true,
+    "photo": "user-20.jpg",
+    "password": "test1234",
+    "passwordConfirm": "test1234"
+  }
+]

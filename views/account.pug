@@ -1,0 +1,173 @@
+extends base
+
+mixin navItem(section, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href='#', data-section=section)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content 
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('profile', t('account.editProfile'), 'settings', true)
+          +navItem('subscription', t('account.subscription'), 'briefcase')
+          +navItem('reviews', t('account.reviews'), 'star')
+          +navItem('billing', t('account.billing'), 'credit-card')
+
+        - if (user.role === 'Admin')
+          .admin-nav
+            h5.admin-nav__heading= t('account.admin')
+            ul.side-nav
+              +navItem('manage-users', t('account.manageUsers'), 'users')
+              +navItem('manage-reviews', t('account.manageReviews'), 'star')
+              //- +navItem('manage-bookings','Manage bookings ', 'briefcase')
+
+      .user-view__content
+        // Profile section (default)
+        .user-view__section.user-view__section--active(data-section-content='profile')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md= t('account.settings')
+            //- WITHOUT API
+            //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
+            //- WITH API
+            form.form.form-user-data
+              .form__group
+                label.form__label(for='name')= t('auth.name')
+                input#name.form__input(type='text', value=`${user.name}`, required, name='name')
+              .form__group.ma-bt-md
+                label.form__label(for='email')= t('auth.email')
+                input#email.form__input(type='email', value=`${user.email}`, required,name='email')
+              .form__group.form__photo-upload
+                img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
+                input.form__upload(type='file', accept='image/*',id='photo', name='photo')
+                label(for='photo')= t('account.choosePhoto')
+              .form__group.right
+                button.btn.btn--small.btn--green= t('account.saveSettings')
+          .line &nbsp;
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md= t('account.password')
+            form.form.form-user-password
+              .form__group
+                label.form__label(for='password-current')= t('account.currentPassword')
+                input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group
+                label.form__label(for='password')= t('account.newPassword')
+                input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group.ma-bt-lg
+                label.form__label(for='password-confirm')= t('account.confirmPassword')
+                input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+              .form__group.right
+                button.btn.btn--small.btn--green.btn--save-password= t('account.savePassword')
+
+        // Subscription section
+        .user-view__section(data-section-content='subscription')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md= t('account.subscription')
+            if user
+              - const planKey = user.subscriptionTier === 'enterprise' ? 'profile.plan.enterprise' : user.subscriptionTier === 'premium' ? 'profile.plan.premium' : 'profile.plan.free';
+              - const statusKey = `subscription.status.${user.subscriptionStatus || 'pending'}`;
+              .subscription-summary
+                p
+                  | #{t('account.currentPlan')} 
+                  strong= t(planKey, {}, user.subscriptionTier || 'free')
+                p
+                  | #{t('account.status')} 
+                  strong= t(statusKey, {}, user.subscriptionStatus || 'pending')
+                if user.trialEndsAt
+                  p
+                    | #{t('account.trialEnds')} 
+                    strong #{user.trialEndsAt.toDateString ? user.trialEndsAt.toDateString() : user.trialEndsAt}
+                if user.currentPeriodEnd
+                  p
+                    | #{t('account.periodEnds')} 
+                    strong #{user.currentPeriodEnd.toDateString ? user.currentPeriodEnd.toDateString() : user.currentPeriodEnd}
+                if user.cancelAtPeriodEnd
+                  p
+                    strong= t('account.cancellationScheduled')
+              .form__group.ma-bt-md
+                p= t('account.choosePlan')
+              .form__group
+                button.btn.btn--small.btn--green(type='button', data-plan-tier='premium')= t('account.upgradePremium')
+                button.btn.btn--small.btn--green(type='button', data-plan-tier='enterprise', style='margin-left:1rem;')= t('account.upgradeEnterprise')
+              if user.stripeCustomerId
+                .form__group.ma-bt-md
+                  button.btn.btn--small.btn--green(type='button', data-open-billing-portal, data-return-url='/editProfile')= t('account.manageBilling')
+              if user.stripeSubscriptionId && user.subscriptionStatus === 'active' && !user.cancelAtPeriodEnd
+                .form__group
+                  button.btn.btn--small.btn--green(type='button', data-cancel-subscription, data-cancel-mode='period-end')= t('account.cancelAtPeriodEnd')
+            else
+              p= t('account.loginToViewSubscription')
+
+        // My reviews section
+        .user-view__section(data-section-content='reviews')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md= t('account.reviews')
+            if accountReviews && accountReviews.length
+              .dashboard-table-wrapper
+                table.dashboard-table
+                  thead
+                    tr
+                      th= t('dashboard.table.document')
+                      th= t('dashboard.table.chat')
+                      th= t('dashboard.table.rating')
+                      th= t('dashboard.table.date')
+                      th= t('account.reviewColumn')
+                  tbody
+                    each review in accountReviews
+                      tr
+                        td
+                          if review.document
+                            span #{review.document.originalFileName}
+                          else
+                            span —
+                        td
+                          if review.chat
+                            span #{review.chat.title}
+                          else
+                            span —
+                        td
+                          span #{review.rating || '-'}
+                        td
+                          span #{review.createdAt ? (review.createdAt.toDateString ? review.createdAt.toDateString() : review.createdAt) : '-'}
+                        td
+                          span #{review.review}
+            else
+              p= t('account.noReviews')
+
+        // Billing section
+        .user-view__section(data-section-content='billing')
+          .user-view__form-container
+            h2.heading-secondary.ma-bt-md= t('account.billing')
+            if user
+              - const billingPlanKey = user.subscriptionTier === 'enterprise' ? 'profile.plan.enterprise' : user.subscriptionTier === 'premium' ? 'profile.plan.premium' : 'profile.plan.free';
+              - const billingStatusKey = `subscription.status.${user.subscriptionStatus || 'pending'}`;
+              p
+                | #{t('account.currentPlan')} 
+                strong= t(billingPlanKey, {}, user.subscriptionTier || 'free')
+              p
+                | #{t('account.status')} 
+                strong= t(billingStatusKey, {}, user.subscriptionStatus || 'pending')
+              p
+                | #{t('account.stripeActive')} 
+                strong= user.stripeSubscriptionId ? t('common.yes') : t('common.no')
+              if user.currentPeriodEnd
+                p
+                  | #{t('account.nextBilling')} 
+                  strong #{user.currentPeriodEnd.toDateString ? user.currentPeriodEnd.toDateString() : user.currentPeriodEnd}
+              .form__group.ma-bt-md
+                a.btn.btn--small.btn--green(href='/pricing')= t('account.viewPricing')
+              .form__group
+                a.btn.btn--small.btn--green(href='/services')= t('account.contactSupport')
+              if user.stripeCustomerId
+                .form__group
+                  button.btn.btn--small.btn--green(type='button', data-open-billing-portal, data-return-url='/editProfile')= t('account.openBillingPortal')
+              if user.stripeSubscriptionId && user.subscriptionStatus === 'active' && !user.cancelAtPeriodEnd
+                .form__group
+                  button.btn.btn--small.btn--green(type='button', data-cancel-subscription, data-cancel-mode='period-end')= t('account.cancelSub')
+              if user.cancelAtPeriodEnd
+                p= t('account.cancellationScheduled')
+            else
+              p= t('account.loginToViewBilling')

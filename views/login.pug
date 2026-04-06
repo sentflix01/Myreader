@@ -1,0 +1,48 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary.ma-bt-lg= t('auth.loginTitle')
+      form.form.form--login(method='POST')
+        if typeof next !== 'undefined' && next
+          input(type='hidden', name='next', id='next', value=next)
+        .form__group
+          label.form__label(for='email')= t('auth.email')
+          input#email.form__input(type='email', placeholder=t('auth.placeholderEmailShort'), required)
+        .form__group.ma-bt-md
+          label.form__label(for='password')= t('auth.password')
+          .password-wrapper(style="position:relative; display:flex; align-items:center;")
+            input#password.form__input(type='password', placeholder='••••••••', required, minlength='8', style='padding-right:2.5rem;')
+            button#togglePassword(type='button', tabindex='-1', aria-label=t('auth.showPassword'), style='background:none; border:none; position:absolute; right:1rem; top:50%; transform:translateY(-50%); cursor:pointer; padding:0;')
+              svg.eye-show(width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24')
+                path(d='M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z')
+                circle(cx='12' cy='12' r='3')
+              svg.eye-hide(width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24' style='display:none')
+                path(d='M17.94 17.94A10.06 10.06 0 0 1 12 19C5 19 1 12 1 12a18.8 18.8 0 0 1 5.06-7.94M1 1l22 22')
+                path(d='M9.53 9.53A3 3 0 0 0 12 15 3 3 0 0 0 14.47 14.47')
+        .form__group
+          button.btn.btn--green= t('auth.loginButton')
+        .form__group
+          p
+            | #{t('auth.noAccount')}
+            -
+              const nextQuery = typeof next !== 'undefined' && next ? `?next=${encodeURIComponent(next)}` : '';
+            a(href=`/signup${nextQuery}`)  #{t('auth.createOne')}
+
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const pwInput = document.getElementById('password');
+      const toggleBtn = document.getElementById('togglePassword');
+      if (pwInput && toggleBtn) {
+        const eyeShow = toggleBtn.querySelector('.eye-show');
+        const eyeHide = toggleBtn.querySelector('.eye-hide');
+        toggleBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const isPwd = pwInput.type === 'password';
+          pwInput.type = isPwd ? 'text' : 'password';
+          if (eyeShow) eyeShow.style.display = isPwd ? 'none' : '';
+          if (eyeHide) eyeHide.style.display = isPwd ? '' : 'none';
+        });
+      }
+    });

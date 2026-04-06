@@ -1,0 +1,173 @@
+extends base
+
+block content
+  main.main
+    section.section-dashboard
+      .dashboard-header
+        .dashboard-user
+          if user
+            img.dashboard-user__photo(src=`/img/users/${user.photo}` alt=user.name)
+            .dashboard-user__info
+              p.dashboard-user__welcome= t('dashboard.welcomeBack')
+              h2.heading-secondary.dashboard-user__name #{user.name}
+          else
+            .dashboard-user__info
+              p.dashboard-user__welcome= t('dashboard.publicWelcome')
+              h2.heading-secondary.dashboard-user__name= t('dashboard.publicTitle')
+
+        .dashboard-summary
+          if user
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.documentsUploaded')
+              h3.dashboard-card__value #{typeof myDocumentsCount !== 'undefined' ? myDocumentsCount : 0}
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.chatsStarted')
+              h3.dashboard-card__value #{typeof myChatsCount !== 'undefined' ? myChatsCount : 0}
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.reviewsLeft')
+              h3.dashboard-card__value #{typeof myReviewsCount !== 'undefined' ? myReviewsCount : 0}
+          else
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.totalUsers')
+              h3.dashboard-card__value #{publicStats.totalUsers}
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.totalDocuments')
+              h3.dashboard-card__value #{publicStats.totalDocuments}
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.totalReviews')
+              h3.dashboard-card__value #{publicStats.totalReviews}
+
+      // Public charts (only pie chart for user tiers)
+      if !user
+        .dashboard-charts-row
+          .dashboard-chart-container
+            h4.dashboard-chart__title= t('dashboard.usersBySubscriptionTier')
+            canvas#publicPieChart(width='400' height='200')
+          // Bar chart removed
+
+      // Personal chart removed (no bar chart for user activity)
+
+    // Recent reviews table (for logged‑in users)
+    section.section-dashboard-list
+      .dashboard-list__header
+        h3.heading-tertiary= t('dashboard.recentReviews')
+        if user && reviews && reviews.length
+          p.text-muted= t('dashboard.showingLatestReviews', { count: reviews.length })
+        else
+          p.text-muted= t('dashboard.noReviews')
+
+      if user && reviews && reviews.length
+        .dashboard-table-wrapper
+          table.dashboard-table
+            thead
+              tr
+                th= t('dashboard.table.user')
+                th= t('dashboard.table.document')
+                th= t('dashboard.table.chat')
+                th= t('dashboard.table.rating')
+                th= t('dashboard.table.date')
+            tbody
+              each review in reviews
+                tr
+                  td
+                    if review.user
+                      span #{review.user.name}
+                    else
+                      span —
+                  td
+                    if review.document
+                      span #{review.document.originalFileName}
+                    else
+                      span —
+                  td
+                    if review.chat
+                      span #{review.chat.title}
+                    else
+                      span —
+                  td
+                    span #{review.rating || '-'}
+                  td
+                    span #{review.createdAt ? review.createdAt.toDateString ? review.createdAt.toDateString() : review.createdAt : '-'}
+
+    // Recent chats (for logged‑in users)
+    if user
+      section.section-dashboard-list
+        .dashboard-list__header
+          h3.heading-tertiary= t('dashboard.recentChats')
+          if recentChats && recentChats.length
+            p.text-muted= t('dashboard.showingLatestChats', { count: recentChats.length })
+          else
+            p.text-muted= t('dashboard.noChats')
+
+        if recentChats && recentChats.length
+          .dashboard-table-wrapper
+            table.dashboard-table
+              thead
+                tr
+                  th= t('dashboard.table.uploadedDocument')
+                  th= t('dashboard.table.lastActivity')
+                  th= t('dashboard.table.messages')
+                  th= t('dashboard.table.open')
+              tbody
+                each c in recentChats
+                  tr
+                    td
+                      span #{c.title || 'Chat'}
+                    td
+                      span #{c.updatedAt ? c.updatedAt.toDateString ? c.updatedAt.toDateString() : c.updatedAt : '-'}
+                    td
+                      span #{typeof c.messageCount !== 'undefined' ? c.messageCount : (c.messages ? c.messages.length : 0)}
+                    td
+                      a(href="/chat")= t('dashboard.openChat')
+
+    // Admin analytics (only pie chart)
+    if user && user.role === 'Admin'
+      section.section-dashboard-admin
+        .dashboard-list__header
+          h3.heading-tertiary= t('dashboard.adminAnalytics')
+        .dashboard-header
+          .dashboard-summary
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.totalDocuments')
+              h3.dashboard-card__value #{typeof totalDocuments !== 'undefined' ? totalDocuments : 0}
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.documentsByType')
+              if documentsByType && documentsByType.length
+                ul.dashboard-mini-list
+                  each stat in documentsByType
+                    li
+                      span #{stat._id}: 
+                      strong #{stat.count}
+              else
+                p.text-muted= t('dashboard.noDocumentsUploaded')
+            .dashboard-card
+              p.dashboard-card__label= t('dashboard.usersByTier')
+              ul.dashboard-mini-list
+                li
+                  span #{t('pricing.free.name')}: 
+                  strong #{usersByTier && usersByTier.free ? usersByTier.free : 0}
+                li
+                  span #{t('pricing.starter.name')}: 
+                  strong #{usersByTier && usersByTier.premium ? usersByTier.premium : 0}
+                li
+                  span #{t('pricing.enterprise.name')}: 
+                  strong #{usersByTier && usersByTier.enterprise ? usersByTier.enterprise : 0}
+        .dashboard-charts-row
+          .dashboard-chart-container
+            h4.dashboard-chart__title= t('dashboard.usersByTierPie')
+            canvas#adminPieChart(width='400' height='200')
+          // Bar chart removed
+
+  script.
+    window.__dashboardData = {
+      user: !{JSON.stringify(user || null)},
+      reviews: !{JSON.stringify(reviews || [])},
+      publicStats: !{JSON.stringify(publicStats || { totalUsers:0, totalDocuments:0, totalReviews:0 })},
+      documentsByType: !{JSON.stringify(documentsByType || [])},
+      usersByTier: !{JSON.stringify(usersByTier || { free:0, premium:0, enterprise:0 })},
+      myDocumentsCount: !{JSON.stringify(typeof myDocumentsCount !== 'undefined' ? myDocumentsCount : 0)},
+      myChatsCount: !{JSON.stringify(typeof myChatsCount !== 'undefined' ? myChatsCount : 0)},
+      myReviewsCount: !{JSON.stringify(typeof myReviewsCount !== 'undefined' ? myReviewsCount : 0)}
+    };
+
+  script(src="/js/dashboard.js")

@@ -1,0 +1,63 @@
+footer.footer
+  .container.grid.grid--footer
+    .logo-col
+      a.footer-logo(href="/")
+        img.logo(alt="SentReader logo" src="img/logos/sentreader remover.png")
+      ul.social-links
+        li
+          a.footer-link(href="#" class="footer-link")
+            ion-icon.social-icon(name="logo-instagram")
+        li
+          a.footer-link(href="#")
+            ion-icon.social-icon(name="logo-facebook")
+        li
+          a.footer-link(href="#")
+            ion-icon.social-icon(name="logo-twitter")
+      p.copyright!= t('footer.copyright', { year: '<span class="year">2027</span>' })
+    .address-col
+      p.footer-heading= t('footer.contact')
+      address.contacts
+        p= t('footer.addressLine')
+        p
+          a.footer-link(href="tel:415-201-6370") 415-201-6370
+        p
+          a.footer-link(href="mailto:hello@sentreader.com") hello@sentreader.com
+    nav.nav-col
+      p.footer-heading= t('footer.solutions')
+      ul.footer-nav
+        li
+          a.footer-link(href="#")= t('footer.financial')
+        li
+          a.footer-link(href="#")= t('footer.legal')
+        li
+          a.footer-link(href="#")= t('footer.researchers')
+        li
+          a.footer-link(href="#")= t('footer.education')
+        li
+          a.footer-link(href="#")= t('footer.documentation')
+    nav.nav-col
+      p.footer-heading= t('footer.company')
+      ul.footer-nav
+        li
+          a.footer-link(href="#")= t('footer.about')
+        li
+          a.footer-link(href="#")= t('footer.business')
+        li
+          a.footer-link(href="#")= t('footer.customers')
+        li
+          a.footer-link(href="#")= t('footer.careers')
+        li
+          a.footer-link(href="#")= t('footer.newsroom')
+    nav.nav-col
+      p.footer-heading= t('footer.resources')
+      ul.footer-nav
+        li
+          a.footer-link(href="#")= t('footer.reviewDir')
+        li
+          a.footer-link(href="#")= t('footer.aiGov')
+        li
+          a.footer-link(href="#")= t('footer.docs')
+        li
+          a.footer-link(href="#")= t('footer.help')
+        li
+          a.footer-link(href="#")= t('footer.privacy')

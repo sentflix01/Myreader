@@ -1,0 +1,166 @@
+extends base
+
+block content
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+  
+  main.chat-main-section
+    .chat-container
+      // ── Left Sidebar – Document Navigation + RAG TOC/Docs ──
+      aside.chat-sidebar.chat-sidebar-left#leftSidebar
+        .sidebar-left-head
+          span.sidebar-doc-title= t('chat.sidebarNoDoc')
+          button#sidebarFileBtn(type="button" title=t('chat.tocTitle'))
+            i.fas.fa-list-ul
+          button#sidebarQuestionsBtn(type="button" title=t('chat.questionsTitle'))
+            i.fas.fa-circle-question
+          button#sidebarFolderBtn(type="button" title=t('chat.docsTitle'))
+            i.fas.fa-folder
+        .sidebar-left-body
+          // TOC view — populated by renderTocView() after RAG ingest
+          .sidebar-view.toc-view#tocView
+            p.rag-empty-hint(style="padding:1.2rem 1.6rem;font-size:1.3rem;color:hsl(210,40%,65%)")
+              i.fas.fa-list-ul(style="margin-right:.6rem")
+              | #{t('chat.tocEmpty')}
+          .sidebar-view.questions-view#questionsView(style="display:none")
+            p.rag-empty-hint(style="padding:1.2rem 1.6rem;font-size:1.3rem;color:hsl(210,40%,65%)")
+              i.fas.fa-circle-question(style="margin-right:.6rem")
+              | #{t('chat.questionsEmpty')}
+          // Docs view — populated by renderDocsView() / RAG group docs
+          .sidebar-view.docs-view#docsView(style="display:none")
+            p.rag-empty-hint(style="padding:1.2rem 1.6rem;font-size:1.3rem;color:hsl(210,40%,65%)")
+              i.fas.fa-folder-open(style="margin-right:.6rem")
+              | #{t('chat.docsEmpty')}
+      
+      // ── Main Chat Area ──────────────────────────────────────
+      section.main-chat-area
+        .chat-area-header
+          .header-left
+          h2#chatTitle= t('chat.pageTitleNew')
+          .header-right
+            .panel-icon-group
+              button#toggleLeftSidebar.sidebar-toggle.panel-icon-btn(title=t('chat.toggleLeft'))
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="1" y="1" width="6" height="16" rx="2.5" fill="currentColor")
+              button#toggleRightSidebar.sidebar-toggle.panel-icon-btn(title=t('chat.toggleRight'))
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="11" y="1" width="6" height="16" rx="2.5" fill="currentColor")
+              button#toggleBottomPanel.sidebar-toggle.panel-icon-btn(title=t('chat.toggleBottom'))
+                svg(width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg")
+                  rect(x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5")
+                  rect(x="1" y="11" width="16" height="6" rx="2.5" fill="currentColor")
+            button#newChatBtn.new-chat-btn
+              i.fas.fa-plus
+              span.btn-text= t('chat.newChat')
+            button#settingsBtn(title=t('chat.settings'))
+              i.fas.fa-cog
+            button#helpBtn(title=t('chat.help'))
+              i.fas.fa-question-circle
+        
+        .chat-messages-area#chatMessagesArea
+          .chat-welcome-state
+            .chat-welcome-icon
+              i.fas.fa-comments
+            h3= t('chat.welcomeTitle')
+            p= t('chat.welcomeText')
+          .chat-upload   
+            .chat-upload-area#chatUploadArea
+              .chat-upload-icon
+                i.fas.fa-cloud-upload-alt
+              h4= t('chat.uploadTitle')
+              p= t('chat.uploadHint')
+              button#uploadFileBtn.upload-file-btn
+                i.fas.fa-upload
+                | #{t('chat.chooseFile')}
+              .supported-file-types
+                span.file-type-badge PDF
+                span.file-type-badge DOCX
+                span.file-type-badge XLSX
+                span.file-type-badge TXT
+                span.file-type-badge JPG/PNG
+
+        // ── Bottom Panel ────────────────────────────────────────
+        #bottomPanel.bottom-panel
+          .bottom-panel-tabs
+            button.bottom-tab.bottom-tab-active(type="button" data-tab="chat")= t('chat.tabChat')
+            button.bottom-tab(type="button" data-tab="error")= t('chat.tabError')
+            button.bottom-tab(type="button" data-tab="token")= t('chat.tabToken')
+            button.bottom-tab(type="button" data-tab="model")= t('chat.tabModel')
+            button.bottom-tab(type="button" data-tab="rag")= t('chat.tabRag')
+            button.bottom-tab(type="button" data-tab="usage")= t('chat.tabUsage')
+            button.bottom-tab(type="button" data-tab="subscription")= t('chat.tabSubscription')
+            button#closeBottomPanel.bottom-panel-close(type="button" title=t('chat.closePanel'))
+              i.fas.fa-times
+          .bottom-panel-body
+
+            // ── CHAT tab — main input ─────────────────────────
+            .bottom-panel-content.bottom-content-active#chatInputContainer(data-content="chat")
+              form.chat-form
+                textarea.message-input(placeholder=language === 'am' ? 'ጥያቄዎን ይጻፉ...' : 'Type your message...' required)
+                .chat-controls
+                  // Language selector for Amharic / English
+                  select#ragLangSelect.rag-lang-select(title=t('chat.ragLangTitle'))
+                    option(value="en" selected=language !== 'am') EN
+                    option(value="am" selected=language === 'am') አማ
+                  button#emoji-picker-btn(type="button")
+                    i.fas.fa-face-smile
+                  button#send-message-btn(type="submit")
+                    i.fas.fa-paper-plane
+
+            // ── ERROR tab ─────────────────────────────────────
+            .bottom-panel-content(data-content="error")
+              .rag-tab-inner#errorLog
+                p.rag-tab-empty
+                  i.fas.fa-check-circle(style="color:#48bb78;margin-right:.6rem")
+                  | #{t('chat.errorTabOk')}
+
+            // ── TOKEN USED tab ────────────────────────────────
+            .bottom-panel-content(data-content="token")
+              .rag-tab-inner#tokenInfo
+                p.rag-tab-empty= t('chat.tokenEmpty')
+
+            // ── MODEL USED tab ────────────────────────────────
+            .bottom-panel-content(data-content="model")
+              .rag-tab-inner#modelInfo
+                p.rag-tab-empty= t('chat.modelEmpty')
+
+            // ── RAG INFO tab ──────────────────────────────────
+            .bottom-panel-content(data-content="rag")
+              .rag-tab-inner#ragInfo
+                p.rag-tab-empty= t('chat.ragTabEmpty')
+
+            // ── USAGE LIMIT tab ───────────────────────────────
+            .bottom-panel-content(data-content="usage")
+              .rag-tab-inner#usageInfo
+                p.rag-tab-empty= t('chat.usageEmpty')
+
+            // ── SUBSCRIPTION tab ──────────────────────────────
+            .bottom-panel-content(data-content="subscription")
+              .rag-tab-inner#subscriptionInfo
+                p.rag-tab-empty
+                  | #{t('chat.subEmpty')}
+                  a(href="/pricing" style="margin-left:.6rem;color:hsl(210,66%,55%)") #{t('chat.viewPlans')} →
+
+      // ── Right Sidebar – Upload History & Conversation Topics ─
+      aside.chat-sidebar.chat-sidebar-right#rightSidebar
+        .chat-logo
+          h2
+            i.fas.fa-history
+            | #{t('chat.history')}
+        .upload-history
+          .chat-section-header
+            h3= t('chat.uploadHistory')
+            button#deleteAllUploadsBtn.chat-action-btn(type="button" title=t('chat.deleteAll'))= t('chat.deleteAll')
+          ul.chat-history-list#uploadHistoryList
+            li.chat-history-item
+              i.fas.fa-file-upload
+              div
+                .chat-history-name= t('chat.noUploads')
+        .conversation-topics
+          h3= t('chat.conversationTopics')
+          ul.chat-history-list#conversationTopicsList
+            li.chat-history-item
+              i.fas.fa-tag
+              div
+                .chat-history-name= t('chat.noTopics')

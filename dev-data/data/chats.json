@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Project Alpha brainstorming",
+    "messages": [
+      { "role": "user", "content": "How do I implement authentication?" },
+      {
+        "role": "assistant",
+        "content": "You can use JWT tokens with Express."
+      },
+      { "role": "user", "content": "Can you show an example?" },
+      {
+        "role": "assistant",
+        "content": "Sure! Install jsonwebtoken, create a signToken function..."
+      }
+    ],
+    "createdAt": "2026-02-01T10:15:00.000Z"
+  },
+  {
+    "title": "Debugging session: API 500 error",
+    "messages": [
+      { "role": "user", "content": "I'm getting a 500 on POST /users" },
+      {
+        "role": "assistant",
+        "content": "Check your error logs. Is the database connected?"
+      },
+      { "role": "user", "content": "Yes, but it says 'duplicate key'." },
+      {
+        "role": "assistant",
+        "content": "That means you're trying to create a user with an existing email."
+      }
+    ],
+    "createdAt": "2026-02-02T14:30:00.000Z"
+  },
+  {
+    "title": "PDF summarization feature",
+    "messages": [
+      { "role": "user", "content": "Can you summarize this PDF?" },
+      { "role": "assistant", "content": "Please upload the document first." },
+      { "role": "user", "content": "Done. It's about machine learning." },
+      {
+        "role": "assistant",
+        "content": "The document explains supervised vs unsupervised learning."
+      }
+    ],
+    "createdAt": "2026-02-03T09:45:00.000Z"
+  },
+  {
+    "title": "Billing inquiry",
+    "messages": [
+      { "role": "user", "content": "Why was I charged twice?" },
+      {
+        "role": "assistant",
+        "content": "Let me check your subscription. Can you provide your email?"
+      },
+      { "role": "user", "content": "user@example.com" },
+      {
+        "role": "assistant",
+        "content": "I see one charge on Feb 1 and another on Feb 2. Possibly a duplicate. I'll refund."
+      }
+    ],
+    "createdAt": "2026-02-04T16:20:00.000Z"
+  },
+  {
+    "title": "New feature request: dark mode",
+    "messages": [
+      { "role": "user", "content": "Do you plan to add dark mode?" },
+      { "role": "assistant", "content": "It's on our roadmap for Q2!" },
+      { "role": "user", "content": "Great! Any ETA?" },
+      { "role": "assistant", "content": "Aiming for April release." }
+    ],
+    "createdAt": "2026-02-05T11:10:00.000Z"
+  }
+]

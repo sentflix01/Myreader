@@ -1,0 +1,65 @@
+extends  base
+
+block content
+    section#features.section-how
+      .container
+        //- span.subheading How it works
+        h2.heading-secondary
+          = t('features.title')
+      .container.grid.grid--2-cols.grid--center-v
+        // STEP 01
+        .step-text-box
+          p.step-number 01
+          h3.heading-tertiary
+            = t('features.step1.title')
+          p.step-description
+            ul.step-description
+              li= t('features.step1.l1')
+              li= t('features.step1.l2')
+              li= t('features.step1.l3')
+        .step-img-box
+          video.step-img(src='img/app/video a1.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-1.png"
+            class="step-img"
+            alt="iPhone app
+            preferences selection screen"
+            />
+        // STEP 02
+        .step-img-box
+          video.step-img(src='img/app/video a2.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-2.png"
+            class="step-img"
+            alt="iPhone app
+            meal approving plan screen"
+            />
+        .step-text-box
+          p.step-number 02
+          h3.heading-tertiary= t('features.step2.title')
+          ul.step-description
+            li= t('features.step2.l1')
+            li= t('features.step2.l2')
+            li= t('features.step2.l3')
+            li= t('features.step2.l4')
+        // STEP 03
+        .step-text-box
+          p.step-number 03
+          h3.heading-tertiary= t('features.step3.title')
+          p.step-description
+            ul.step-description
+              li= t('features.step3.l1')
+              li= t('features.step3.l2')
+              li= t('features.step3.l3')
+              li= t('features.step3.l4')
+        .step-img-box
+          video.step-img(src='img/app/video a3.mp4' autoplay='' muted='' loop='' playsinline='')
+          //
+            <img
+            src="img/app/app-screen-3.png"
+            class="step-img"
+            alt="iPhone app
+            delivery screen"
+            />

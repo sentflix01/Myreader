@@ -1,0 +1,114 @@
+extends  base
+
+block content
+    section#pricing.section-pricing
+      .container
+        //- span.subheading
+        h2.heading-secondary
+          = t('pricing.title')
+      .container.grid.grid--3-cols.margin-bottom-md
+        .pricing-plan.pricing-plan--complete-free
+          header.complete-free
+            p.plan-name= t('pricing.free.name')
+            p.plan-price
+              span /$
+              | 0
+            p.plan-text= t('pricing.free.period')
+          ul.list.list-free
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.free.f4')
+            //
+              <li class="list-item">
+              <ion-icon class="list-icon" name="close-outline"></ion-icon>
+              <span>Premium level</span>
+              </li>
+          .plan-sing-up
+            if user
+              a.btn.btn--full(href='/chat')= t('pricing.openWorkspace')
+            else
+              a.btn.btn--full(href='/signup')= t('pricing.free.cta')
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-starter
+          header.plan-header
+            p.plan-name= t('pricing.starter.name')
+            p.plan-price
+              span $
+              | 9
+            p.plan-text= t('pricing.starter.period')
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span
+                = t('pricing.starter.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.starter.f4')
+          .plan-sing-up
+            button.btn.btn--full(type='button' data-plan-tier='premium')= t('pricing.starter.ctaMonthly')
+        .pricing-plan.pricing-plan--complete.pricing-plan--complete-enterprise
+          header.complete-enterprise
+            p.plan-name= t('pricing.enterprise.name')
+            p.plan-price
+              span= t('pricing.enterprise.price')
+            p.plan-text
+          ul.list
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f1')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f2')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f3')
+            li.list-item
+              ion-icon.list-icon(name='checkmark-outline')
+              span= t('pricing.enterprise.f4')
+          .plan-sing-up
+            button.btn.btn--full(type='button' data-plan-tier='enterprise')= t('pricing.enterprise.cta')
+      .container.grid
+        aside.plan-details
+          span= t('pricing.details')
+          p(style='margin-top:1rem')= t('pricing.stripeNote')
+      #contacts.container.grid.grid--4-cols
+        .feature
+          ion-icon.feature-icon(name='time')
+          p.feature-title= t('pricing.feat1.title')
+          ul.step-description
+            li= t('pricing.feat1.l1')
+            li= t('pricing.feat1.l2')
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='book-outline')
+          p.feature-title= t('pricing.feat2.title')
+          ul.step-description
+            li= t('pricing.feat2.l1')
+            li= t('pricing.feat2.l2')
+        .feature
+          ion-icon.feature-icon(name='help-outline')
+          p.feature-title= t('pricing.feat3.title')
+          ul.step-description
+            li= t('pricing.feat3.l1')
+            li= t('pricing.feat3.l2')
+          p.feature-text
+        .feature
+          ion-icon.feature-icon(name='checkbox-outline')
+          p.feature-title= t('pricing.feat4.title')
+          ul.step-description
+            li= t('pricing.feat4.l1')
+            li= t('pricing.feat4.l2')

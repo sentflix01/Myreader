@@ -1,0 +1,40 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      .success-content
+        .success__icon ✓
+        h2.heading-secondary.ma-bt-lg= successHeadline
+        p.success__message= successMessage
+        .subscription-details
+          p.success__message
+            strong Plan:
+            |  #{planName}
+          if currentPeriodEndLabel
+            p.success__message
+              strong Next billing date:
+              |  #{currentPeriodEndLabel}
+          p.success__message.subscription-note
+            | Your subscription is now active and you have access to all premium features.
+        .success__actions
+          a.btn.btn--green(href='/account') Manage Account
+          a.btn.btn--white(href='/chat') Start Using Premium Features
+          a.btn.btn--outline(href='/pricing') View All Plans
+        
+        script.
+          // Show success message and clean URL
+          if (window.history && window.history.replaceState) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('session_id');
+            url.searchParams.delete('tier');
+            url.searchParams.delete('interval');
+            window.history.replaceState({}, document.title, url.pathname);
+          }
+          
+          // Optional: Show a toast notification
+          setTimeout(() => {
+            if (window.showAlert) {
+              window.showAlert('success', 'Subscription activated successfully!');
+            }
+          }, 500);

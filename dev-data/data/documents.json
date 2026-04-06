@@ -1,0 +1,32 @@
+[
+  {
+    "originalFileName": "annual-report-2025.pdf",
+    "fileSize": 1258291,
+    "fileType": "pdf",
+    "uploadedAt": "2026-01-15T08:30:00.000Z"
+  },
+  {
+    "originalFileName": "project-proposal.docx",
+    "fileSize": 524288,
+    "fileType": "docx",
+    "uploadedAt": "2026-01-20T13:45:00.000Z"
+  },
+  {
+    "originalFileName": "meeting-notes.txt",
+    "fileSize": 15360,
+    "fileType": "txt",
+    "uploadedAt": "2026-01-25T09:15:00.000Z"
+  },
+  {
+    "originalFileName": "user-manual.pdf",
+    "fileSize": 3048576,
+    "fileType": "pdf",
+    "uploadedAt": "2026-01-28T11:00:00.000Z"
+  },
+  {
+    "originalFileName": "budget-2026.xlsx",
+    "fileSize": 262144,
+    "fileType": "xlsx",
+    "uploadedAt": "2026-02-01T14:20:00.000Z"
+  }
+]

@@ -1,0 +1,9 @@
+extends baseEmail
+
+block content
+  p Hi #{firstName},
+  p Please verify your email by clicking the button below: 
+  a.btn(href=`${url}`, target='_blank') Verify Email ✅ 
+  p This link will expire in 10 minutes. if you don't verify your email, you will not be able to login to your account. please verify your email to continue.
+  p If you need any help, please don't hesitate to contact us. we are here to help you.
+  p - SentReader Team
