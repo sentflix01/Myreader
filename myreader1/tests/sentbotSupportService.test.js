@@ -1,8 +1,4 @@
-const {
-  buildDocumentRedirectReply,
-  buildFallbackSupportAnswer,
-  isDocumentQuestion,
-} = require('../services/sentbot/supportContextService');
+const {\n  buildDocumentRedirectReply,\n  buildFallbackSupportAnswer,\n  isDocumentQuestion,\n} = require('../services/sentbot/supportContextService');
 
 describe('Sentbot support guardrails', () => {
   const snapshot = {

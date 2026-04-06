@@ -24,6 +24,7 @@ router
   .delete(chatController.deleteChat);
 
 router.route('/:id/messages').post(chatController.addMessage);
+router.route('/:id/messages/stream').post(chatController.streamMessage);
 router.route('/:id/sync').put(chatController.syncChat);
 router.route('/:id/clear').patch(chatController.clearChat);
 

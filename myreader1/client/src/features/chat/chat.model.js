@@ -92,6 +92,7 @@ export async function createChatOnServer({
   scopeType,
   folderId,
   folderName,
+  ragGroupId,
 }) {
   const res = await http.post('/api/v1/chats', {
     clientId,
@@ -102,6 +103,7 @@ export async function createChatOnServer({
     scopeType,
     folderId,
     folderName,
+    ragGroupId,
   });
   return res.data?.data?.chat;
 }

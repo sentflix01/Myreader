@@ -1,9 +1,4 @@
-const {
-  buildBillingCancelledMessage,
-  buildCheckoutSuccessHeadline,
-  buildCheckoutSuccessMessage,
-  getBillingPlanName,
-} = require('../services/billingCopyService');
+const {\n  buildBillingCancelledMessage,\n  buildCheckoutSuccessHeadline,\n  buildCheckoutSuccessMessage,\n  getBillingPlanName,\n} = require('../services/billingCopyService');
 
 describe('BillingCopyService', () => {
   test('builds plan labels for paid intervals', () => {

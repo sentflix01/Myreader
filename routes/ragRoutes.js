@@ -126,8 +126,10 @@ const tierGuard = (req, res, next) => {
 // ── All routes require authentication ────────────────────────
 router.use(protect);
 
-// POST /api/v1/rag/ingest
+// POST /api/v1/rag/ingest  (and /upload alias used by frontend)
 router.post('/ingest', buildUpload, ragController.ingest);
+router.post('/upload', buildUpload, ragController.ingest);
+router.post('/upload-folder', buildUpload, ragController.ingest);
 
 // POST /api/v1/rag/chat
 router.post('/chat', tierGuard, ragController.chat);

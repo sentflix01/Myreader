@@ -47,4 +47,8 @@ router.post(
 // RAG knowledge base views — integrated into /chat, no separate pages needed
 // router.get('/success', authController.isLoggedIn, viewsControllers.getSuccess);
 
+// Stripe billing result pages
+router.get('/billing/success', authController.isLoggedIn, viewsControllers.getBillingSuccess);
+router.get('/billing/cancel', authController.isLoggedIn, viewsControllers.getBillingCancel);
+
 module.exports = router;

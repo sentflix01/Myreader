@@ -7,7 +7,9 @@ export async function fetchMySubscription() {
 
 export async function subscribePlan({ tier, interval, method }) {
   const res = await http.post('/api/v1/billing/subscribe', { tier, interval, method });
-  return res.data;
+  // Controller returns { status, data: { url } } — normalize to redirectUrl
+  const url = res.data?.data?.url || res.data?.data?.redirectUrl;
+  return { ...res.data, data: { ...res.data?.data, redirectUrl: url } };
 }
 
 export async function cancelSubscription() {

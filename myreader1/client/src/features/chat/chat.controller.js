@@ -228,6 +228,7 @@ export function initChatController() {
       scopeType: chat.scopeType || 'document',
       folderId: chat.folderId || undefined,
       folderName: chat.folderName || undefined,
+      ragGroupId: chat.ragGroupId || undefined,
     });
     chat.serverId = created?.id || chat.serverId;
     return chat.serverId;
@@ -375,6 +376,7 @@ export function initChatController() {
       newChat.docId = uploadedDoc._id;
       newChat.fileName = uploadedDoc.originalFileName;
       newChat.documentIds = [uploadedDoc._id];
+      newChat.ragGroupId = uploadResult?.data?.groupId || uploadedDoc.groupId || null;
       newChat.scopeDocuments = [
         {
           id: uploadedDoc._id,

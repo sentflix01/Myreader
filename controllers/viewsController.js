@@ -174,6 +174,22 @@ exports.getSuccess = (req, res) => {
   });
 };
 
+exports.getBillingSuccess = (req, res) => {
+  const tier = req.query.tier || 'premium';
+  const sessionId = req.query.session_id || '';
+  res.status(200).render('billing-success', {
+    title: 'Subscription Activated',
+    tier,
+    sessionId,
+  });
+};
+
+exports.getBillingCancel = (req, res) => {
+  res.status(200).render('billing-cancel', {
+    title: 'Payment Cancelled',
+  });
+};
+
 exports.getRag = (req, res) => {
   res.status(200).render('rag/index', {
     title: 'Knowledge Bases',
